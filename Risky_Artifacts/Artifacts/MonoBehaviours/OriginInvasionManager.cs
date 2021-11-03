@@ -19,6 +19,8 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
 
         public static float spawnDelay = 1.5f;
         public static int maxSpawns = -1;
+        public static int baseBossCount = 1;
+        public static int beadBossCount = 1;
 
         private List<DirectorSpawnRequest> pendingSpawns;
 
@@ -128,10 +130,10 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                     CharacterMaster characterMaster = CharacterMaster.readOnlyInstancesList[i];
                     if (characterMaster.teamIndex == TeamIndex.Player && characterMaster.playerCharacterMasterController)
                     {
-                        int spawnCount = 1;
+                        int spawnCount = baseBossCount;
                         if (characterMaster.inventory)
                         {
-                            spawnCount += characterMaster.inventory.GetItemCount(RoR2Content.Items.LunarTrinket);
+                            spawnCount += characterMaster.inventory.GetItemCount(RoR2Content.Items.LunarTrinket) * beadBossCount;
                         }
                         //spawnCount *= 1 + (Run.instance.stageClearCount / 5);
                         for (int j = 0; j < spawnCount; j++)
