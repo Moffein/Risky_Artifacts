@@ -8,9 +8,6 @@ using BepInEx.Configuration;
 
 namespace Risky_Artifacts
 {
-    [BepInDependency("com.Moffein.ArtifactOfWar", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInDependency("com.Moffein.ArtifactOfConformity", BepInDependency.DependencyFlags.SoftDependency)]
-
     [BepInDependency("com.bepis.r2api")]
     [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.0.0")]
     [R2API.Utils.R2APISubmoduleDependency(nameof(DirectorAPI), nameof(ArtifactAPI), nameof(LanguageAPI), nameof(RecalculateStatsAPI), nameof(ItemAPI))]
@@ -54,11 +51,11 @@ namespace Risky_Artifacts
                 new ConfigDescription("Multiplier for charge duration.")).Value;
             Expansion.voidRadiusMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Void Radius Multiplier"), 2f,
                 new ConfigDescription("Multiplier for radius size.")).Value;
-            Expansion.voidDurationMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Void Duration Multiplier"), 4f / 3f,
+            Expansion.voidDurationMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Void Duration Multiplier"), 1.5f,
                 new ConfigDescription("Multiplier for charge duration.")).Value;
             Expansion.moonRadiusMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Moon Radius Multiplier"), 2f,
                 new ConfigDescription("Multiplier for radius size.")).Value;
-            Expansion.moonDurationMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Moon Duration Multiplier"), 4f / 3f,
+            Expansion.moonDurationMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Moon Duration Multiplier"), 1.5f,
                 new ConfigDescription("Multiplier for charge duration.")).Value;
 
             Origin.impOnly = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Imps Only"), false,

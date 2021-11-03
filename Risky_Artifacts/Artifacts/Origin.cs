@@ -218,12 +218,12 @@ namespace Risky_Artifacts.Artifacts
                 }
                 else
                 {
-                    int roll = rng.RangeInt(1, 11);
-                    if (roll < 4)
+                    int roll = rng.RangeInt(10, 100);
+                    if (roll < 25)
                     {
                         availableBosses = t1BossCards;
                     }
-                    else if (roll < 10)
+                    else if (roll < 90)
                     {
                         availableBosses = t2BossCards;
                     }

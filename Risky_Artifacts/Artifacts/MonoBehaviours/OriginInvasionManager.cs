@@ -16,6 +16,11 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
         private Xoroshiro128Plus treasureRng;
         private float invasionInterval = 600f;
 
+        /*public static int maxSpawnsPerTick = 4;
+        public static float spawnInterval = 2.5f;*/
+
+        private List<DirectorSpawnRequest> pendingSpawns;
+
         private bool artifactIsEnabled
         {
             get
@@ -68,6 +73,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
             this.run = base.GetComponent<Run>();
             this.seed = this.run.seed;
             this.treasureRng = new Xoroshiro128Plus(this.seed);
+            pendingSpawns = new List<DirectorSpawnRequest>();
         }
 
         private void OnCharacterDeathGlobal(DamageReport damageReport)

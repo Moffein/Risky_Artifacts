@@ -23,7 +23,7 @@ namespace Risky_Artifacts.Artifacts
         {
             LanguageAPI.Add("RISKYARTIFACTS_EXPANSION_NAME", "Artifact of Expansion");
             LanguageAPI.Add("RISKYARTIFACTS_EXPANSION_DESC", "The Teleporter zone covers the whole map, but charging speed is reduced"
-                + (priceMult > 1f ? " and money prices are increased" : "") + ".");
+                + (priceMult > 1f ? " and prices are increased" : "") + ".");
 
             artifact = ScriptableObject.CreateInstance<ArtifactDef>();
             artifact.cachedName = "RiskyArtifactOfExpansion";
