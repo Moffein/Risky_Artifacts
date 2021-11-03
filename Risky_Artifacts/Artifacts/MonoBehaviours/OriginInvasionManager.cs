@@ -109,84 +109,87 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
 
             //Select spawncard
             SpawnCard spawnCard = Origin.SelectSpawnCard(rng);
-            EliteDef selectedElite = null;
-            float eliteHPMult = 1f;
-            float eliteDamageMult = 1f;
-
-            if (CombatDirector.IsEliteOnlyArtifactActive())
+            if (spawnCard)
             {
-                CombatDirector.EliteTierDef t1Elite = CombatDirector.eliteTiers[1];
-                eliteHPMult = t1Elite.healthBoostCoefficient;
-                eliteDamageMult = t1Elite.damageBoostCoefficient;
-                selectedElite = t1Elite.eliteTypes[rng.RangeInt(0, t1Elite.eliteTypes.Length)];
-            }
+                EliteDef selectedElite = null;
+                float eliteHPMult = 1f;
+                float eliteDamageMult = 1f;
 
-            for (int i = CharacterMaster.readOnlyInstancesList.Count - 1; i >= 0; i--)
-            {
-                CharacterMaster characterMaster = CharacterMaster.readOnlyInstancesList[i];
-                if (characterMaster.teamIndex == TeamIndex.Player && characterMaster.playerCharacterMasterController)
+                if (CombatDirector.IsEliteOnlyArtifactActive())
                 {
-                    int spawnCount = 1;
-                    if (characterMaster.inventory)
+                    CombatDirector.EliteTierDef t1Elite = CombatDirector.eliteTiers[1];
+                    eliteHPMult = t1Elite.healthBoostCoefficient;
+                    eliteDamageMult = t1Elite.damageBoostCoefficient;
+                    selectedElite = t1Elite.eliteTypes[rng.RangeInt(0, t1Elite.eliteTypes.Length)];
+                }
+
+                for (int i = CharacterMaster.readOnlyInstancesList.Count - 1; i >= 0; i--)
+                {
+                    CharacterMaster characterMaster = CharacterMaster.readOnlyInstancesList[i];
+                    if (characterMaster.teamIndex == TeamIndex.Player && characterMaster.playerCharacterMasterController)
                     {
-                        spawnCount += characterMaster.inventory.GetItemCount(RoR2Content.Items.LunarTrinket);
-                    }
-                    //spawnCount *= 1 + (Run.instance.stageClearCount / 5);
-                    for (int j = 0; j < spawnCount; j++)
-                    {
-                        if (!spawnCard || (maxSpawns >= 0 && totalSpawns >= maxSpawns))
+                        int spawnCount = 1;
+                        if (characterMaster.inventory)
                         {
-                            yield return null;
+                            spawnCount += characterMaster.inventory.GetItemCount(RoR2Content.Items.LunarTrinket);
                         }
-                        Transform spawnOnTarget;
-                        DirectorCore.MonsterSpawnDistance input;
-
-                        spawnOnTarget = characterMaster.GetBody().coreTransform;
-                        input = DirectorCore.MonsterSpawnDistance.Close;
-
-                        DirectorPlacementRule directorPlacementRule = new DirectorPlacementRule
+                        //spawnCount *= 1 + (Run.instance.stageClearCount / 5);
+                        for (int j = 0; j < spawnCount; j++)
                         {
-                            spawnOnTarget = spawnOnTarget,
-                            placementMode = DirectorPlacementRule.PlacementMode.Approximate
-                        };
-                        DirectorCore.GetMonsterSpawnDistance(input, out directorPlacementRule.minDistance, out directorPlacementRule.maxDistance);
-                        DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(spawnCard, directorPlacementRule, rng);
-                        directorSpawnRequest.teamIndexOverride = new TeamIndex?(TeamIndex.Monster);
-                        directorSpawnRequest.ignoreTeamMemberLimit = true;
-                        CombatSquad combatSquad = null;
-                        directorSpawnRequest.onSpawnedServer = (Action<SpawnCard.SpawnResult>)Delegate.Combine(directorSpawnRequest.onSpawnedServer, new Action<SpawnCard.SpawnResult>(delegate (SpawnCard.SpawnResult result)
-                        {
-                            if (!combatSquad)
+                            if (!spawnCard || (maxSpawns >= 0 && totalSpawns >= maxSpawns))
                             {
-                                combatSquad = UnityEngine.Object.Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/NetworkedObjects/Encounters/ShadowCloneEncounter")).GetComponent<CombatSquad>();
+                                yield return null;
                             }
-                            combatSquad.AddMember(result.spawnedInstance.GetComponent<CharacterMaster>());
-                            CharacterMaster resultMaster = result.spawnedInstance.GetComponent<CharacterMaster>();
-                            if (resultMaster && resultMaster.inventory)
-                            {
-                                resultMaster.inventory.GiveItem(Origin.OriginBonusItem);
-                                resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
-                                resultMaster.inventory.RemoveItem(RoR2Content.Items.InvadingDoppelganger);
+                            Transform spawnOnTarget;
+                            DirectorCore.MonsterSpawnDistance input;
 
-                                if (selectedElite != null)
+                            spawnOnTarget = characterMaster.GetBody().coreTransform;
+                            input = DirectorCore.MonsterSpawnDistance.Close;
+
+                            DirectorPlacementRule directorPlacementRule = new DirectorPlacementRule
+                            {
+                                spawnOnTarget = spawnOnTarget,
+                                placementMode = DirectorPlacementRule.PlacementMode.Approximate
+                            };
+                            DirectorCore.GetMonsterSpawnDistance(input, out directorPlacementRule.minDistance, out directorPlacementRule.maxDistance);
+                            DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(spawnCard, directorPlacementRule, rng);
+                            directorSpawnRequest.teamIndexOverride = new TeamIndex?(TeamIndex.Monster);
+                            directorSpawnRequest.ignoreTeamMemberLimit = true;
+                            CombatSquad combatSquad = null;
+                            directorSpawnRequest.onSpawnedServer = (Action<SpawnCard.SpawnResult>)Delegate.Combine(directorSpawnRequest.onSpawnedServer, new Action<SpawnCard.SpawnResult>(delegate (SpawnCard.SpawnResult result)
+                            {
+                                if (!combatSquad)
                                 {
-                                    resultMaster.inventory.GiveEquipmentString(selectedElite.eliteEquipmentDef.name);
-                                    resultMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, (int)((eliteHPMult - 1f) * 10f));
-                                    resultMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, (int)((eliteDamageMult - 1f) * 10f));
+                                    combatSquad = UnityEngine.Object.Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/NetworkedObjects/Encounters/ShadowCloneEncounter")).GetComponent<CombatSquad>();
                                 }
+                                combatSquad.AddMember(result.spawnedInstance.GetComponent<CharacterMaster>());
+                                CharacterMaster resultMaster = result.spawnedInstance.GetComponent<CharacterMaster>();
+                                if (resultMaster && resultMaster.inventory)
+                                {
+                                    resultMaster.inventory.GiveItem(Origin.OriginBonusItem);
+                                    resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
+                                    resultMaster.inventory.RemoveItem(RoR2Content.Items.InvadingDoppelganger);
+
+                                    if (selectedElite != null)
+                                    {
+                                        resultMaster.inventory.GiveEquipmentString(selectedElite.eliteEquipmentDef.name);
+                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, (int)((eliteHPMult - 1f) * 10f));
+                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, (int)((eliteDamageMult - 1f) * 10f));
+                                    }
+                                }
+                            }));
+                            DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
+                            if (combatSquad)
+                            {
+                                NetworkServer.Spawn(combatSquad.gameObject);
+                                totalSpawns++;
+                                yield return new WaitForSeconds(1.5f);
                             }
-                        }));
-                        DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
-                        if (combatSquad)
-                        {
-                            NetworkServer.Spawn(combatSquad.gameObject);
-                            totalSpawns++;
-                            yield return new WaitForSeconds(1.5f);
                         }
                     }
                 }
+                yield return null;
             }
-            yield return null;
         }
     }
 }

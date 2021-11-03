@@ -198,45 +198,77 @@ namespace Risky_Artifacts.Artifacts
             }
             else
             {
-                //This is super hard-coded. Find a better way to do this.
-                List<SpawnCard> availableBosses = new List<SpawnCard>();
+                //This is super hard-coded. Weighted selection would be better if I could figure out how to set it up.
+                bool t1Available = t1BossCards.Count > 0;
+                bool t2Available = t2BossCards.Count > 0;
+                bool t3Available = t3BossCards.Count > 0;
+
+                List<SpawnCard> availableBosses = null;
                 int stageNumber = Run.instance.stageClearCount;
                 if (stageNumber < 2)
                 {
-                    availableBosses = t1BossCards;
+                    if (t1Available)
+                    {
+                        availableBosses = t1BossCards;
+                    }
+                    else if (t2Available)
+                    {
+                        availableBosses = t2BossCards;
+                    }
+                    else if (t3Available)
+                    {
+                        availableBosses = t3BossCards;
+                    }
                 }
                 else if (stageNumber < 4)
                 {
-                    if (rng.RangeInt(1,11) < 4)
+                    if (t1Available && rng.RangeInt(1,11) < 4)
                     {
                         availableBosses = t1BossCards;
                     }
                     else
                     {
-                        availableBosses = t2BossCards;
+                        if (t2Available)
+                        {
+                            availableBosses = t2BossCards;
+                        }
+                        else if (t3Available)
+                        {
+                            availableBosses = t3BossCards;
+                        }
                     }
                 }
                 else
                 {
                     int roll = rng.RangeInt(10, 100);
-                    if (roll < 25)
+                    if (t1Available && roll < 25)
                     {
                         availableBosses = t1BossCards;
                     }
-                    else if (roll < 90)
+                    else if (t2Available && (!t1Available || roll < 90))
                     {
                         availableBosses = t2BossCards;
                     }
-                    else
+                    else if (t3Available)
                     {
                         availableBosses = t3BossCards;
                     }
                 }
+
                 if (CombatDirector.IsEliteOnlyArtifactActive() && !allowEliteWorms)
                 {
                     availableBosses.Remove(wormCard);
                 }
-                return availableBosses[rng.RangeInt(0, availableBosses.Count)];
+
+                if (availableBosses.Count > 0)
+                {
+                    return availableBosses[rng.RangeInt(0, availableBosses.Count)];
+                }
+                else
+                {
+                    Debug.LogError("RiskyArtifacts: Could not pick Origin Spawncard");
+                    return null;
+                }
             }
         }
         private void PopulateBossSpawncards()
