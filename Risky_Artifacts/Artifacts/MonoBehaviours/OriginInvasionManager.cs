@@ -4,6 +4,7 @@ using R2API;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using System;
+using System.Collections;
 
 namespace Risky_Artifacts.Artifacts.MonoBehaviours
 {
@@ -16,8 +17,8 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
         private Xoroshiro128Plus treasureRng;
         private float invasionInterval = 600f;
 
-        /*public static int maxSpawnsPerTick = 4;
-        public static float spawnInterval = 2.5f;*/
+        public static float spawnDelay = 1.5f;
+        public static int maxSpawns = -1;
 
         private List<DirectorSpawnRequest> pendingSpawns;
 
@@ -36,7 +37,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                 this.previousInvasionCycle = currentInvasionCycle;
                 if (this.artifactIsEnabled)
                 {
-                    OriginInvasionManager.PerformInvasion(new Xoroshiro128Plus(this.seed + (ulong)((long)currentInvasionCycle)));
+                    StartCoroutine(PerformInvasion(new Xoroshiro128Plus(this.seed + (ulong)((long)currentInvasionCycle))));
                 }
             }
         }
@@ -99,11 +100,13 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
             {
                 return;
             }
-            OriginInvasionManager.PerformInvasion(new Xoroshiro128Plus((ulong)damageReport.victim.health));
+            StartCoroutine(PerformInvasion(new Xoroshiro128Plus((ulong)damageReport.victim.health)));
         }
 
-        public static void PerformInvasion(Xoroshiro128Plus rng)
+        IEnumerator PerformInvasion(Xoroshiro128Plus rng)
         {
+            int totalSpawns = 0;
+
             //Select spawncard
             SpawnCard spawnCard = Origin.SelectSpawnCard(rng);
             EliteDef selectedElite = null;
@@ -131,9 +134,9 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                     //spawnCount *= 1 + (Run.instance.stageClearCount / 5);
                     for (int j = 0; j < spawnCount; j++)
                     {
-                        if (!spawnCard)
+                        if (!spawnCard || (maxSpawns >= 0 && totalSpawns >= maxSpawns))
                         {
-                            return;
+                            yield return null;
                         }
                         Transform spawnOnTarget;
                         DirectorCore.MonsterSpawnDistance input;
@@ -164,7 +167,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                 resultMaster.inventory.GiveItem(Origin.OriginBonusItem);
                                 resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
                                 resultMaster.inventory.RemoveItem(RoR2Content.Items.InvadingDoppelganger);
-                                
+
                                 if (selectedElite != null)
                                 {
                                     resultMaster.inventory.GiveEquipmentString(selectedElite.eliteEquipmentDef.name);
@@ -177,10 +180,13 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                         if (combatSquad)
                         {
                             NetworkServer.Spawn(combatSquad.gameObject);
+                            totalSpawns++;
+                            yield return new WaitForSeconds(1.5f);
                         }
                     }
                 }
             }
+            yield return null;
         }
     }
 }
