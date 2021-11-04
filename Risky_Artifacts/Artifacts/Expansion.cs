@@ -29,8 +29,8 @@ namespace Risky_Artifacts.Artifacts
             artifact.cachedName = "RiskyArtifactOfExpansion";
             artifact.nameToken = "RISKYARTIFACTS_EXPANSION_NAME";
             artifact.descriptionToken = "RISKYARTIFACTS_EXPANSION_DESC";
-            artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArtifactWarDisabled.png");//todo: unique icon
-            artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArtifactWarEnabled.png");//todo: unique icon
+            artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texExpansionDisabled.png");
+            artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texExpansionEnabled.png");
             ArtifactAPI.Add(artifact);
 
             On.RoR2.Run.IsItemAvailable += (orig, self, itemIndex) =>

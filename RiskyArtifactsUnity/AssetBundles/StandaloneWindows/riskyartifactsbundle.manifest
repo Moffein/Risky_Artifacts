@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3549766209
+CRC: 1869329246
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: c5c6e4ad07dda8dd752dfd42371a7fed
+    Hash: e831446548fd982cbff3a0f908cf0d18
   TypeTreeHash:
     serializedVersion: 2
     Hash: ea5a42e0fd8ea905efa7aa926a3b8944
@@ -15,7 +15,13 @@ ClassTypes:
   Script: {instanceID: 0}
 Assets:
 - Assets/Resources/texArtifactWarEnabled.png
+- Assets/Resources/texOriginDisabled.png
+- Assets/Resources/texOriginEnabled.png
 - Assets/Resources/texArtifactWarDisabled.png
 - Assets/Resources/texConformityResizedDisabled.png
+- Assets/Resources/texArrogDisabled.png
 - Assets/Resources/texConformityResizedEnabled.png
+- Assets/Resources/texExpansionDisabled.png
+- Assets/Resources/texArrogEnabled.png
+- Assets/Resources/texExpansionEnabled.png
 Dependencies: []

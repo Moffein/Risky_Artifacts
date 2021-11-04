@@ -51,11 +51,11 @@ namespace Risky_Artifacts
                 new ConfigDescription("Multiplier for charge duration.")).Value;
             Expansion.voidRadiusMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Void Radius Multiplier"), 2f,
                 new ConfigDescription("Multiplier for radius size.")).Value;
-            Expansion.voidDurationMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Void Duration Multiplier"), 1.5f,
+            Expansion.voidDurationMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Void Duration Multiplier"), 4f / 3f,
                 new ConfigDescription("Multiplier for charge duration.")).Value;
             Expansion.moonRadiusMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Moon Radius Multiplier"), 2f,
                 new ConfigDescription("Multiplier for radius size.")).Value;
-            Expansion.moonDurationMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Moon Duration Multiplier"), 1.5f,
+            Expansion.moonDurationMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Moon Duration Multiplier"), 4f / 3f,
                 new ConfigDescription("Multiplier for charge duration.")).Value;
 
             Origin.impOnly = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Imps Only"), false,

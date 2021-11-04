@@ -36,8 +36,8 @@ namespace Risky_Artifacts.Artifacts
             artifact.cachedName = "RiskyArtifactOfOrigination";
             artifact.nameToken = "RISKYARTIFACTS_ORIGIN_NAME";
             artifact.descriptionToken = "RISKYARTIFACTS_ORIGIN_DESC";
-            artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArtifactWarDisabled.png");//todo: unique icon
-            artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArtifactWarEnabled.png");//todo: unique icon
+            artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texOriginDisabled.png");
+            artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texOriginEnabled.png");
             ArtifactAPI.Add(artifact);
 
             CreateOriginItem();

@@ -17,8 +17,8 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
         private Xoroshiro128Plus treasureRng;
         private float invasionInterval = 600f;
 
-        public static float spawnDelay = 1.5f;
-        public static int maxSpawns = -1;
+        public static float spawnDelay = 1.2f;
+        public static int maxSpawns = 100;  //-1 disables limit
         public static int baseBossCount = 1;
         public static int beadBossCount = 1;
 

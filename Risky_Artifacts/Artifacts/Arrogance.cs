@@ -21,8 +21,8 @@ namespace Risky_Artifacts.Artifacts
             artifact.cachedName = "RiskyArtifactOfArrogance";
             artifact.nameToken = "RISKYARTIFACTS_ARROGANCE_NAME";
             artifact.descriptionToken = "RISKYARTIFACTS_ARROGANCE_DESC";
-            artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArtifactWarDisabled.png");//todo: unique icon
-            artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArtifactWarEnabled.png");//todo: unique icon
+            artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArrogDisabled.png");
+            artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArrogEnabled.png");
             ArtifactAPI.Add(artifact);
 
             On.RoR2.ShrineBossBehavior.AddShrineStack += (orig, self, interactor) =>
