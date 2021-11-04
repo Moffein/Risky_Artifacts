@@ -9,7 +9,7 @@ using BepInEx.Configuration;
 namespace Risky_Artifacts
 {
     [BepInDependency("com.bepis.r2api")]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.0.0")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.0.1")]
     [R2API.Utils.R2APISubmoduleDependency(nameof(DirectorAPI), nameof(ArtifactAPI), nameof(LanguageAPI), nameof(RecalculateStatsAPI), nameof(ItemAPI))]
     public class RiskyArtifacts : BaseUnityPlugin
     {

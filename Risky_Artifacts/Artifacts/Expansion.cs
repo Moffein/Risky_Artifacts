@@ -55,7 +55,7 @@ namespace Risky_Artifacts.Artifacts
                         self.baseRadius *= voidRadiusMult;
                         self.baseChargeDuration *= voidDurationMult;
                     }
-                    else if (sd && sd.baseSceneName.Equals("moon2"))
+                    else if (sd && sd.baseSceneName.Equals("moon2") && self.name.Contains("MoonBattery"))
                     {
                         self.baseRadius *= moonRadiusMult;
                         self.baseChargeDuration *= moonDurationMult;
@@ -65,15 +65,6 @@ namespace Risky_Artifacts.Artifacts
                         self.baseRadius *= teleRadiusMult;
                         self.baseChargeDuration *= teleDurationMult;
                     }
-                }
-                orig(self);
-            };
-
-            On.RoR2.HoldoutZoneController.Start += (orig, self) =>
-            {
-                if (RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex))
-                {
-                    self.applyFocusConvergence = false;
                 }
                 orig(self);
             };
