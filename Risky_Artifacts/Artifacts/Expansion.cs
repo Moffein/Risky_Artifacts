@@ -47,7 +47,7 @@ namespace Risky_Artifacts.Artifacts
 
             On.RoR2.HoldoutZoneController.Awake += (orig, self) =>
             {
-                if (RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex))
+                if (RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex) && self)
                 {
                     SceneDef sd = RoR2.SceneCatalog.GetSceneDefForCurrentScene();
                     if (sd && sd.baseSceneName.Equals("arena"))

@@ -16,9 +16,9 @@ namespace Risky_Artifacts.Artifacts
 
         public static bool impOnly = false;
         public static bool allowEliteWorms = false;
-        public static float cooldownMult = 0.6f;
-        public static float atkSpeedMult = 1.5f;
-        public static float damageMult = 1.5f;
+        public static float cooldownMult = 0.7f;
+        public static float atkSpeedMult = 1.3f;
+        public static float damageMult = 1.2f;
         public static float moveSpeedMult = 1.5f;
 
         private static List<SpawnCard> t1BossCards;
@@ -56,7 +56,7 @@ namespace Risky_Artifacts.Artifacts
         {
             LanguageAPI.Add("RISKYARTIFACTS_ORIGINBONUSITEM_NAME", "Origin Bonus");
             LanguageAPI.Add("RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP", "The party starts here.");
-            LanguageAPI.Add("RISKYARTIFACTS_ORIGINBONUSITEM_DESC", "Increase <style=cIsUtility>movement speed</style>, <style=cIsDamage>attack speed</style> and <style=cIsDamage>damage</style> by <style=cIsDamage>50%</style> and <style=cIsUtility>reduce skill cooldowns</style> by <style=cIsUtility>25%</style>.");
+            LanguageAPI.Add("RISKYARTIFACTS_ORIGINBONUSITEM_DESC", "Increase <style=cIsUtility>movement speed</style>, <style=cIsDamage>attack speed</style> and <style=cIsDamage>damage</style>, and <style=cIsUtility>reduce skill cooldowns</style>.");
 
             LanguageAPI.Add("RISKYARTIFACTS_ORIGIN_SUBTITLENAMETOKEN", "Reclaimer");
             LanguageAPI.Add("RISKYARTIFACTS_ORIGIN_MODIFIER", "Vanguard");
