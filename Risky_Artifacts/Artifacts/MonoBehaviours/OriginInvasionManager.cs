@@ -19,7 +19,6 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
 
         public static float spawnDelay = 1.2f;
         public static int maxSpawns = 100;  //-1 disables limit
-        public static int baseBossCount = 1;
         public static int beadBossCount = 1;
 
         private List<DirectorSpawnRequest> pendingSpawns;
@@ -109,6 +108,8 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
         {
             int totalSpawns = 0;
 
+            int playerNumber = 0;
+
             //Select spawncard
             SpawnCard spawnCard = Origin.SelectSpawnCard(rng);
             if (spawnCard)
@@ -130,7 +131,8 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                     CharacterMaster characterMaster = CharacterMaster.readOnlyInstancesList[i];
                     if (characterMaster.teamIndex == TeamIndex.Player && characterMaster.playerCharacterMasterController)
                     {
-                        int spawnCount = baseBossCount;
+                        int spawnCount = (playerNumber % 2 == 0) ? 1 : 0;
+                        playerNumber++;
                         if (characterMaster.inventory)
                         {
                             spawnCount += characterMaster.inventory.GetItemCount(RoR2Content.Items.LunarTrinket) * beadBossCount;
