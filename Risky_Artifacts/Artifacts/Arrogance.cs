@@ -2,6 +2,7 @@
 using RoR2;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -29,8 +30,7 @@ namespace Risky_Artifacts.Artifacts
             ArtifactAPI.Add(artifact);
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.KingEnderBrine.ProperSave"))
             {
-                ProperSave.SaveFile.OnGatgherSaveData += Save;
-                ProperSave.Loading.OnLoadingEnded += Load;
+                HandleSave();
             }
             
 
@@ -70,6 +70,14 @@ namespace Risky_Artifacts.Artifacts
 
             
         }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private void HandleSave()
+        {
+            ProperSave.SaveFile.OnGatgherSaveData += Save;
+            ProperSave.Loading.OnLoadingEnded += Load;
+        }
+
         public static void Save(Dictionary<string, object> dict)
         {
             dict.Add("riskyArtifact.Arrogance.runCount", runMountainCount);

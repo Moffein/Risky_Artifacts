@@ -10,18 +10,13 @@ namespace Risky_Artifacts
 {
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.0.4")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.0.6")]
     [R2API.Utils.R2APISubmoduleDependency(nameof(DirectorAPI), nameof(ArtifactAPI), nameof(LanguageAPI), nameof(RecalculateStatsAPI), nameof(ItemAPI))]
     public class RiskyArtifacts : BaseUnityPlugin
     {
         public static AssetBundle assetBundle;
         public void Awake()
         {
-
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.KingEnderBrine.ProperSave"))
-            {
-                Debug.Log("ProperSave detected! Using ProperSave to save Arrogance count.");
-            }
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Risky_Artifacts.riskyartifactsbundle"))
             {
                 assetBundle = AssetBundle.LoadFromStream(stream);
