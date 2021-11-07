@@ -1,5 +1,8 @@
 ﻿using R2API;
 using RoR2;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -24,6 +27,12 @@ namespace Risky_Artifacts.Artifacts
             artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArrogDisabled.png");
             artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArrogEnabled.png");
             ArtifactAPI.Add(artifact);
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.KingEnderBrine.ProperSave"))
+            {
+                ProperSave.SaveFile.OnGatgherSaveData += Save;
+                ProperSave.Loading.OnLoadingEnded += Load;
+            }
+            
 
             On.RoR2.ShrineBossBehavior.AddShrineStack += (orig, self, interactor) =>
             {
@@ -58,6 +67,17 @@ namespace Risky_Artifacts.Artifacts
                     }
                 }
             };
+
+            
+        }
+        public static void Save(Dictionary<string, object> dict)
+        {
+            dict.Add("riskyArtifact.Arrogance.runCount", runMountainCount);
+        }
+
+        public void Load(ProperSave.SaveFile save)
+        {
+            runMountainCount = save.GetModdedData<int>("riskyArtifact.Arrogance.runCount");
         }
     }
 }
