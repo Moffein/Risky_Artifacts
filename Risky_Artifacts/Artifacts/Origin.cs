@@ -339,24 +339,21 @@ namespace Risky_Artifacts.Artifacts
 
                         list = new List<PickupIndex>();
                         pearlIndex = PickupCatalog.FindPickupIndex(RoR2Content.Items.Pearl.itemIndex);
-                        if (pearlIndex != PickupIndex.none && Run.instance.availableBossDropList.Contains(pearlIndex))
-                        {
-                            list.Add(pearlIndex);
-                        }
+                        bool pearlAvailable = pearlIndex != PickupIndex.none && Run.instance.IsItemAvailable(RoR2Content.Items.Pearl.itemIndex);
+
                         shinyPearlIndex = PickupCatalog.FindPickupIndex(RoR2Content.Items.ShinyPearl.itemIndex);
-                        if (shinyPearlIndex != PickupIndex.none && Run.instance.availableBossDropList.Contains(shinyPearlIndex))
+                        bool shinyPearlAvailable = shinyPearlIndex != PickupIndex.none && Run.instance.IsItemAvailable(RoR2Content.Items.ShinyPearl.itemIndex);
+
+                        if (pearlAvailable || shinyPearlAvailable)
                         {
-                            list.Add(shinyPearlIndex);
-                        }
-                        if (list.Count > 0)
-                        {
-                            if (pearlIndex != PickupIndex.none && shinyPearlIndex != PickupIndex.none)
+                            //Shiny pearl is locked behind 20% random chance.
+                            if (pearlAvailable && (!shinyPearlAvailable || treasureRng.RangeFloat(0f, 100f) <= 80f))
                             {
-                                //Shiny pearl is locked behind 20% random chance.
-                                if (treasureRng.RangeInt(0, 5) != 0)
-                                {
-                                    list.Remove(shinyPearlIndex);
-                                }
+                                list.Add(pearlIndex);
+                            }
+                            else
+                            {
+                                list.Add(shinyPearlIndex);
                             }
                         }
                         else
