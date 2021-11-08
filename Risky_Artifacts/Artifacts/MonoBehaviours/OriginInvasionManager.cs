@@ -106,41 +106,57 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
 
         IEnumerator PerformInvasion(Xoroshiro128Plus rng)
         {
-            int totalSpawns = 0;
-
-            int playerNumber = 0;
-
             //Select spawncard
             SpawnCard spawnCard = Origin.SelectSpawnCard(rng);
             if (spawnCard)
             {
-                EliteDef selectedElite = null;
-                float eliteHPMult = 1f;
-                float eliteDamageMult = 1f;
+                EliteDef selectedT1Elite = null;
+                float t1EliteHpMult = 1f;
+                float t1EliteDamageMult = 1f;
 
                 if (CombatDirector.IsEliteOnlyArtifactActive())
                 {
                     CombatDirector.EliteTierDef t1Elite = CombatDirector.eliteTiers[1];
-                    eliteHPMult = t1Elite.healthBoostCoefficient;
-                    eliteDamageMult = t1Elite.damageBoostCoefficient;
-                    selectedElite = t1Elite.eliteTypes[rng.RangeInt(0, t1Elite.eliteTypes.Length)];
+                    t1EliteHpMult = t1Elite.healthBoostCoefficient;
+                    t1EliteDamageMult = t1Elite.damageBoostCoefficient;
+                    selectedT1Elite = t1Elite.eliteTypes[rng.RangeInt(0, t1Elite.eliteTypes.Length)];
                 }
+
+                int livingPlayers = run.livingPlayerCount;
+                int spawnCount = Mathf.FloorToInt(0.5f + 0.5f * livingPlayers) * (1 + run.stageClearCount/5);
+                int spawnsPerPlayer = Math.Max(Mathf.CeilToInt((float)spawnCount / (float)livingPlayers), 1);
+                int spawned = 0;
 
                 for (int i = CharacterMaster.readOnlyInstancesList.Count - 1; i >= 0; i--)
                 {
-                    CharacterMaster characterMaster = CharacterMaster.readOnlyInstancesList[i];
-                    if (characterMaster.teamIndex == TeamIndex.Player && characterMaster.playerCharacterMasterController)
+                    if (spawnCount <= 0)
                     {
-                        int spawnCount = (playerNumber % 2 == 0) ? 1 : 0;
-                        playerNumber++;
+                        break;
+                    }
+                    CharacterMaster characterMaster = CharacterMaster.readOnlyInstancesList[i];
+                    CharacterBody cb = characterMaster.bodyInstanceObject.GetComponent<CharacterBody>();
+                    if (characterMaster.teamIndex == TeamIndex.Player && characterMaster.playerCharacterMasterController && cb && cb.healthComponent && cb.healthComponent.alive)
+                    {
+                        int toSpawn = 0;
+                        if (spawnCount > spawnsPerPlayer)
+                        {
+                            toSpawn = spawnsPerPlayer;
+                            spawnCount -= spawnsPerPlayer;
+                        }
+                        else
+                        {
+                            toSpawn = spawnCount;
+                            spawnCount = 0;
+                        }
+
                         if (characterMaster.inventory)
                         {
-                            spawnCount += characterMaster.inventory.GetItemCount(RoR2Content.Items.LunarTrinket) * beadBossCount;
+                            toSpawn += characterMaster.inventory.GetItemCount(RoR2Content.Items.LunarTrinket) * beadBossCount;
                         }
                         //spawnCount *= 1 + (Run.instance.stageClearCount / 5);
-                        for (int j = 0; j < spawnCount; j++)
+                        for (int j = 0; j < toSpawn; j++)
                         {
-                            if (!spawnCard || (maxSpawns >= 0 && totalSpawns >= maxSpawns))
+                            if (!spawnCard || (maxSpawns >= 0 && spawned >= maxSpawns))
                             {
                                 yield return null;
                             }
@@ -171,14 +187,17 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                 if (resultMaster && resultMaster.inventory)
                                 {
                                     resultMaster.inventory.GiveItem(Origin.OriginBonusItem);
-                                    resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
                                     resultMaster.inventory.RemoveItem(RoR2Content.Items.InvadingDoppelganger);
-
-                                    if (selectedElite != null)
+                                    if (run.stageClearCount >= 5)
                                     {
-                                        resultMaster.inventory.GiveEquipmentString(selectedElite.eliteEquipmentDef.name);
-                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, (int)((eliteHPMult - 1f) * 10f));
-                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, (int)((eliteDamageMult - 1f) * 10f));
+                                        resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
+                                    }
+
+                                    if (selectedT1Elite != null)
+                                    {
+                                        resultMaster.inventory.GiveEquipmentString(selectedT1Elite.eliteEquipmentDef.name);
+                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, (int)((t1EliteHpMult - 1f) * 10f));
+                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, (int)((t1EliteDamageMult - 1f) * 10f));
                                     }
                                 }
                             }));
@@ -186,7 +205,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                             if (combatSquad)
                             {
                                 NetworkServer.Spawn(combatSquad.gameObject);
-                                totalSpawns++;
+                                spawned++;
                                 yield return new WaitForSeconds(1.5f);
                             }
                         }
