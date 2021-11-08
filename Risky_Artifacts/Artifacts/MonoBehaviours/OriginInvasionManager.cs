@@ -123,7 +123,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                 }
 
                 int livingPlayers = run.livingPlayerCount;
-                int spawnCount = Mathf.FloorToInt(0.5f + 0.5f * livingPlayers) * (1 + run.stageClearCount/5);
+                int spawnCount = Mathf.FloorToInt((0.5f + 0.5f * livingPlayers) * (1 + run.stageClearCount / 5));
                 int spawnsPerPlayer = Math.Max(Mathf.CeilToInt((float)spawnCount / (float)livingPlayers), 1);
                 int spawned = 0;
 
