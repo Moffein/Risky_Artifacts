@@ -150,12 +150,6 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                             spawnCount = 0;
                         }
 
-                        /*if (characterMaster.inventory)
-                        {
-                            toSpawn += characterMaster.inventory.GetItemCount(RoR2Content.Items.LunarTrinket) * beadBossCount;
-                        }*/
-
-                        //spawnCount *= 1 + (Run.instance.stageClearCount / 5);
                         for (int j = 0; j < toSpawn; j++)
                         {
                             if (!spawnCard || (maxSpawns >= 0 && spawned >= maxSpawns))
