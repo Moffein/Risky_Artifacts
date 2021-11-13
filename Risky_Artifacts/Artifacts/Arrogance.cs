@@ -32,7 +32,7 @@ namespace Risky_Artifacts.Artifacts
             {
                 HandleSave();
             }
-            
+
 
             On.RoR2.ShrineBossBehavior.AddShrineStack += (orig, self, interactor) =>
             {

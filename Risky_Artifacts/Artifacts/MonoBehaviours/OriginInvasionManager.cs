@@ -19,7 +19,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
 
         public static float spawnDelay = 1.2f;
         public static int maxSpawns = 100;  //-1 disables limit
-        public static int beadBossCount = 1;
+        public static int beadBossCount = 2;
 
         private List<DirectorSpawnRequest> pendingSpawns;
 
@@ -122,12 +122,13 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                     selectedT1Elite = t1Elite.eliteTypes[rng.RangeInt(0, t1Elite.eliteTypes.Length)];
                 }
 
+                int teamBeadCount = Util.GetItemCountForTeam(TeamIndex.Player, RoR2Content.Items.LunarTrinket.itemIndex, true, true);
                 int livingPlayers = run.livingPlayerCount;
-                int spawnCount = Mathf.FloorToInt((0.5f + 0.5f * livingPlayers) * (1 + run.stageClearCount / 5));
+                int spawnCount = Mathf.FloorToInt((0.5f + 0.5f * livingPlayers + teamBeadCount * beadBossCount) * (1 + run.stageClearCount / 5));
                 int spawnsPerPlayer = Math.Max(Mathf.CeilToInt((float)spawnCount / (float)livingPlayers), 1);
                 int spawned = 0;
 
-                for (int i = CharacterMaster.readOnlyInstancesList.Count - 1; i >= 0; i--)
+                for (int i = 0; i < CharacterMaster.readOnlyInstancesList.Count; i++)
                 {
                     if (spawnCount <= 0)
                     {
@@ -149,10 +150,11 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                             spawnCount = 0;
                         }
 
-                        if (characterMaster.inventory)
+                        /*if (characterMaster.inventory)
                         {
                             toSpawn += characterMaster.inventory.GetItemCount(RoR2Content.Items.LunarTrinket) * beadBossCount;
-                        }
+                        }*/
+
                         //spawnCount *= 1 + (Run.instance.stageClearCount / 5);
                         for (int j = 0; j < toSpawn; j++)
                         {
