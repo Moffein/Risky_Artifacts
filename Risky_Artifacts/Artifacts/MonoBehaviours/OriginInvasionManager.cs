@@ -17,9 +17,9 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
         private Xoroshiro128Plus treasureRng;
         private float invasionInterval = 600f;
 
-        public static float spawnDelay = 1.2f;
-        public static int maxSpawns = 100;  //-1 disables limit
-        public static int beadBossCount = 2;
+        public static float spawnDelay = 1f;
+        public static int maxSpawns = 120;  //-1 disables limit
+        public static int beadBossCount = 3;
 
         private List<DirectorSpawnRequest> pendingSpawns;
 
@@ -123,39 +123,19 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                 }
 
                 int teamBeadCount = Util.GetItemCountForTeam(TeamIndex.Player, RoR2Content.Items.LunarTrinket.itemIndex, true, true);
-                int livingPlayers = run.livingPlayerCount;
-                int spawnCount = Mathf.FloorToInt((0.5f + 0.5f * livingPlayers + teamBeadCount * beadBossCount) * (1 + run.stageClearCount / 5));
-                int spawnsPerPlayer = Math.Max(Mathf.CeilToInt((float)spawnCount / (float)livingPlayers), 1);
-                int spawned = 0;
+                int spawnCount = Mathf.FloorToInt((0.5f + 0.5f * run.livingPlayerCount + teamBeadCount * beadBossCount) * (1 + run.stageClearCount / 5));
+                spawnCount = Math.Min(spawnCount, maxSpawns);
 
-                for (int i = 0; i < CharacterMaster.readOnlyInstancesList.Count; i++)
+                while (spawnCount > 0 && run.livingPlayerCount > 0)
                 {
-                    if (spawnCount <= 0)
+                    for (int i = 0; i < CharacterMaster.readOnlyInstancesList.Count; i++)
                     {
-                        break;
-                    }
-                    CharacterMaster characterMaster = CharacterMaster.readOnlyInstancesList[i];
-                    CharacterBody cb = characterMaster.bodyInstanceObject.GetComponent<CharacterBody>();
-                    if (characterMaster.teamIndex == TeamIndex.Player && characterMaster.playerCharacterMasterController && cb && cb.healthComponent && cb.healthComponent.alive)
-                    {
-                        int toSpawn = 0;
-                        if (spawnCount > spawnsPerPlayer)
-                        {
-                            toSpawn = spawnsPerPlayer;
-                            spawnCount -= spawnsPerPlayer;
-                        }
-                        else
-                        {
-                            toSpawn = spawnCount;
-                            spawnCount = 0;
-                        }
+                        if (!(spawnCount > 0 && run.livingPlayerCount > 0)) yield return null;
 
-                        for (int j = 0; j < toSpawn; j++)
+                        CharacterMaster characterMaster = CharacterMaster.readOnlyInstancesList[i];
+                        CharacterBody cb = characterMaster.bodyInstanceObject.GetComponent<CharacterBody>();
+                        if (characterMaster.teamIndex == TeamIndex.Player && characterMaster.playerCharacterMasterController && cb && cb.healthComponent && cb.healthComponent.alive)
                         {
-                            if (!spawnCard || (maxSpawns >= 0 && spawned >= maxSpawns))
-                            {
-                                yield return null;
-                            }
                             Transform spawnOnTarget;
                             DirectorCore.MonsterSpawnDistance input;
 
@@ -201,8 +181,8 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                             if (combatSquad)
                             {
                                 NetworkServer.Spawn(combatSquad.gameObject);
-                                spawned++;
-                                yield return new WaitForSeconds(1.5f);
+                                spawnCount--;
+                                yield return new WaitForSeconds(spawnDelay);
                             }
                         }
                     }
