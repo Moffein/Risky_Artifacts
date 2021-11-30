@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using MonoMod.Cil;
 using System;
 using Mono.Cecil.Cil;
+using static Risky_Artifacts.Artifacts.MonoBehaviours.OriginExtraDrops;
 
 namespace Risky_Artifacts.Artifacts
 {
@@ -26,6 +27,22 @@ namespace Risky_Artifacts.Artifacts
         private static List<SpawnCard> t3BossCards;
         private static SpawnCard impCard;
         private static SpawnCard wormCard;
+
+        public static bool combineSpawns = true;
+        public static bool disableParticles = false;
+        public static bool ignoreHonor = false;
+
+        public static bool enableTitan = true;
+        public static bool enableVagrant = true;
+        public static bool enableDunestrider = true;
+        public static bool enableBeetle = false;
+
+        public static bool enableImp = true;
+        public static bool enableRoboBall = true;
+        public static bool enableGrovetender = true;
+        public static bool enableWorm = false;
+
+        public static bool enableGrandparent = true;
 
         public Origin()
         {
@@ -61,17 +78,15 @@ namespace Risky_Artifacts.Artifacts
             LanguageAPI.Add("RISKYARTIFACTS_ORIGIN_SUBTITLENAMETOKEN", "Reclaimer");
             LanguageAPI.Add("RISKYARTIFACTS_ORIGIN_MODIFIER", "Vanguard");
 
-            OriginBonusItem = new ItemDef
+            OriginBonusItem = ScriptableObject.CreateInstance<ItemDef>();
+            OriginBonusItem.name = "RiskyArtifactsOriginBonus";
+            OriginBonusItem.tier = ItemTier.NoTier;
+            OriginBonusItem.nameToken = "RISKYARTIFACTS_ORIGINBONUSITEM_NAME";
+            OriginBonusItem.pickupToken = "RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP";
+            OriginBonusItem.descriptionToken = "RISKYARTIFACTS_ORIGINBONUSITEM_DESC";
+            OriginBonusItem.tags = new[]
             {
-                name = "RiskyArtifactsOriginBonus",
-                tier = ItemTier.NoTier,
-                nameToken = "RISKYARTIFACTS_ORIGINBONUSITEM_NAME",
-                pickupToken = "RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP",
-                descriptionToken = "RISKYARTIFACTS_ORIGINBONUSITEM_DESC",
-                tags = new[]
-                {
-                    ItemTag.WorldUnique
-                }
+                ItemTag.WorldUnique
             };
             ItemDisplayRule[] idr = null;
             ItemAPI.Add(new CustomItem(OriginBonusItem, idr));
@@ -140,19 +155,22 @@ namespace Risky_Artifacts.Artifacts
                 return toReturn;
             };
 
-            IL.RoR2.CharacterBody.UpdateAllTemporaryVisualEffects += (il) =>
+            if (!disableParticles)
             {
-                ILCursor c = new ILCursor(il);
-                c.GotoNext(
-                     x => x.MatchLdsfld(typeof(RoR2Content.Items), "InvadingDoppelganger")
-                    );
-                c.Index += 2;
-                c.Emit(OpCodes.Ldarg_0);
-                c.EmitDelegate<Func<int, CharacterBody, int>>((vengeanceCount, self) =>
+                IL.RoR2.CharacterBody.UpdateAllTemporaryVisualEffects += (il) =>
                 {
-                    return vengeanceCount + self.inventory.GetItemCount(OriginBonusItem);
-                });
-            };
+                    ILCursor c = new ILCursor(il);
+                    c.GotoNext(
+                         x => x.MatchLdsfld(typeof(RoR2Content.Items), "InvadingDoppelganger")
+                        );
+                    c.Index += 2;
+                    c.Emit(OpCodes.Ldarg_0);
+                    c.EmitDelegate<Func<int, CharacterBody, int>>((vengeanceCount, self) =>
+                    {
+                        return vengeanceCount + self.inventory.GetItemCount(OriginBonusItem);
+                    });
+                };
+            }
 
             IL.RoR2.CharacterModel.UpdateOverlays += (il) =>
             {
@@ -281,15 +299,15 @@ namespace Risky_Artifacts.Artifacts
                 t2BossCards = new List<SpawnCard>();
                 t3BossCards = new List<SpawnCard>();
 
-                //t1BossCards.Add(LoadSpawncard("cscBeetleQueen")); //too useless
-                t1BossCards.Add(LoadSpawncard("cscVagrant"));
-                t1BossCards.Add(LoadSpawncard("titan/cscTitanGooLake"));
-                t1BossCards.Add(LoadSpawncard("cscClayBoss"));
+                if (enableBeetle) t1BossCards.Add(LoadSpawncard("cscBeetleQueen")); //too useless
+                if (enableVagrant) t1BossCards.Add(LoadSpawncard("cscVagrant"));
+                if (enableTitan) t1BossCards.Add(LoadSpawncard("titan/cscTitanGooLake"));
+                if (enableDunestrider) t1BossCards.Add(LoadSpawncard("cscClayBoss"));
 
-                t2BossCards.Add(LoadSpawncard("cscGravekeeper"));
-                t2BossCards.Add(LoadSpawncard("cscRoboBallBoss"));
-                //t2BossCards.Add(wormCard);    //too jank and laggy
-                t2BossCards.Add(impCard);
+                if (enableGrovetender) t2BossCards.Add(LoadSpawncard("cscGravekeeper"));
+                if (enableRoboBall) t2BossCards.Add(LoadSpawncard("cscRoboBallBoss"));
+                if (enableWorm) t2BossCards.Add(wormCard);    //too jank and laggy
+                if (enableImp) t2BossCards.Add(impCard);
 
                 t3BossCards.Add(LoadSpawncard("titan/cscGrandparent"));
             }
@@ -302,12 +320,12 @@ namespace Risky_Artifacts.Artifacts
             t3  //Stage 5
         }
 
-        public static void DropItem(Vector3 position, Xoroshiro128Plus treasureRng)
+        public static void DropItem(Vector3 position, Xoroshiro128Plus treasureRng, EliteTier tier)
         {
             List<PickupIndex> list;
 
-            float whiteChance = 50f;
-            float greenChance = 35f;
+            float whiteChance = (tier == EliteTier.None || (tier == EliteTier.T1 && CombatDirector.IsEliteOnlyArtifactActive() && !Origin.ignoreHonor)) ? 50f : 0f;
+            float greenChance = tier < EliteTier.T2 ? 35f : 0f;
             float redChance = 5f;
             float yellowChance = 10f;
 
@@ -346,19 +364,33 @@ namespace Risky_Artifacts.Artifacts
 
                         if (pearlAvailable || shinyPearlAvailable)
                         {
-                            //Shiny pearl is locked behind 20% random chance.
-                            if (pearlAvailable && (!shinyPearlAvailable || treasureRng.RangeFloat(0f, 100f) <= 80f))
+                            if (pearlAvailable && shinyPearlAvailable)
                             {
-                                list.Add(pearlIndex);
+                                if (tier < EliteTier.T2 && treasureRng.RangeFloat(0f, 100f) <= 80f)
+                                {
+                                    list.Add(pearlIndex);
+                                }
+                                else
+                                {
+                                    list.Add(shinyPearlIndex);
+                                }
                             }
                             else
                             {
-                                list.Add(shinyPearlIndex);
+                                if (pearlAvailable) list.Add(pearlIndex);
+                                if (shinyPearlAvailable ) list.Add(shinyPearlIndex);
                             }
                         }
                         else
                         {
-                            list = Run.instance.availableTier2DropList;
+                            if (tier < EliteTier.T2)
+                            {
+                                list = Run.instance.availableTier2DropList;
+                            }
+                            else
+                            {
+                                list = Run.instance.availableTier3DropList;
+                            }
                         }
                     }
                 }

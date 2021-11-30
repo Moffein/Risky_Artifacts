@@ -59,8 +59,38 @@ namespace Risky_Artifacts
             Expansion.moonDurationMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Moon Duration Multiplier"), 4f / 3f,
                 new ConfigDescription("Multiplier for charge duration.")).Value;
 
+            Origin.combineSpawns = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Combine Spawns"), true,
+                new ConfigDescription("Combine spawns into elites if too many bosses are spawning.")).Value;
+            Origin.ignoreHonor = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Ignore Honor"), false,
+                new ConfigDescription("Invasion spawns aren't forced to be elite if Honor is active.")).Value;
             Origin.impOnly = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Imps Only"), false,
                 new ConfigDescription("Only Imp Overlords spawn during invasions.")).Value;
+            Origin.disableParticles = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Disable Particles"), false,
+                new ConfigDescription("Disables the Origin Boss particle effect.")).Value;
+
+
+            Origin.enableTitan = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Stone Titan"), true,
+                new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
+            Origin.enableVagrant = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Wandering Vagrant"), true,
+                new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
+            Origin.enableDunestrider = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Clay Dunestrider"), true,
+                new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
+            Origin.enableBeetle = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Beetle Queen"), false,
+                new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
+
+            Origin.enableImp = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Imp Overlord"), true,
+                new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
+            Origin.enableGrovetender = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Grovetender"), true,
+                new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
+            Origin.enableRoboBall = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Solus Control Unit"), true,
+                new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
+            Origin.enableWorm = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Magma Worm"), true,
+                new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
+            Origin.allowEliteWorms = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Magma Worm - Allow Elites"), false,
+                new ConfigDescription("Allow this boss to spawn as an elite.")).Value;
+
+            Origin.enableGrandparent = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Grandparent"), true,
+                new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
         }
     }
 }

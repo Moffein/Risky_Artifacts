@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 using System;
 using System.Collections;
+using static Risky_Artifacts.Artifacts.MonoBehaviours.OriginExtraDrops;
 
 namespace Risky_Artifacts.Artifacts.MonoBehaviours
 {
@@ -19,7 +20,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
 
         public static float spawnDelay = 1f;
         public static int maxSpawns = 120;  //-1 disables limit
-        public static int beadBossCount = 3;
+        public static float beadBossCount = 2.5f;
 
         private List<DirectorSpawnRequest> pendingSpawns;
 
@@ -86,7 +87,10 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
             {
                 if (inventory.GetItemCount(Origin.OriginBonusItem) > 0 && inventory.GetItemCount(RoR2Content.Items.ExtraLife) == 0 && !damageReport.victimMaster.minionOwnership.ownerMaster)
                 {
-                    Origin.DropItem(damageReport.victimBody.corePosition, treasureRng);
+                    EliteTier tier = EliteTier.None;
+                    OriginExtraDrops oed = victimMaster.GetComponent<OriginExtraDrops>();
+                    if (oed) tier = oed.tier;
+                    Origin.DropItem(damageReport.victimBody.corePosition, treasureRng, tier);
                 }
             }
         }
@@ -106,36 +110,71 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
 
         IEnumerator PerformInvasion(Xoroshiro128Plus rng)
         {
+            bool honorEnabled = CombatDirector.IsEliteOnlyArtifactActive();
+
             //Select spawncard
             SpawnCard spawnCard = Origin.SelectSpawnCard(rng);
             if (spawnCard)
             {
                 EliteDef selectedT1Elite = null;
-                float t1EliteHpMult = 1f;
-                float t1EliteDamageMult = 1f;
+                EliteDef selectedT2Elite = null;
 
-                if (CombatDirector.IsEliteOnlyArtifactActive())
-                {
-                    CombatDirector.EliteTierDef t1Elite = CombatDirector.eliteTiers[1];
-                    t1EliteHpMult = t1Elite.healthBoostCoefficient;
-                    t1EliteDamageMult = t1Elite.damageBoostCoefficient;
-                    selectedT1Elite = t1Elite.eliteTypes[rng.RangeInt(0, t1Elite.eliteTypes.Length)];
-                }
+                CombatDirector.EliteTierDef t1Elite = CombatDirector.eliteTiers[honorEnabled ? 2 : 1];
+                selectedT1Elite = t1Elite.eliteTypes[rng.RangeInt(0, t1Elite.eliteTypes.Length)];
+
+                CombatDirector.EliteTierDef t2Elite = CombatDirector.eliteTiers[3];
+                selectedT2Elite = t2Elite.eliteTypes[rng.RangeInt(0, t2Elite.eliteTypes.Length)];
 
                 int teamBeadCount = Util.GetItemCountForTeam(TeamIndex.Player, RoR2Content.Items.LunarTrinket.itemIndex, true, true);
-                int spawnCount = Mathf.FloorToInt((0.5f + 0.5f * run.livingPlayerCount + teamBeadCount * beadBossCount) * (1 + run.stageClearCount / 5));
-                spawnCount = Math.Min(spawnCount, maxSpawns);
 
-                while (spawnCount > 0 && run.livingPlayerCount > 0)
+                float spawnCredits = (1f + (0.3f * (run.livingPlayerCount - 1)) + teamBeadCount * beadBossCount) * (1 + 0.5f * (run.stageClearCount / 5));
+
+                int spawnCount = 0;
+                int t1Count = 0;
+                int t2Count = 0;
+                if (Origin.combineSpawns)
+                {
+                    while (spawnCredits > t2Elite.costMultiplier)
+                    {
+                        t2Count++;
+                        spawnCredits -= t2Elite.costMultiplier;
+                    }
+                    if (honorEnabled && !Origin.ignoreHonor)
+                    {
+                        t1Count = Mathf.FloorToInt(spawnCredits);
+                        spawnCredits = 0f;
+                    }
+                    else
+                    {
+                        while (spawnCredits > t1Elite.costMultiplier)
+                        {
+                            t1Count++;
+                            spawnCredits -= t1Elite.costMultiplier;
+                        }
+                        spawnCount = Mathf.FloorToInt(spawnCredits);
+                    }
+                }
+                else
+                {
+                    if (honorEnabled && !Origin.ignoreHonor)
+                    {
+                        t1Count = Mathf.FloorToInt(spawnCredits);
+                        spawnCredits = 0f;
+                    }
+                    spawnCount = Mathf.FloorToInt(spawnCredits);
+                }
+
+                while ((spawnCount + t1Count + t2Count) > 0 && run.livingPlayerCount > 0)
                 {
                     for (int i = 0; i < CharacterMaster.readOnlyInstancesList.Count; i++)
                     {
-                        if (!(spawnCount > 0 && run.livingPlayerCount > 0)) yield return null;
+                        if (!((spawnCount + t1Count + t2Count) > 0 && run.livingPlayerCount > 0)) yield return null;
 
                         CharacterMaster characterMaster = CharacterMaster.readOnlyInstancesList[i];
                         CharacterBody cb = characterMaster.bodyInstanceObject.GetComponent<CharacterBody>();
                         if (characterMaster.teamIndex == TeamIndex.Player && characterMaster.playerCharacterMasterController && cb && cb.healthComponent && cb.healthComponent.alive)
                         {
+                            CombatSquad combatSquad = null;
                             Transform spawnOnTarget;
                             DirectorCore.MonsterSpawnDistance input;
 
@@ -151,7 +190,6 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                             DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(spawnCard, directorPlacementRule, rng);
                             directorSpawnRequest.teamIndexOverride = new TeamIndex?(TeamIndex.Monster);
                             directorSpawnRequest.ignoreTeamMemberLimit = true;
-                            CombatSquad combatSquad = null;
                             directorSpawnRequest.onSpawnedServer = (Action<SpawnCard.SpawnResult>)Delegate.Combine(directorSpawnRequest.onSpawnedServer, new Action<SpawnCard.SpawnResult>(delegate (SpawnCard.SpawnResult result)
                             {
                                 if (!combatSquad)
@@ -169,11 +207,36 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                         resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
                                     }
 
-                                    if (selectedT1Elite != null)
+                                    EliteTier et = EliteTier.None;
+                                    if (t2Count > 0)
                                     {
+                                        t2Count--;
+                                        et = EliteTier.T2;
+                                        resultMaster.inventory.GiveEquipmentString(selectedT2Elite.eliteEquipmentDef.name);
+                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, (int)((t2Elite.healthBoostCoefficient - 1f) * 10f));
+                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, (int)((t2Elite.damageBoostCoefficient - 1f) * 10f));
+                                    }
+                                    else if (t1Count > 0)
+                                    {
+                                        t1Count--;
+                                        et = EliteTier.T1;
                                         resultMaster.inventory.GiveEquipmentString(selectedT1Elite.eliteEquipmentDef.name);
-                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, (int)((t1EliteHpMult - 1f) * 10f));
-                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, (int)((t1EliteDamageMult - 1f) * 10f));
+                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, (int)((t1Elite.healthBoostCoefficient - 1f) * 10f));
+                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, (int)((t1Elite.damageBoostCoefficient - 1f) * 10f));
+                                    }
+                                    else
+                                    {
+                                        spawnCount--;
+                                    }
+
+                                    if (et != EliteTier.None)
+                                    {
+                                        OriginExtraDrops oed = resultMaster.GetComponent<OriginExtraDrops>();
+                                        if (!oed)
+                                        {
+                                            oed = resultMaster.gameObject.AddComponent<OriginExtraDrops>();
+                                            oed.tier = et;
+                                        }
                                     }
                                 }
                             }));
@@ -189,6 +252,15 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                 }
                 yield return null;
             }
+        }
+    }
+
+    public class OriginExtraDrops : MonoBehaviour
+    {
+        public EliteTier tier = EliteTier.None;
+        public enum EliteTier
+        {
+            None, T1, T2
         }
     }
 }
