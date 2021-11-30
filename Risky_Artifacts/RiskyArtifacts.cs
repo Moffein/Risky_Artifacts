@@ -10,7 +10,7 @@ namespace Risky_Artifacts
 {
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.0.11")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.2.0")]
     [R2API.Utils.R2APISubmoduleDependency(nameof(DirectorAPI), nameof(ArtifactAPI), nameof(LanguageAPI), nameof(RecalculateStatsAPI), nameof(ItemAPI))]
     public class RiskyArtifacts : BaseUnityPlugin
     {
@@ -28,6 +28,7 @@ namespace Risky_Artifacts
             new Arrogance();
             new Expansion();
             new Origin();
+            new PrimordialTele();
         }
 
         public void ReadConfig()
@@ -44,7 +45,7 @@ namespace Risky_Artifacts
             Warfare.disableOnMithrix = base.Config.Bind<bool>(new ConfigDefinition("Warfare", "Disable move speed boost for Michael"), true,
                 new ConfigDescription("Makes Michael unaffected by the move speed boost of this artifact because it causes him to always miss his melee.")).Value;
 
-            Expansion.priceMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Cost Multiplier"), 1.3f,
+            Expansion.priceMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Cost Multiplier"), 1.25f,
                 new ConfigDescription("Multiplier for how much money things cost.")).Value;
             Expansion.teleRadiusMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Teleporter Radius Multiplier"), 10000f,
                 new ConfigDescription("Multiplier for radius size.")).Value;
