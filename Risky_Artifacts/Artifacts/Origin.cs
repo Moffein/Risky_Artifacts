@@ -306,7 +306,7 @@ namespace Risky_Artifacts.Artifacts
 
                 if (enableGrovetender) t2BossCards.Add(LoadSpawncard("cscGravekeeper"));
                 if (enableRoboBall) t2BossCards.Add(LoadSpawncard("cscRoboBallBoss"));
-                if (enableWorm) t2BossCards.Add(wormCard);    //too jank and laggy
+                if (enableWorm) t2BossCards.Add(wormCard);
                 if (enableImp) t2BossCards.Add(impCard);
 
                 t3BossCards.Add(LoadSpawncard("titan/cscGrandparent"));
@@ -366,7 +366,7 @@ namespace Risky_Artifacts.Artifacts
                         {
                             if (pearlAvailable && shinyPearlAvailable)
                             {
-                                if (tier < EliteTier.T2 && treasureRng.RangeFloat(0f, 100f) <= 80f)
+                                if (tier < EliteTier.T1 && treasureRng.RangeFloat(0f, 100f) <= 80f)
                                 {
                                     list.Add(pearlIndex);
                                 }
