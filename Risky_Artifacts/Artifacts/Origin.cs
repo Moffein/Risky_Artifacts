@@ -327,7 +327,7 @@ namespace Risky_Artifacts.Artifacts
             float whiteChance = (tier == EliteTier.None || (tier == EliteTier.T1 && CombatDirector.IsEliteOnlyArtifactActive() && !Origin.ignoreHonor)) ? 50f : 0f;
             float greenChance = tier < EliteTier.T2 ? 35f : 0f;
             float redChance = 5f;
-            float yellowChance = 10f;
+            float yellowChance = tier < EliteTier.T2 ? 10f : 0.55f;
 
             float total = whiteChance + greenChance + redChance + yellowChance;
             
