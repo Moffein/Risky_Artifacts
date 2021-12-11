@@ -163,16 +163,22 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                     }
                     spawnCount = Mathf.FloorToInt(spawnCredits);
                 }
+                if ((spawnCount + t1Count + t2Count) <= 0)
+                {
+                    spawnCount = 1;
+                }
 
                 while ((spawnCount + t1Count + t2Count) > 0 && run.livingPlayerCount > 0)
                 {
                     for (int i = 0; i < CharacterMaster.readOnlyInstancesList.Count; i++)
                     {
-                        if (!((spawnCount + t1Count + t2Count) > 0 && run.livingPlayerCount > 0)) yield return null;
+                        if (!((spawnCount + t1Count + t2Count) > 0 && run.livingPlayerCount > 0)) break;
 
                         CharacterMaster characterMaster = CharacterMaster.readOnlyInstancesList[i];
                         CharacterBody cb = characterMaster.bodyInstanceObject.GetComponent<CharacterBody>();
-                        if (characterMaster.teamIndex == TeamIndex.Player && characterMaster.playerCharacterMasterController && cb && cb.healthComponent && cb.healthComponent.alive)
+                        if (characterMaster.teamIndex == TeamIndex.Player
+                            && characterMaster.playerCharacterMasterController
+                            && cb && cb.healthComponent && cb.healthComponent.alive)
                         {
                             CombatSquad combatSquad = null;
                             Transform spawnOnTarget;
@@ -240,11 +246,10 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                     }
                                 }
                             }));
-                            DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
+                            GameObject spawnedObject = DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
                             if (combatSquad)
                             {
                                 NetworkServer.Spawn(combatSquad.gameObject);
-                                spawnCount--;
                                 yield return new WaitForSeconds(spawnDelay);
                             }
                         }
