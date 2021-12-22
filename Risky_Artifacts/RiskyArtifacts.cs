@@ -10,7 +10,7 @@ namespace Risky_Artifacts
 {
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.2.3")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.3.0")]
     [R2API.Utils.R2APISubmoduleDependency(nameof(DirectorAPI), nameof(ArtifactAPI), nameof(LanguageAPI), nameof(RecalculateStatsAPI), nameof(ItemAPI))]
     public class RiskyArtifacts : BaseUnityPlugin
     {
