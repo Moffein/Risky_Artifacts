@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 using System;
 using System.Collections;
-using static Risky_Artifacts.Artifacts.MonoBehaviours.OriginExtraDrops;
+using System.Linq;
 
 namespace Risky_Artifacts.Artifacts.MonoBehaviours
 {
@@ -87,10 +87,10 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
             {
                 if (inventory.GetItemCount(Origin.OriginBonusItem) > 0 && inventory.GetItemCount(RoR2Content.Items.ExtraLife) == 0 && !damageReport.victimMaster.minionOwnership.ownerMaster)
                 {
-                    EliteTier tier = EliteTier.None;
+                    float cost = 1f;
                     OriginExtraDrops oed = victimMaster.GetComponent<OriginExtraDrops>();
-                    if (oed) tier = oed.tier;
-                    Origin.DropItem(damageReport.victimBody.corePosition, treasureRng, tier);
+                    if (oed) cost = oed.cost;
+                    Origin.DropItem(damageReport.victimBody.corePosition, treasureRng, cost);
                 }
             }
         }
@@ -108,6 +108,22 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
             StartCoroutine(PerformInvasion(new Xoroshiro128Plus((ulong)damageReport.victim.health)));
         }
 
+        private int CompareEliteTierCost(CombatDirector.EliteTierDef tier1, CombatDirector.EliteTierDef tier2)
+        {
+            if (tier1.costMultiplier == tier2.costMultiplier)
+            {
+                return 0;
+            }
+            else
+            {
+                if (tier1.costMultiplier > tier2.costMultiplier)
+                {
+                    return -1;
+                }
+                return 1;
+            }
+        }
+
         IEnumerator PerformInvasion(Xoroshiro128Plus rng)
         {
             bool honorEnabled = CombatDirector.IsEliteOnlyArtifactActive();
@@ -116,63 +132,15 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
             SpawnCard spawnCard = Origin.SelectSpawnCard(rng);
             if (spawnCard)
             {
-                EliteDef selectedT1Elite = null;
-                EliteDef selectedT2Elite = null;
-
-                CombatDirector.EliteTierDef t1Elite = EliteAPI.VanillaEliteTiers[honorEnabled ? 2 : 1];
-                selectedT1Elite = t1Elite.eliteTypes[rng.RangeInt(0, t1Elite.eliteTypes.Length)];
-
-                CombatDirector.EliteTierDef t2Elite = EliteAPI.VanillaEliteTiers[3];
-                selectedT2Elite = t2Elite.eliteTypes[rng.RangeInt(0, t2Elite.eliteTypes.Length)];
-
                 int teamBeadCount = Util.GetItemCountForTeam(TeamIndex.Player, RoR2Content.Items.LunarTrinket.itemIndex, true, true);
 
                 float spawnCredits = (1f + (0.3f * (run.livingPlayerCount - 1)) + teamBeadCount * beadBossCount) * (1 + 0.5f * (run.stageClearCount / 5));
 
-                int spawnCount = 0;
-                int t1Count = 0;
-                int t2Count = 0;
-                if (Origin.combineSpawns)
-                {
-                    while (spawnCredits > t2Elite.costMultiplier)
-                    {
-                        t2Count++;
-                        spawnCredits -= t2Elite.costMultiplier;
-                    }
-                    if (honorEnabled && !Origin.ignoreHonor)
-                    {
-                        t1Count = Mathf.FloorToInt(spawnCredits);
-                        spawnCredits = 0f;
-                    }
-                    else
-                    {
-                        while (spawnCredits > t1Elite.costMultiplier)
-                        {
-                            t1Count++;
-                            spawnCredits -= t1Elite.costMultiplier;
-                        }
-                        spawnCount = Mathf.FloorToInt(spawnCredits);
-                    }
-                }
-                else
-                {
-                    if (honorEnabled && !Origin.ignoreHonor)
-                    {
-                        t1Count = Mathf.FloorToInt(spawnCredits);
-                        spawnCredits = 0f;
-                    }
-                    spawnCount = Mathf.FloorToInt(spawnCredits);
-                }
-                if ((spawnCount + t1Count + t2Count) <= 0)
-                {
-                    spawnCount = 1;
-                }
-
-                while ((spawnCount + t1Count + t2Count) > 0 && run.livingPlayerCount > 0)
+                while (spawnCredits > 0f && run.livingPlayerCount > 0)
                 {
                     for (int i = 0; i < CharacterMaster.readOnlyInstancesList.Count; i++)
                     {
-                        if (!((spawnCount + t1Count + t2Count) > 0 && run.livingPlayerCount > 0)) break;
+                        if (!(spawnCredits > 0f && run.livingPlayerCount > 0)) break;
 
                         CharacterMaster characterMaster = CharacterMaster.readOnlyInstancesList[i];
                         CharacterBody cb = characterMaster.bodyInstanceObject.GetComponent<CharacterBody>();
@@ -186,6 +154,34 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
 
                             spawnOnTarget = characterMaster.GetBody().coreTransform;
                             input = DirectorCore.MonsterSpawnDistance.Close;
+
+                            //Select Elite Tier
+                            CombatDirector.EliteTierDef selectedEliteTier = null;
+                            EliteDef selectedElite = null;
+                            float cost = 1f;
+                            if (Origin.combineSpawns)
+                            {
+
+                                List<CombatDirector.EliteTierDef> eliteTiersList = EliteAPI.GetCombatDirectorEliteTiers().ToList();
+                                eliteTiersList.Sort(CompareEliteTierCost);
+                                foreach (CombatDirector.EliteTierDef etd in eliteTiersList)
+                                {
+                                    if (etd.costMultiplier <= spawnCredits && etd.eliteTypes.Length > 0 && etd.isAvailable(spawnCard.eliteRules))
+                                    {
+                                        selectedEliteTier = etd;
+                                        selectedElite = GetRandomElite(etd);
+                                        cost = etd.costMultiplier;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (honorEnabled && !Origin.ignoreHonor && selectedEliteTier == null && selectedElite == null)
+                            {
+                                selectedEliteTier = EliteAPI.VanillaEliteOnlyFirstTierDef;
+                                selectedElite = GetRandomElite(selectedEliteTier);
+                                cost = selectedEliteTier.costMultiplier;
+                            }
 
                             DirectorPlacementRule directorPlacementRule = new DirectorPlacementRule
                             {
@@ -213,40 +209,26 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                         resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
                                     }
 
-                                    EliteTier et = EliteTier.None;
-                                    if (t2Count > 0)
+                                    OriginExtraDrops oed = resultMaster.GetComponent<OriginExtraDrops>();
+                                    if (!oed)
                                     {
-                                        t2Count--;
-                                        et = EliteTier.T2;
-                                        resultMaster.inventory.GiveEquipmentString(selectedT2Elite.eliteEquipmentDef.name);
-                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, (int)((t2Elite.healthBoostCoefficient - 1f) * 10f));
-                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, (int)((t2Elite.damageBoostCoefficient - 1f) * 10f));
-                                    }
-                                    else if (t1Count > 0)
-                                    {
-                                        t1Count--;
-                                        et = EliteTier.T1;
-                                        resultMaster.inventory.GiveEquipmentString(selectedT1Elite.eliteEquipmentDef.name);
-                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, (int)((t1Elite.healthBoostCoefficient - 1f) * 10f));
-                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, (int)((t1Elite.damageBoostCoefficient - 1f) * 10f));
-                                    }
-                                    else
-                                    {
-                                        spawnCount--;
+                                        oed = resultMaster.gameObject.AddComponent<OriginExtraDrops>();
+                                        oed.cost = cost;
                                     }
 
-                                    if (et != EliteTier.None)
+                                    if (selectedEliteTier != null && selectedElite != null)
                                     {
-                                        OriginExtraDrops oed = resultMaster.GetComponent<OriginExtraDrops>();
-                                        if (!oed)
-                                        {
-                                            oed = resultMaster.gameObject.AddComponent<OriginExtraDrops>();
-                                            oed.tier = et;
-                                        }
+                                        resultMaster.inventory.GiveEquipmentString(selectedElite.eliteEquipmentDef.name);
+                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, (int)((selectedEliteTier.healthBoostCoefficient - 1f) * 10f));
+                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, (int)((selectedEliteTier.damageBoostCoefficient - 1f) * 10f));
                                     }
                                 }
                             }));
                             GameObject spawnedObject = DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
+                            if (spawnedObject)
+                            {
+                                spawnCredits -= cost;
+                            }
                             if (combatSquad)
                             {
                                 NetworkServer.Spawn(combatSquad.gameObject);
@@ -258,14 +240,15 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                 yield return null;
             }
         }
+
+        public static EliteDef GetRandomElite(CombatDirector.EliteTierDef et)
+        {
+            return et.eliteTypes[UnityEngine.Random.Range(0, et.eliteTypes.Length)];
+        }
     }
 
     public class OriginExtraDrops : MonoBehaviour
     {
-        public EliteTier tier = EliteTier.None;
-        public enum EliteTier
-        {
-            None, T1, T2
-        }
+        public float cost = 1f;
     }
 }

@@ -320,14 +320,19 @@ namespace Risky_Artifacts.Artifacts
             t3  //Stage 5
         }
 
-        public static void DropItem(Vector3 position, Xoroshiro128Plus treasureRng, EliteTier tier)
+        public static void DropItem(Vector3 position, Xoroshiro128Plus treasureRng, float cost)
         {
             List<PickupIndex> list;
 
-            float whiteChance = (tier == EliteTier.None || (tier == EliteTier.T1 && CombatDirector.IsEliteOnlyArtifactActive() && !Origin.ignoreHonor)) ? 50f : 0f;
-            float greenChance = tier < EliteTier.T2 ? 35f : 0f;
-            float redChance = tier < EliteTier.T2 ? 5f : 30f;
-            float yellowChance = 10f;
+            float whiteChance = 50f;
+            float greenChance = 35f;
+            float redChance = 5f;
+
+            whiteChance = Mathf.Lerp(whiteChance, 0f, (cost - 1f) / 2f);   //3 whites = 1 guaranteed green
+            greenChance = cost < 3f ? greenChance : Mathf.Lerp(greenChance, 0f, (cost-3f)/12f); //15 whites = 1 guaranteed red
+
+            float yellowChance = (whiteChance + greenChance) > 0 ? (whiteChance + greenChance + redChance) * 10f / 9f : 0f;
+
 
             float total = whiteChance + greenChance + redChance + yellowChance;
             
@@ -349,7 +354,7 @@ namespace Risky_Artifacts.Artifacts
                     {
                         list = Run.instance.availableTier3DropList;
                     }
-                    else
+                    else//drop yellow
                     {
                         //There's probably a better way of doing this.
                         PickupIndex pearlIndex;
@@ -366,7 +371,7 @@ namespace Risky_Artifacts.Artifacts
                         {
                             if (pearlAvailable && shinyPearlAvailable)
                             {
-                                if (tier < EliteTier.T1 && treasureRng.RangeFloat(0f, 100f) <= 80f)
+                                if (cost < 3f && treasureRng.RangeFloat(0f, 100f) <= 80f)
                                 {
                                     list.Add(pearlIndex);
                                 }
@@ -383,7 +388,7 @@ namespace Risky_Artifacts.Artifacts
                         }
                         else
                         {
-                            if (tier < EliteTier.T2)
+                            if (cost < 15f)
                             {
                                 list = Run.instance.availableTier2DropList;
                             }
