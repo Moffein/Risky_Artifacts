@@ -119,10 +119,10 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                 EliteDef selectedT1Elite = null;
                 EliteDef selectedT2Elite = null;
 
-                CombatDirector.EliteTierDef t1Elite = CombatDirector.eliteTiers[honorEnabled ? 2 : 1];
+                CombatDirector.EliteTierDef t1Elite = EliteAPI.VanillaEliteTiers[honorEnabled ? 2 : 1];
                 selectedT1Elite = t1Elite.eliteTypes[rng.RangeInt(0, t1Elite.eliteTypes.Length)];
 
-                CombatDirector.EliteTierDef t2Elite = CombatDirector.eliteTiers[3];
+                CombatDirector.EliteTierDef t2Elite = EliteAPI.VanillaEliteTiers[3];
                 selectedT2Elite = t2Elite.eliteTypes[rng.RangeInt(0, t2Elite.eliteTypes.Length)];
 
                 int teamBeadCount = Util.GetItemCountForTeam(TeamIndex.Player, RoR2Content.Items.LunarTrinket.itemIndex, true, true);
