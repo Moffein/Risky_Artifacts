@@ -10,7 +10,7 @@ namespace Risky_Artifacts
 {
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.3.0")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.3.1")]
     [R2API.Utils.R2APISubmoduleDependency(nameof(DirectorAPI), nameof(ArtifactAPI), nameof(LanguageAPI), nameof(RecalculateStatsAPI), nameof(ItemAPI))]
     public class RiskyArtifacts : BaseUnityPlugin
     {
@@ -33,9 +33,16 @@ namespace Risky_Artifacts
 
         public void ReadConfig()
         {
+            Arrogance.enabled = base.Config.Bind<bool>(new ConfigDefinition("Arrogance", "Enable Artifact"), true,
+                new ConfigDescription("Allows this artifact to be selected.")).Value;
+
+            Conformity.enabled = base.Config.Bind<bool>(new ConfigDefinition("Conformity", "Enable Artifact"), true,
+                new ConfigDescription("Allows this artifact to be selected.")).Value;
             Conformity.disableInBazaar = base.Config.Bind<bool>(new ConfigDefinition("Conformity", "Disable Conformity in Bazaar"), true,
                 new ConfigDescription("Allow printers to spawn in the bazaar while Conformity is enabled (for use with mods that do this).")).Value;
 
+            Warfare.enabled = base.Config.Bind<bool>(new ConfigDefinition("Warfare", "Enable Artifact"), true,
+                new ConfigDescription("Allows this artifact to be selected.")).Value;
             Warfare.moveSpeed = base.Config.Bind<float>(new ConfigDefinition("Warfare", "Move Speed Multiplier"), 1.5f,
                 new ConfigDescription("Multiplier for enemy movement speed.")).Value;
             Warfare.atkSpeed = base.Config.Bind<float>(new ConfigDefinition("Warfare", "Attack Speed Multiplier"), 1.5f,
@@ -45,6 +52,8 @@ namespace Risky_Artifacts
             Warfare.disableOnMithrix = base.Config.Bind<bool>(new ConfigDefinition("Warfare", "Disable move speed boost for Michael"), true,
                 new ConfigDescription("Makes Michael unaffected by the move speed boost of this artifact because it causes him to always miss his melee.")).Value;
 
+            Expansion.enabled = base.Config.Bind<bool>(new ConfigDefinition("Expansion", "Enable Artifact"), true,
+                new ConfigDescription("Allows this artifact to be selected.")).Value;
             Expansion.priceMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Cost Multiplier"), 1.25f,
                 new ConfigDescription("Multiplier for how much money things cost.")).Value;
             Expansion.teleRadiusMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Teleporter Radius Multiplier"), 10000f,
@@ -60,6 +69,8 @@ namespace Risky_Artifacts
             Expansion.moonDurationMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Moon Duration Multiplier"), 4f / 3f,
                 new ConfigDescription("Multiplier for charge duration.")).Value;
 
+            Origin.enabled = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Enable Artifact"), true,
+                new ConfigDescription("Allows this artifact to be selected.")).Value;
             Origin.combineSpawns = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Combine Spawns"), true,
                 new ConfigDescription("Combine spawns into elites if too many bosses are spawning.")).Value;
             Origin.ignoreHonor = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Ignore Honor"), false,
@@ -92,6 +103,9 @@ namespace Risky_Artifacts
 
             Origin.enableGrandparent = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Grandparent"), true,
                 new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
+
+            PrimordialTele.enabled = base.Config.Bind<bool>(new ConfigDefinition("Primacy", "Enable Artifact"), true,
+                new ConfigDescription("Allows this artifact to be selected.")).Value;
         }
     }
 }

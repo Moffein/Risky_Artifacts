@@ -6,6 +6,7 @@ namespace Risky_Artifacts.Artifacts
 {
     public class Expansion
     {
+        public static bool enabled = true;
         public static ArtifactDef artifact;
 
         public static float teleRadiusMult = 10000f;
@@ -21,6 +22,7 @@ namespace Risky_Artifacts.Artifacts
 
         public Expansion()
         {
+            if (!enabled) return;
             LanguageAPI.Add("RISKYARTIFACTS_EXPANSION_NAME", "Artifact of Expansion");
             LanguageAPI.Add("RISKYARTIFACTS_EXPANSION_DESC", "The Teleporter zone covers the whole map, but charging speed is reduced"
                 + (priceMult > 1f ? " and prices are increased" : "") + ".");

@@ -12,6 +12,7 @@ namespace Risky_Artifacts.Artifacts
 {
     public class Origin
     {
+        public static bool enabled = true;
         public static ArtifactDef artifact;
         public static ItemDef OriginBonusItem;
 
@@ -46,6 +47,7 @@ namespace Risky_Artifacts.Artifacts
 
         public Origin()
         {
+            if (!enabled) return;
             LanguageAPI.Add("RISKYARTIFACTS_ORIGIN_NAME", "Artifact of Origination");   //Prevent conflicting with Chen's Origin
             LanguageAPI.Add("RISKYARTIFACTS_ORIGIN_DESC", impOnly ? "Imp Overlords" : "Boss monsters" + " invade the map every 10 minutes.");
 

@@ -11,6 +11,7 @@ namespace Risky_Artifacts.Artifacts
 {
     public class Arrogance
     {
+        public static bool enabled = true;
         public static ArtifactDef artifact;
 
         private static int runMountainCount = 0;
@@ -18,6 +19,7 @@ namespace Risky_Artifacts.Artifacts
 
         public Arrogance()
         {
+            if (!enabled) return;
             LanguageAPI.Add("RISKYARTIFACTS_ARROGANCE_NAME", "Artifact of Arrogance");
             LanguageAPI.Add("RISKYARTIFACTS_ARROGANCE_DESC", "The effects of Shrine of the Mountain are permanent.");
 

@@ -7,11 +7,13 @@ namespace Risky_Artifacts.Artifacts
 {
     public class Conformity
     {
+        public static bool enabled = true;
         public static ArtifactDef artifact;
         public static bool disableInBazaar = true;
         public static bool enableCleansingPools;
         public Conformity()
         {
+            if (!enabled) return;
             LanguageAPI.Add("RISKYARTIFACTS_CONFORMITY_NAME", "Artifact of Conformity");
             LanguageAPI.Add("RISKYARTIFACTS_CONFORMITY_DESC", "3D Printers and Scrappers no longer spawn.");
 

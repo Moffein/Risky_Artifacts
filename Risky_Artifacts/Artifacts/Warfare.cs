@@ -6,6 +6,7 @@ namespace Risky_Artifacts.Artifacts
 {
     public class Warfare
     {
+        public static bool enabled = true;
         public static ArtifactDef artifact;
 
         public static bool disableOnMithrix = true;
@@ -14,6 +15,7 @@ namespace Risky_Artifacts.Artifacts
         public static float projSpeed = 1.5f;
         public Warfare()
         {
+            if (!enabled) return;
             LanguageAPI.Add("RISKYARTIFACTS_WARFARE_NAME", "Artifact of Warfare");
             LanguageAPI.Add("RISKYARTIFACTS_WARFARE_DESC", "Monsters gain greatly increased movement speed, attack speed, and projectile speed.");
 
