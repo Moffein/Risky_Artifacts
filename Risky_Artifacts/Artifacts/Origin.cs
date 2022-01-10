@@ -22,6 +22,7 @@ namespace Risky_Artifacts.Artifacts
         public static float atkSpeedMult = 1.3f;
         public static float damageMult = 1.2f;
         public static float moveSpeedMult = 1.5f;
+        public static float extraBossesPerInvasion = 1f;
 
         private static List<SpawnCard> t1BossCards;
         private static List<SpawnCard> t2BossCards;
@@ -56,7 +57,7 @@ namespace Risky_Artifacts.Artifacts
             artifact.nameToken = "RISKYARTIFACTS_ORIGIN_NAME";
             artifact.descriptionToken = "RISKYARTIFACTS_ORIGIN_DESC";
             artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texOriginDisabled.png");
-            artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texOriginEnabled.png");
+            artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texOriginEnabledClean.png");
             ArtifactAPI.Add(artifact);
 
             CreateOriginItem();

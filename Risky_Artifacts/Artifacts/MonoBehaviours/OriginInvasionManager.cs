@@ -134,7 +134,15 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
             {
                 int teamBeadCount = Util.GetItemCountForTeam(TeamIndex.Player, RoR2Content.Items.LunarTrinket.itemIndex, true, true);
 
-                float spawnCredits = (1f + (0.3f * (run.livingPlayerCount - 1)) + teamBeadCount * beadBossCount) * (1 + 0.5f * (run.stageClearCount / 5));
+                float playerFactor = 1f + (0.3f * (run.livingPlayerCount - 1));
+                float invasionCount = 1f;
+                int cycle = this.GetCurrentInvasionCycle();
+                if (cycle > 0)
+                {
+                    invasionCount += (this.GetCurrentInvasionCycle() - 1) * Origin.extraBossesPerInvasion;
+                }
+                float loopFactor = 1 + 0.5f * (run.stageClearCount / 5);
+                float spawnCredits = (playerFactor + teamBeadCount * beadBossCount) * invasionCount * loopFactor;
 
                 while (spawnCredits > 0f && run.livingPlayerCount > 0)
                 {
