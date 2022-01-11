@@ -141,8 +141,8 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                 {
                     invasionCount += (this.GetCurrentInvasionCycle() - 1) * Origin.extraBossesPerInvasion;
                 }
-                float loopFactor = 1 + 0.5f * (run.stageClearCount / 5);
-                float spawnCredits = (playerFactor + teamBeadCount * beadBossCount) * invasionCount * loopFactor;
+                //float loopFactor = 1 + 0.5f * (run.stageClearCount / 5);
+                float spawnCredits = (playerFactor + teamBeadCount * beadBossCount) * invasionCount;// * loopFactor;
 
                 while (spawnCredits > 0f && run.livingPlayerCount > 0)
                 {
