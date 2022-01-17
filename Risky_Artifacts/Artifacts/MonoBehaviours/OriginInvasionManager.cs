@@ -87,10 +87,13 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
             {
                 if (inventory.GetItemCount(Origin.OriginBonusItem) > 0 && inventory.GetItemCount(RoR2Content.Items.ExtraLife) == 0 && !damageReport.victimMaster.minionOwnership.ownerMaster)
                 {
-                    float cost = 1f;
-                    OriginExtraDrops oed = victimMaster.GetComponent<OriginExtraDrops>();
-                    if (oed) cost = oed.cost;
-                    Origin.DropItem(damageReport.victimBody.corePosition, treasureRng, cost);
+                    if (!(damageReport.victimBody && damageReport.victimBody.healthComponent && damageReport.victimBody.healthComponent.alive))
+                    {
+                        float cost = 1f;
+                        OriginExtraDrops oed = victimMaster.GetComponent<OriginExtraDrops>();
+                        if (oed) cost = oed.cost;
+                        Origin.DropItem(damageReport.victimBody.corePosition, treasureRng, cost);
+                    }
                 }
             }
         }
