@@ -32,7 +32,7 @@ namespace Risky_Artifacts.Artifacts
                     List<DirectorAPI.DirectorCardHolder> removeList = new List<DirectorAPI.DirectorCardHolder>();
                     foreach (DirectorAPI.DirectorCardHolder dc in cardList)
                     {
-                        Debug.Log(dc.Card.spawnCard.name + " - " + dc.InteractableCategory);
+                        //Debug.Log(dc.Card.spawnCard.name + " - " + dc.InteractableCategory);
                         if (dc.InteractableCategory == DirectorAPI.InteractableCategory.Duplicator)
                         {
                             dc.Card.selectionWeight = 0;
