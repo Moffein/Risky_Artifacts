@@ -18,7 +18,7 @@ namespace Risky_Artifacts.Artifacts
         public static float moonRadiusMult = 2f;
         public static float moonDurationMult = 4f / 3f;
 
-        public static float priceMult = 1.3f;
+        public static float priceMult = 1.2f;
 
         public Expansion()
         {
@@ -33,7 +33,7 @@ namespace Risky_Artifacts.Artifacts
             artifact.descriptionToken = "RISKYARTIFACTS_EXPANSION_DESC";
             artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texExpansionDisabled.png");
             artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texExpansionEnabled.png");
-            ArtifactAPI.Add(artifact);
+            ContentAddition.AddArtifactDef(artifact);
 
             On.RoR2.Run.IsItemAvailable += (orig, self, itemIndex) =>
             {
@@ -49,10 +49,10 @@ namespace Risky_Artifacts.Artifacts
 
             On.RoR2.HoldoutZoneController.Awake += (orig, self) =>
             {
-                if (RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex) && self)
+                if (RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex) && self && Run.instance.gameModeIndex != RiskyArtifacts.SimulacrumIndex)
                 {
                     SceneDef sd = RoR2.SceneCatalog.GetSceneDefForCurrentScene();
-                    if (sd && sd.baseSceneName.Equals("arena"))
+                    if (sd && (sd.baseSceneName.Equals("arena") || sd.baseSceneName.Equals("voidstage")))
                     {
                         self.baseRadius *= voidRadiusMult;
                         self.baseChargeDuration *= voidDurationMult;

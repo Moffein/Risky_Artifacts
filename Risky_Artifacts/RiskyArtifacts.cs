@@ -10,11 +10,12 @@ namespace Risky_Artifacts
 {
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.3.5")]
-    [R2API.Utils.R2APISubmoduleDependency(nameof(DirectorAPI), nameof(ArtifactAPI), nameof(LanguageAPI), nameof(RecalculateStatsAPI), nameof(ItemAPI), nameof(EliteAPI))]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.4.0")]
+    [R2API.Utils.R2APISubmoduleDependency(nameof(DirectorAPI), nameof(LanguageAPI), nameof(RecalculateStatsAPI), nameof(ItemAPI), nameof(EliteAPI), nameof(ContentAddition))]
     public class RiskyArtifacts : BaseUnityPlugin
     {
         public static AssetBundle assetBundle;
+        public static GameModeIndex SimulacrumIndex;
         public void Awake()
         {
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Risky_Artifacts.riskyartifactsbundle"))
@@ -22,6 +23,12 @@ namespace Risky_Artifacts
                 assetBundle = AssetBundle.LoadFromStream(stream);
             }
             ReadConfig();
+
+            On.RoR2.GameModeCatalog.LoadGameModes += (orig) =>
+            {
+                orig();
+                SimulacrumIndex = GameModeCatalog.FindGameModeIndex("InfiniteTowerRun");
+            };
 
             new Warfare();
             new Conformity();
@@ -71,6 +78,8 @@ namespace Risky_Artifacts
 
             Origin.enabled = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
+            Origin.bossVoidTeam = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Use Void Team"), true,
+                new ConfigDescription("Bosses spawn as part of the Void team.")).Value;
             Origin.combineSpawns = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Combine Spawns"), true,
                 new ConfigDescription("Combine spawns into elites if too many bosses are spawning.")).Value;
             Origin.ignoreHonor = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Ignore Honor"), false,
@@ -101,7 +110,7 @@ namespace Risky_Artifacts
             Origin.allowEliteWorms = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Magma Worm - Allow Elites"), false,
                 new ConfigDescription("Allow this boss to spawn as an elite.")).Value;
 
-            Origin.enableGrandparent = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Grandparent"), true,
+            Origin.enableGrandparent = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Grandparent"), false,
                 new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
 
             PrimordialTele.enabled = base.Config.Bind<bool>(new ConfigDefinition("Primacy", "Enable Artifact"), true,

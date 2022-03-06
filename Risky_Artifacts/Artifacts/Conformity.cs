@@ -23,7 +23,7 @@ namespace Risky_Artifacts.Artifacts
             artifact.descriptionToken = "RISKYARTIFACTS_CONFORMITY_DESC";
             artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texConformityResizedDisabled.png");
             artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texConformityResizedEnabled.png");
-            ArtifactAPI.Add(artifact);
+            ContentAddition.AddArtifactDef(artifact);
 
             DirectorAPI.InteractableActions += delegate (List<DirectorAPI.DirectorCardHolder> cardList, DirectorAPI.StageInfo stage)
             {
@@ -32,6 +32,7 @@ namespace Risky_Artifacts.Artifacts
                     List<DirectorAPI.DirectorCardHolder> removeList = new List<DirectorAPI.DirectorCardHolder>();
                     foreach (DirectorAPI.DirectorCardHolder dc in cardList)
                     {
+                        Debug.Log(dc.Card.spawnCard.name + " - " + dc.InteractableCategory);
                         if (dc.InteractableCategory == DirectorAPI.InteractableCategory.Duplicator)
                         {
                             dc.Card.selectionWeight = 0;

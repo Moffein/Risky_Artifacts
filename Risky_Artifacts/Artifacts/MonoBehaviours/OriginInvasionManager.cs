@@ -190,7 +190,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                             if (honorEnabled && !Origin.ignoreHonor && selectedEliteTier == null && selectedElite == null)
                             {
                                 selectedEliteTier = EliteAPI.VanillaEliteOnlyFirstTierDef;
-                                selectedElite = GetRandomElite(selectedEliteTier);
+                                selectedElite = selectedEliteTier.GetRandomAvailableEliteDef(rng);
                                 cost = selectedEliteTier.costMultiplier;
                             }
 
@@ -201,13 +201,13 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                             };
                             DirectorCore.GetMonsterSpawnDistance(input, out directorPlacementRule.minDistance, out directorPlacementRule.maxDistance);
                             DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(spawnCard, directorPlacementRule, rng);
-                            directorSpawnRequest.teamIndexOverride = new TeamIndex?(TeamIndex.Monster);
+                            directorSpawnRequest.teamIndexOverride = new TeamIndex?(Origin.bossVoidTeam ? TeamIndex.Void : TeamIndex.Monster);
                             directorSpawnRequest.ignoreTeamMemberLimit = true;
                             directorSpawnRequest.onSpawnedServer = (Action<SpawnCard.SpawnResult>)Delegate.Combine(directorSpawnRequest.onSpawnedServer, new Action<SpawnCard.SpawnResult>(delegate (SpawnCard.SpawnResult result)
                             {
                                 if (!combatSquad)
                                 {
-                                    combatSquad = UnityEngine.Object.Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/NetworkedObjects/Encounters/ShadowCloneEncounter")).GetComponent<CombatSquad>();
+                                    combatSquad = UnityEngine.Object.Instantiate<GameObject>(LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/Encounters/ShadowCloneEncounter")).GetComponent<CombatSquad>();
                                 }
                                 combatSquad.AddMember(result.spawnedInstance.GetComponent<CharacterMaster>());
                                 CharacterMaster resultMaster = result.spawnedInstance.GetComponent<CharacterMaster>();
@@ -230,8 +230,8 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                     if (selectedEliteTier != null && selectedElite != null)
                                     {
                                         resultMaster.inventory.GiveEquipmentString(selectedElite.eliteEquipmentDef.name);
-                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, (int)((selectedEliteTier.healthBoostCoefficient - 1f) * 10f));
-                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, (int)((selectedEliteTier.damageBoostCoefficient - 1f) * 10f));
+                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, (int)((selectedElite.healthBoostCoefficient - 1f) * 10f));
+                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, (int)((selectedElite.damageBoostCoefficient - 1f) * 10f));
                                     }
                                 }
                             }));

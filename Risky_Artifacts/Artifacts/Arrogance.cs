@@ -29,7 +29,7 @@ namespace Risky_Artifacts.Artifacts
             artifact.descriptionToken = "RISKYARTIFACTS_ARROGANCE_DESC";
             artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArrogDisabled.png");
             artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArrogEnabled.png");
-            ArtifactAPI.Add(artifact);
+            ContentAddition.AddArtifactDef(artifact);
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.KingEnderBrine.ProperSave"))
             {
                 HandleSave();

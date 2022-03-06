@@ -25,7 +25,7 @@ namespace Risky_Artifacts.Artifacts
             artifact.descriptionToken = "RISKYARTIFACTS_WARFARE_DESC";
             artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArtifactWarDisabled.png");
             artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArtifactWarEnabled.png");
-            ArtifactAPI.Add(artifact);
+            ContentAddition.AddArtifactDef(artifact);
 
             On.RoR2.CharacterBody.RecalculateStats += (orig, self) =>
             {
@@ -46,7 +46,7 @@ namespace Risky_Artifacts.Artifacts
                 if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && self.rigidbody && !self.rigidbody.useGravity)
                 {
                     TeamFilter tf = self.gameObject.GetComponent<TeamFilter>();
-                    if (tf && tf.teamIndex == TeamIndex.Monster)
+                    if (tf && tf.teamIndex != TeamIndex.Player)
                     {
                         self.desiredForwardSpeed *= projSpeed;
                     }

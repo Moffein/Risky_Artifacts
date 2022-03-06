@@ -7,6 +7,7 @@ using MonoMod.Cil;
 using System;
 using Mono.Cecil.Cil;
 using static Risky_Artifacts.Artifacts.MonoBehaviours.OriginExtraDrops;
+using System.Linq;
 
 namespace Risky_Artifacts.Artifacts
 {
@@ -46,6 +47,8 @@ namespace Risky_Artifacts.Artifacts
 
         public static bool enableGrandparent = true;
 
+        public static bool bossVoidTeam = true;
+
         public Origin()
         {
             if (!enabled) return;
@@ -58,7 +61,7 @@ namespace Risky_Artifacts.Artifacts
             artifact.descriptionToken = "RISKYARTIFACTS_ORIGIN_DESC";
             artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texOriginDisabled.png");
             artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texOriginEnabledClean.png");
-            ArtifactAPI.Add(artifact);
+            ContentAddition.AddArtifactDef(artifact);
 
             CreateOriginItem();
 
@@ -69,7 +72,7 @@ namespace Risky_Artifacts.Artifacts
 
         private SpawnCard LoadSpawncard(string path)
         {
-            return Resources.Load<SpawnCard>("spawncards/characterspawncards/" + path);
+            return LegacyResourcesAPI.Load<SpawnCard>("spawncards/characterspawncards/" + path);
         }
 
         private void CreateOriginItem()
@@ -312,7 +315,7 @@ namespace Risky_Artifacts.Artifacts
                 if (enableWorm) t2BossCards.Add(wormCard);
                 if (enableImp) t2BossCards.Add(impCard);
 
-                t3BossCards.Add(LoadSpawncard("titan/cscGrandparent"));
+                if (enableGrandparent) t3BossCards.Add(LoadSpawncard("titan/cscGrandparent"));
             }
         }
 
@@ -341,21 +344,21 @@ namespace Risky_Artifacts.Artifacts
             
             if (treasureRng.RangeFloat(0f, total) <= whiteChance)//drop white
             {
-                list = Run.instance.availableTier1DropList;
+                list = Run.instance.availableTier1DropList.Concat(Run.instance.availableVoidTier1DropList).ToList();
             }
             else
             {
                 total -= whiteChance;
                 if (treasureRng.RangeFloat(0f, total) <= greenChance)//drop green
                 {
-                    list = Run.instance.availableTier2DropList;
+                    list = Run.instance.availableTier2DropList.Concat(Run.instance.availableVoidTier2DropList).ToList();
                 }
                 else
                 {
                     total -= greenChance;
                     if (treasureRng.RangeFloat(0f, total) <= redChance)//drop red
                     {
-                        list = Run.instance.availableTier3DropList;
+                        list = Run.instance.availableTier3DropList.Concat(Run.instance.availableVoidTier3DropList).ToList();
                     }
                     else//drop yellow
                     {
