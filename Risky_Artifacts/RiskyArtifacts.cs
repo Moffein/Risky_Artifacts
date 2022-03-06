@@ -61,7 +61,7 @@ namespace Risky_Artifacts
 
             Expansion.enabled = base.Config.Bind<bool>(new ConfigDefinition("Expansion", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
-            Expansion.priceMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Cost Multiplier"), 1.25f,
+            Expansion.priceMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Cost Multiplier"), 1.2f,
                 new ConfigDescription("Multiplier for how much money things cost.")).Value;
             Expansion.teleRadiusMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Teleporter Radius Multiplier"), 10000f,
                 new ConfigDescription("Multiplier for radius size.")).Value;
