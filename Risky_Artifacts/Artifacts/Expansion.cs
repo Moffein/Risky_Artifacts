@@ -49,7 +49,6 @@ namespace Risky_Artifacts.Artifacts
 
             On.RoR2.HoldoutZoneController.Awake += (orig, self) =>
             {
-                Debug.Log(self.name);
                 if (RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex) && self && Run.instance.gameModeIndex != RiskyArtifacts.SimulacrumIndex)
                 {
                     SceneDef sd = RoR2.SceneCatalog.GetSceneDefForCurrentScene();
