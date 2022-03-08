@@ -49,6 +49,7 @@ namespace Risky_Artifacts.Artifacts
 
             On.RoR2.HoldoutZoneController.Awake += (orig, self) =>
             {
+                Debug.Log(self.name);
                 if (RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex) && self && Run.instance.gameModeIndex != RiskyArtifacts.SimulacrumIndex)
                 {
                     SceneDef sd = RoR2.SceneCatalog.GetSceneDefForCurrentScene();
@@ -62,7 +63,7 @@ namespace Risky_Artifacts.Artifacts
                         self.baseRadius *= moonRadiusMult;
                         self.baseChargeDuration *= moonDurationMult;
                     }
-                    else if (self.baseRadius == 60f && self.baseChargeDuration == 90f)
+                    else if (self.name == "LunarTeleporter Variant(Clone)" || self.name == "Teleporter1(Clone)")
                     {
                         self.baseRadius *= teleRadiusMult;
                         self.baseChargeDuration *= teleDurationMult;
