@@ -131,6 +131,8 @@ namespace Risky_Artifacts.Mutators.MonoBehaviours
         {
             bool honorEnabled = CombatDirector.IsEliteOnlyArtifactActive();
 
+            CombatSquad combatSquad = UnityEngine.Object.Instantiate<GameObject>(LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/Encounters/ShadowCloneEncounter")).GetComponent<CombatSquad>();
+
             //Select spawncard
             SpawnCard spawnCard = Origin.SelectSpawnCard(rng);
             if (spawnCard)
@@ -159,7 +161,7 @@ namespace Risky_Artifacts.Mutators.MonoBehaviours
                             && characterMaster.playerCharacterMasterController
                             && cb && cb.healthComponent && cb.healthComponent.alive)
                         {
-                            CombatSquad combatSquad = null;
+                            //CombatSquad combatSquad = null;
                             Transform spawnOnTarget;
                             DirectorCore.MonsterSpawnDistance input;
 
@@ -175,8 +177,10 @@ namespace Risky_Artifacts.Mutators.MonoBehaviours
 
                                 List<CombatDirector.EliteTierDef> eliteTiersList = EliteAPI.GetCombatDirectorEliteTiers().ToList();
                                 eliteTiersList.Sort(CompareEliteTierCost);
+                                //Ordered with the most expensive at the top
                                 foreach (CombatDirector.EliteTierDef etd in eliteTiersList)
                                 {
+                                    //Debug.Log(etd.costMultiplier);
                                     if (etd.costMultiplier <= spawnCredits && etd.eliteTypes.Length > 0 && etd.isAvailable(spawnCard.eliteRules))
                                     {
                                         selectedEliteTier = etd;
@@ -205,10 +209,10 @@ namespace Risky_Artifacts.Mutators.MonoBehaviours
                             directorSpawnRequest.ignoreTeamMemberLimit = true;
                             directorSpawnRequest.onSpawnedServer = (Action<SpawnCard.SpawnResult>)Delegate.Combine(directorSpawnRequest.onSpawnedServer, new Action<SpawnCard.SpawnResult>(delegate (SpawnCard.SpawnResult result)
                             {
-                                if (!combatSquad)
+                                /*if (!combatSquad)
                                 {
                                     combatSquad = UnityEngine.Object.Instantiate<GameObject>(LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/Encounters/ShadowCloneEncounter")).GetComponent<CombatSquad>();
-                                }
+                                }*/
                                 combatSquad.AddMember(result.spawnedInstance.GetComponent<CharacterMaster>());
                                 CharacterMaster resultMaster = result.spawnedInstance.GetComponent<CharacterMaster>();
                                 if (resultMaster && resultMaster.inventory)
