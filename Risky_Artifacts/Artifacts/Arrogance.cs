@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Risky_Artifacts.Mutators
+namespace Risky_Artifacts.Artifacts
 {
     public class Arrogance
     {

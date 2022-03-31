@@ -1,15 +1,15 @@
 ﻿using RoR2;
 using R2API;
 using UnityEngine;
-using Risky_Artifacts.Mutators.MonoBehaviours;
+using Risky_Artifacts.Artifacts.MonoBehaviours;
 using System.Collections.Generic;
 using MonoMod.Cil;
 using System;
 using Mono.Cecil.Cil;
-using static Risky_Artifacts.Mutators.MonoBehaviours.OriginExtraDrops;
+using static Risky_Artifacts.Artifacts.MonoBehaviours.OriginExtraDrops;
 using System.Linq;
 
-namespace Risky_Artifacts.Mutators
+namespace Risky_Artifacts.Artifacts
 {
     public class Origin
     {
@@ -95,7 +95,7 @@ namespace Risky_Artifacts.Mutators
             {
                 ItemTag.WorldUnique
             };
-            ItemDisplayRule[] idr = null;
+            ItemDisplayRule[] idr = new ItemDisplayRule[0];
             ItemAPI.Add(new CustomItem(OriginBonusItem, idr));
 
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>

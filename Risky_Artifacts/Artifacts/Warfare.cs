@@ -2,7 +2,7 @@
 using RoR2;
 using UnityEngine;
 
-namespace Risky_Artifacts.Mutators
+namespace Risky_Artifacts.Artifacts
 {
     public class Warfare
     {

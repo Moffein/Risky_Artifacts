@@ -3,7 +3,7 @@ using R2API;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace Risky_Artifacts.Mutators
+namespace Risky_Artifacts.Artifacts
 {
     public class Conformity
     {

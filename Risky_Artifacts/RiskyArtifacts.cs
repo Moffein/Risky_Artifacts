@@ -2,7 +2,7 @@
 using R2API;
 using UnityEngine;
 using BepInEx;
-using Risky_Artifacts.Mutators;
+using Risky_Artifacts.Artifacts;
 using System.Reflection;
 using BepInEx.Configuration;
 using System.Collections.Generic;
@@ -12,8 +12,8 @@ namespace Risky_Artifacts
 {
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.4.3")]
-    [R2API.Utils.R2APISubmoduleDependency(nameof(DirectorAPI), nameof(LanguageAPI), nameof(RecalculateStatsAPI), nameof(ItemAPI), nameof(EliteAPI), nameof(ContentAddition))]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.4.4")]
+    [R2API.Utils.R2APISubmoduleDependency( nameof(LanguageAPI), nameof(RecalculateStatsAPI), nameof(ItemAPI), nameof(EliteAPI), nameof(ContentAddition))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifacts : BaseUnityPlugin
     {
