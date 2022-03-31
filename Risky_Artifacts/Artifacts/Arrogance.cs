@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Risky_Artifacts.Artifacts
+namespace Risky_Artifacts.Mutators
 {
     public class Arrogance
     {
@@ -29,6 +29,7 @@ namespace Risky_Artifacts.Artifacts
             artifact.descriptionToken = "RISKYARTIFACTS_ARROGANCE_DESC";
             artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArrogDisabled.png");
             artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArrogEnabled.png");
+            RiskyArtifacts.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.KingEnderBrine.ProperSave"))
             {

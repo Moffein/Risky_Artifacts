@@ -7,7 +7,7 @@ using System;
 using System.Collections;
 using System.Linq;
 
-namespace Risky_Artifacts.Artifacts.MonoBehaviours
+namespace Risky_Artifacts.Mutators.MonoBehaviours
 {
     //Mostly based off of DoppelgangerInvasionManager
     public class OriginInvasionManager : MonoBehaviour

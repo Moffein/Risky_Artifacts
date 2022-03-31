@@ -1,15 +1,15 @@
 ﻿using RoR2;
 using R2API;
 using UnityEngine;
-using Risky_Artifacts.Artifacts.MonoBehaviours;
+using Risky_Artifacts.Mutators.MonoBehaviours;
 using System.Collections.Generic;
 using MonoMod.Cil;
 using System;
 using Mono.Cecil.Cil;
-using static Risky_Artifacts.Artifacts.MonoBehaviours.OriginExtraDrops;
+using static Risky_Artifacts.Mutators.MonoBehaviours.OriginExtraDrops;
 using System.Linq;
 
-namespace Risky_Artifacts.Artifacts
+namespace Risky_Artifacts.Mutators
 {
     public class Origin
     {
@@ -61,6 +61,7 @@ namespace Risky_Artifacts.Artifacts
             artifact.descriptionToken = "RISKYARTIFACTS_ORIGIN_DESC";
             artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texOriginDisabled.png");
             artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texOriginEnabledClean.png");
+            RiskyArtifacts.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
             CreateOriginItem();

@@ -2,7 +2,7 @@
 using R2API;
 using UnityEngine;
 
-namespace Risky_Artifacts.Artifacts
+namespace Risky_Artifacts.Mutators
 {
     public class Expansion
     {
@@ -33,6 +33,7 @@ namespace Risky_Artifacts.Artifacts
             artifact.descriptionToken = "RISKYARTIFACTS_EXPANSION_DESC";
             artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texExpansionDisabled.png");
             artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texExpansionEnabled.png");
+            RiskyArtifacts.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
             On.RoR2.Run.IsItemAvailable += (orig, self, itemIndex) =>

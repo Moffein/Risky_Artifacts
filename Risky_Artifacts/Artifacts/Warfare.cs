@@ -2,7 +2,7 @@
 using RoR2;
 using UnityEngine;
 
-namespace Risky_Artifacts.Artifacts
+namespace Risky_Artifacts.Mutators
 {
     public class Warfare
     {
@@ -25,6 +25,7 @@ namespace Risky_Artifacts.Artifacts
             artifact.descriptionToken = "RISKYARTIFACTS_WARFARE_DESC";
             artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArtifactWarDisabled.png");
             artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArtifactWarEnabled.png");
+            RiskyArtifacts.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
             On.RoR2.CharacterBody.RecalculateStats += (orig, self) =>

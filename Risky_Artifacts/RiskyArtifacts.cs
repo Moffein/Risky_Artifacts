@@ -2,16 +2,19 @@
 using R2API;
 using UnityEngine;
 using BepInEx;
-using Risky_Artifacts.Artifacts;
+using Risky_Artifacts.Mutators;
 using System.Reflection;
 using BepInEx.Configuration;
+using System.Collections.Generic;
+using R2API.Utils;
 
 namespace Risky_Artifacts
 {
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.4.2")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.4.3")]
     [R2API.Utils.R2APISubmoduleDependency(nameof(DirectorAPI), nameof(LanguageAPI), nameof(RecalculateStatsAPI), nameof(ItemAPI), nameof(EliteAPI), nameof(ContentAddition))]
+    [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifacts : BaseUnityPlugin
     {
         public static AssetBundle assetBundle;
@@ -45,8 +48,6 @@ namespace Risky_Artifacts
 
             Conformity.enabled = base.Config.Bind<bool>(new ConfigDefinition("Conformity", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
-            Conformity.disableInBazaar = base.Config.Bind<bool>(new ConfigDefinition("Conformity", "Disable Conformity in Bazaar"), true,
-                new ConfigDescription("Allow printers to spawn in the bazaar while Conformity is enabled (for use with mods that do this).")).Value;
 
             Warfare.enabled = base.Config.Bind<bool>(new ConfigDefinition("Warfare", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
@@ -115,6 +116,11 @@ namespace Risky_Artifacts
 
             PrimordialTele.enabled = base.Config.Bind<bool>(new ConfigDefinition("Primacy", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
+        }
+
+        public static void FixScriptableObjectName(ArtifactDef ad)
+        {
+            (ad as ScriptableObject).name = ad.cachedName;
         }
     }
 }

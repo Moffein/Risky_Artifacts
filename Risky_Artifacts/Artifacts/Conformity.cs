@@ -3,14 +3,13 @@ using R2API;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace Risky_Artifacts.Artifacts
+namespace Risky_Artifacts.Mutators
 {
     public class Conformity
     {
         public static bool enabled = true;
         public static ArtifactDef artifact;
-        public static bool disableInBazaar = true;
-        public static bool enableCleansingPools;
+
         public Conformity()
         {
             if (!enabled) return;
@@ -23,27 +22,26 @@ namespace Risky_Artifacts.Artifacts
             artifact.descriptionToken = "RISKYARTIFACTS_CONFORMITY_DESC";
             artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texConformityResizedDisabled.png");
             artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texConformityResizedEnabled.png");
+            RiskyArtifacts.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
-            DirectorAPI.InteractableActions += delegate (List<DirectorAPI.DirectorCardHolder> cardList, DirectorAPI.StageInfo stage)
+            On.EntityStates.Scrapper.ScrapperBaseState.OnEnter += (orig, self) =>
             {
-                if ((RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex)) && !(stage.stage == DirectorAPI.Stage.Bazaar && disableInBazaar))
+                orig(self);
+                if (RunArtifactManager.instance.IsArtifactEnabled(artifact))
                 {
-                    List<DirectorAPI.DirectorCardHolder> removeList = new List<DirectorAPI.DirectorCardHolder>();
-                    foreach (DirectorAPI.DirectorCardHolder dc in cardList)
-                    {
-                        //Debug.Log(dc.Card.spawnCard.name + " - " + dc.InteractableCategory);
-                        if (dc.InteractableCategory == DirectorAPI.InteractableCategory.Duplicator)
-                        {
-                            dc.Card.selectionWeight = 0;
-                            removeList.Add(dc);
-                        }
-                    }
+                    Debug.Log("Conformity - Removing Scrapper");
+                    UnityEngine.Object.Destroy(self.gameObject);
+                }
+            };
 
-                    foreach (DirectorAPI.DirectorCardHolder dc in removeList)
-                    {
-                        cardList.Remove(dc);
-                    }
+            On.RoR2.PurchaseInteraction.Awake += (orig, self) =>
+            {
+                orig(self);
+                if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && self.displayNameToken == "DUPLICATOR_NAME")
+                {
+                    Debug.Log("Conformity - Removing Printer");
+                    UnityEngine.Object.Destroy(self.gameObject);
                 }
             };
         }
