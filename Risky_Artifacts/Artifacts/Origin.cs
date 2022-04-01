@@ -93,7 +93,8 @@ namespace Risky_Artifacts.Artifacts
             OriginBonusItem.descriptionToken = "RISKYARTIFACTS_ORIGINBONUSITEM_DESC";
             OriginBonusItem.tags = new[]
             {
-                ItemTag.WorldUnique
+                ItemTag.WorldUnique,
+                ItemTag.BrotherBlacklist
             };
             ItemDisplayRule[] idr = new ItemDisplayRule[0];
             ItemAPI.Add(new CustomItem(OriginBonusItem, idr));
