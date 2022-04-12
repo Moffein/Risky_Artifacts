@@ -94,7 +94,8 @@ namespace Risky_Artifacts.Artifacts
             OriginBonusItem.tags = new[]
             {
                 ItemTag.WorldUnique,
-                ItemTag.BrotherBlacklist
+                ItemTag.BrotherBlacklist,
+                ItemTag.CannotSteal
             };
             ItemDisplayRule[] idr = new ItemDisplayRule[0];
             ItemAPI.Add(new CustomItem(OriginBonusItem, idr));
