@@ -8,6 +8,7 @@ namespace Risky_Artifacts.Artifacts
     public class Conformity
     {
         public static bool enabled = true;
+        public static bool disableInBazaar = true;
         public static ArtifactDef artifact;
 
         public Conformity()
@@ -31,7 +32,12 @@ namespace Risky_Artifacts.Artifacts
                 if (RunArtifactManager.instance.IsArtifactEnabled(artifact))
                 {
                     Debug.Log("Conformity - Removing Scrapper");
-                    UnityEngine.Object.Destroy(self.gameObject);
+
+                    SceneDef sd = RoR2.SceneCatalog.GetSceneDefForCurrentScene();
+                    if (!(disableInBazaar && sd && sd.baseSceneName.Equals("bazaar")))
+                    {
+                        UnityEngine.Object.Destroy(self.gameObject);
+                    }
                 }
             };
 
@@ -41,7 +47,12 @@ namespace Risky_Artifacts.Artifacts
                 if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && self.displayNameToken == "DUPLICATOR_NAME")
                 {
                     Debug.Log("Conformity - Removing Printer");
-                    UnityEngine.Object.Destroy(self.gameObject);
+
+                    SceneDef sd = RoR2.SceneCatalog.GetSceneDefForCurrentScene();
+                    if (!(disableInBazaar && sd && sd.baseSceneName.Equals("bazaar")))
+                    {
+                        UnityEngine.Object.Destroy(self.gameObject);
+                    }
                 }
             };
         }
