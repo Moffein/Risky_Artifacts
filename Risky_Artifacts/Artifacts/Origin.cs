@@ -176,7 +176,12 @@ namespace Risky_Artifacts.Artifacts
                     c.Emit(OpCodes.Ldarg_0);
                     c.EmitDelegate<Func<int, CharacterBody, int>>((vengeanceCount, self) =>
                     {
-                        return vengeanceCount + self.inventory.GetItemCount(OriginBonusItem);
+                        int toReturn = vengeanceCount;
+                        if (self.inventory)
+                        {
+                            toReturn += self.inventory.GetItemCount(OriginBonusItem);
+                        }
+                        return toReturn;
                     });
                 };
             }
@@ -191,7 +196,12 @@ namespace Risky_Artifacts.Artifacts
                 c.Emit(OpCodes.Ldarg_0);
                 c.EmitDelegate<Func<int, CharacterModel, int>>((vengeanceCount, self) =>
                 {
-                    return vengeanceCount + self.body.inventory.GetItemCount(OriginBonusItem);
+                    int toReturn = vengeanceCount;
+                    if (self.body && self.body.inventory)
+                    {
+                        toReturn += self.body.inventory.GetItemCount(OriginBonusItem);
+                    }
+                    return toReturn;
                 });
             };
         }

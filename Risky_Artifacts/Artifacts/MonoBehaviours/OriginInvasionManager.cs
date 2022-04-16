@@ -39,6 +39,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                 this.previousInvasionCycle = currentInvasionCycle;
                 if (this.artifactIsEnabled)
                 {
+
                     StartCoroutine(PerformInvasion(new Xoroshiro128Plus(this.seed + (ulong)((long)currentInvasionCycle))));
                 }
             }
@@ -142,7 +143,8 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                 float playerFactor = 1f + (0.3f * (run.livingPlayerCount - 1));
                 float invasionCount = 1f;
                 int cycle = this.GetCurrentInvasionCycle();
-                if (cycle > 0)
+                SceneDef sd = RoR2.SceneCatalog.GetSceneDefForCurrentScene();
+                if (cycle > 0 && sd && sd.sceneType == SceneType.Stage)
                 {
                     invasionCount += (this.GetCurrentInvasionCycle() - 1) * Origin.extraBossesPerInvasion;
                 }
