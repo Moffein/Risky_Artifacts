@@ -14,8 +14,8 @@ namespace Risky_Artifacts.Artifacts
         public static bool enabled = true;
         public static ArtifactDef artifact;
 
-        private static int runMountainCount = 0;
-        private static int stageMountainCount = 0;
+        public static int runMountainCount = 0;
+        public static int stageMountainCount = 0;
 
         public Arrogance()
         {

@@ -44,7 +44,7 @@ namespace Risky_Artifacts.Artifacts
             On.RoR2.PurchaseInteraction.Awake += (orig, self) =>
             {
                 orig(self);
-                if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && self.displayNameToken == "DUPLICATOR_NAME")
+                if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && (self.displayNameToken == "DUPLICATOR_NAME" || self.displayNameToken == "DUPLICATOR_WILD_NAME" || self.displayNameToken == "DUPLICATOR_MILITARY_NAME"))
                 {
                     Debug.Log("Conformity - Removing Printer");
 
