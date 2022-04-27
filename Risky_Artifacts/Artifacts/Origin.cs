@@ -87,7 +87,7 @@ namespace Risky_Artifacts.Artifacts
 
             OriginBonusItem = ScriptableObject.CreateInstance<ItemDef>();
             OriginBonusItem.name = "RiskyArtifactsOriginBonus";
-            OriginBonusItem.tier = ItemTier.NoTier;
+            OriginBonusItem.deprecatedTier = ItemTier.NoTier;
             OriginBonusItem.nameToken = "RISKYARTIFACTS_ORIGINBONUSITEM_NAME";
             OriginBonusItem.pickupToken = "RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP";
             OriginBonusItem.descriptionToken = "RISKYARTIFACTS_ORIGINBONUSITEM_DESC";
@@ -98,6 +98,7 @@ namespace Risky_Artifacts.Artifacts
                 ItemTag.CannotSteal
             };
             ItemDisplayRule[] idr = new ItemDisplayRule[0];
+            //ContentAddition.AddItemDef(OriginBonusItem);
             ItemAPI.Add(new CustomItem(OriginBonusItem, idr));
 
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>
@@ -208,6 +209,10 @@ namespace Risky_Artifacts.Artifacts
 
         public static void AddSpawnCard(SpawnCard spawnCard, BossTier tier)
         {
+            if (t1BossCards == null) t1BossCards = new List<SpawnCard>();
+            if (t2BossCards == null) t2BossCards = new List<SpawnCard>();
+            if (t3BossCards == null) t3BossCards = new List<SpawnCard>();
+
             if (!impOnly)
             {
                 switch (tier)
@@ -314,9 +319,9 @@ namespace Risky_Artifacts.Artifacts
             wormCard = LoadSpawncard("cscMagmaWorm");
             if (!impOnly)
             {
-                t1BossCards = new List<SpawnCard>();
-                t2BossCards = new List<SpawnCard>();
-                t3BossCards = new List<SpawnCard>();
+                if (t1BossCards == null) t1BossCards = new List<SpawnCard>();
+                if (t2BossCards == null) t2BossCards = new List<SpawnCard>();
+                if (t3BossCards == null) t3BossCards = new List<SpawnCard>();
 
                 if (enableBeetle) t1BossCards.Add(LoadSpawncard("cscBeetleQueen")); //too useless
                 if (enableVagrant) t1BossCards.Add(LoadSpawncard("cscVagrant"));
