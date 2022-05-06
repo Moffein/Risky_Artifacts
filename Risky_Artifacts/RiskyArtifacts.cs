@@ -12,7 +12,7 @@ namespace Risky_Artifacts
 {
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.4.11")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.5.0")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(LanguageAPI), nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifacts : BaseUnityPlugin
@@ -118,6 +118,8 @@ namespace Risky_Artifacts
 
             PrimordialTele.enabled = base.Config.Bind<bool>(new ConfigDefinition("Primacy", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
+            PrimordialTele.enableOnFirstLoop = base.Config.Bind<bool>(new ConfigDefinition("Primacy", "Enable on First Loop"), false,
+                new ConfigDescription("Primordial teleporters will spawn on the first loop.")).Value;
         }
 
         public static void FixScriptableObjectName(ArtifactDef ad)
