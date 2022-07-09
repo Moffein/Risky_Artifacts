@@ -113,6 +113,11 @@ namespace Risky_Artifacts
             Origin.allowEliteWorms = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Magma Worm - Allow Elites"), false,
                 new ConfigDescription("Allow this boss to spawn as an elite.")).Value;
 
+            Origin.enableRoboBall = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Xi Construct"), true,
+                new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
+            Origin.enableWorm = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Void Devastator"), true,
+                new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
+
             Origin.enableGrandparent = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Grandparent"), false,
                 new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
 

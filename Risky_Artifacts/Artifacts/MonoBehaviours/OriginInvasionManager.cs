@@ -95,7 +95,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                         float cost = 1f;
                         OriginExtraDrops oed = victimMaster.GetComponent<OriginExtraDrops>();
                         if (oed) cost = oed.cost;
-                        Origin.DropItem(damageReport.victimBody.corePosition, treasureRng, cost);
+                        Origin.DropItem(damageReport.victimBody.corePosition, treasureRng, cost, (damageReport.victim && oed.teleportItem) ? damageReport.victim.gameObject : null);
                     }
                 }
             }
@@ -233,6 +233,10 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                     {
                                         oed = resultMaster.gameObject.AddComponent<OriginExtraDrops>();
                                         oed.cost = cost;
+                                        if (spawnCard == Origin.wormCard)
+                                        {
+                                            oed.teleportItem = true;
+                                        }
                                     }
 
                                     if (selectedEliteTier != null && selectedElite != null)
@@ -269,5 +273,6 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
     public class OriginExtraDrops : MonoBehaviour
     {
         public float cost = 1f;
+        public bool teleportItem = false;
     }
 }

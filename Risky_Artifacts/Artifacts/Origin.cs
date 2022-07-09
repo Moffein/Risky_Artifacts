@@ -8,6 +8,8 @@ using System;
 using Mono.Cecil.Cil;
 using static Risky_Artifacts.Artifacts.MonoBehaviours.OriginExtraDrops;
 using System.Linq;
+using UnityEngine.AddressableAssets;
+using RoR2.ExpansionManagement;
 
 namespace Risky_Artifacts.Artifacts
 {
@@ -27,9 +29,14 @@ namespace Risky_Artifacts.Artifacts
 
         private static List<SpawnCard> t1BossCards;
         private static List<SpawnCard> t2BossCards;
+
+        private static ExpansionDef dlc1Def = Addressables.LoadAssetAsync<ExpansionDef>("RoR2/DLC1/Common/DLC1.asset").WaitForCompletion();
+
+        private static List<SpawnCard> t2BossCards_DLC1;
+
         private static List<SpawnCard> t3BossCards;
-        private static SpawnCard impCard;
-        private static SpawnCard wormCard;
+        public static SpawnCard impCard;
+        public static SpawnCard wormCard;
 
         public static bool combineSpawns = true;
         public static bool disableParticles = false;
@@ -44,6 +51,9 @@ namespace Risky_Artifacts.Artifacts
         public static bool enableRoboBall = true;
         public static bool enableGrovetender = true;
         public static bool enableWorm = false;
+
+        public static bool enableXi_DLC1 = true;
+        public static bool enableVoidCrab_DLC1 = true;
 
         public static bool enableGrandparent = true;
 
@@ -211,6 +221,7 @@ namespace Risky_Artifacts.Artifacts
         {
             if (t1BossCards == null) t1BossCards = new List<SpawnCard>();
             if (t2BossCards == null) t2BossCards = new List<SpawnCard>();
+            if (t2BossCards_DLC1 == null) t2BossCards_DLC1 = new List<SpawnCard>();
             if (t3BossCards == null) t3BossCards = new List<SpawnCard>();
 
             if (!impOnly)
@@ -298,6 +309,18 @@ namespace Risky_Artifacts.Artifacts
                     }
                 }
 
+                //Add DLC1 Bosses
+                if (availableBosses == t2BossCards)
+                {
+                    if (Run.instance.IsExpansionEnabled(dlc1Def))
+                    {
+                        List<SpawnCard> temp = new List<SpawnCard>(availableBosses.Count + t2BossCards_DLC1.Count);
+                        temp.AddRange(availableBosses);
+                        temp.AddRange(t2BossCards_DLC1);
+                        availableBosses = temp;
+                    }
+                }
+
                 if (CombatDirector.IsEliteOnlyArtifactActive() && !allowEliteWorms)
                 {
                     availableBosses.Remove(wormCard);
@@ -336,6 +359,7 @@ namespace Risky_Artifacts.Artifacts
             {
                 if (t1BossCards == null) t1BossCards = new List<SpawnCard>();
                 if (t2BossCards == null) t2BossCards = new List<SpawnCard>();
+                if (t2BossCards_DLC1 == null) t2BossCards_DLC1 = new List<SpawnCard>();
                 if (t3BossCards == null) t3BossCards = new List<SpawnCard>();
 
                 if (enableBeetle) t1BossCards.Add(LoadSpawncard("cscBeetleQueen")); //too useless
@@ -348,6 +372,9 @@ namespace Risky_Artifacts.Artifacts
                 if (enableWorm) t2BossCards.Add(wormCard);
                 if (enableImp) t2BossCards.Add(impCard);
 
+                if (enableXi_DLC1) t2BossCards_DLC1.Add(Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/MajorAndMinorConstruct/cscMegaConstruct.asset").WaitForCompletion());
+                if (enableXi_DLC1) t2BossCards_DLC1.Add(Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/VoidMegaCrab/cscVoidMegaCrab.asset").WaitForCompletion());
+
                 if (enableGrandparent) t3BossCards.Add(LoadSpawncard("titan/cscGrandparent"));
             }
         }
@@ -359,7 +386,7 @@ namespace Risky_Artifacts.Artifacts
             t3  //Stage 5
         }
 
-        public static void DropItem(Vector3 position, Xoroshiro128Plus treasureRng, float cost)
+        public static void DropItem(Vector3 position, Xoroshiro128Plus treasureRng, float cost, GameObject victimObject)
         {
             List<PickupIndex> list;
 
@@ -370,11 +397,16 @@ namespace Risky_Artifacts.Artifacts
             whiteChance = Mathf.Lerp(whiteChance, 0f, (cost - 1f) / 2f);   //3 whites = 1 guaranteed green
             greenChance = cost < 3f ? greenChance : Mathf.Lerp(greenChance, 0f, (cost-3f)/12f); //15 whites = 1 guaranteed red
 
-            float yellowChance = (whiteChance + greenChance) > 0 ? (whiteChance + greenChance + redChance) * 10f / 9f : 0f;
+            float yellowChance = (whiteChance + greenChance) > 0 ? (whiteChance + greenChance + redChance) * 0.1111111111f : 0f;
 
 
             float total = whiteChance + greenChance + redChance + yellowChance;
-            
+
+            if (victimObject)
+            {
+                position = (SneedUtils.SneedUtils.FindSafeTeleportPosition(victimObject, position));
+            }    
+
             if (treasureRng.RangeFloat(0f, total) <= whiteChance)//drop white
             {
                 list = Run.instance.availableTier1DropList.Concat(Run.instance.availableVoidTier1DropList).ToList();
