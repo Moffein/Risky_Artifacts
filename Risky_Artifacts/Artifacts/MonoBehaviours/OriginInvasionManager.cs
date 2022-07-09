@@ -23,6 +23,8 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
         public static float beadBossCount = 2.5f;
 
         private List<DirectorSpawnRequest> pendingSpawns;
+        
+        public SpawnCard prevBoss = null;
 
         private bool artifactIsEnabled
         {
@@ -135,7 +137,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
             CombatSquad combatSquad = UnityEngine.Object.Instantiate<GameObject>(LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/Encounters/ShadowCloneEncounter")).GetComponent<CombatSquad>();
 
             //Select spawncard
-            SpawnCard spawnCard = Origin.SelectSpawnCard(rng);
+            SpawnCard spawnCard = Origin.SelectSpawnCard(rng, ref prevBoss);
             if (spawnCard)
             {
                 int teamBeadCount = Util.GetItemCountForTeam(TeamIndex.Player, RoR2Content.Items.LunarTrinket.itemIndex, true, true);

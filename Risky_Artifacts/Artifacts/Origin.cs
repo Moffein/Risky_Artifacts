@@ -232,10 +232,11 @@ namespace Risky_Artifacts.Artifacts
             }
         }
 
-        public static SpawnCard SelectSpawnCard(Xoroshiro128Plus rng)
+        public static SpawnCard SelectSpawnCard(Xoroshiro128Plus rng, ref SpawnCard prevBoss)
         {
             if (impOnly)
             {
+                prevBoss = impCard;
                 return impCard;
             }
             else
@@ -302,9 +303,23 @@ namespace Risky_Artifacts.Artifacts
                     availableBosses.Remove(wormCard);
                 }
 
+                //Attempt to filter out previous boss
+                if (prevBoss != null)
+                {
+                    if (availableBosses.Contains(prevBoss) && availableBosses.Count - 1 > 0)
+                    {
+                        SpawnCard[] temp = new SpawnCard[availableBosses.Count];
+                        availableBosses.CopyTo(temp, 0);
+                        availableBosses = temp.ToList<SpawnCard>();
+                        availableBosses.Remove(prevBoss);
+                    }
+                }
+
                 if (availableBosses.Count > 0)
                 {
-                    return availableBosses[rng.RangeInt(0, availableBosses.Count)];
+                    SpawnCard selectedBoss = availableBosses[rng.RangeInt(0, availableBosses.Count)];
+                    prevBoss = selectedBoss;
+                    return selectedBoss;
                 }
                 else
                 {
