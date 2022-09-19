@@ -12,8 +12,8 @@ namespace Risky_Artifacts
 {
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.6.0")]
-    [R2API.Utils.R2APISubmoduleDependency( nameof(LanguageAPI), nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.6.2")]
+    [R2API.Utils.R2APISubmoduleDependency( nameof(LanguageAPI), nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI), nameof(RecalculateStatsAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifacts : BaseUnityPlugin
     {
@@ -50,6 +50,11 @@ namespace Risky_Artifacts
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
             Conformity.disableInBazaar = base.Config.Bind<bool>(new ConfigDefinition("Conformity", "Disable Conformity in Bazaar"), true,
                 new ConfigDescription("Allow printers to spawn in the bazaar while Conformity is enabled (for use with mods that do this).")).Value;
+            Conformity.removeScrappers = base.Config.Bind<bool>(new ConfigDefinition("Conformity", "Remove Scrappers"), true,
+                new ConfigDescription("Prevent Scrappers from spawning when this artifact is enabled.")).Value;
+            Conformity.removePrinters = base.Config.Bind<bool>(new ConfigDefinition("Conformity", "Remove Printers"), true,
+                new ConfigDescription("Prevent Printers from spawning when this artifact is enabled.")).Value;
+
 
             Warfare.enabled = base.Config.Bind<bool>(new ConfigDefinition("Warfare", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;

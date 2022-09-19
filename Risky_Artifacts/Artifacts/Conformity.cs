@@ -8,6 +8,8 @@ namespace Risky_Artifacts.Artifacts
     public class Conformity
     {
         public static bool enabled = true;
+        public static bool removeScrappers = true;
+        public static bool removePrinters = true;
         public static bool disableInBazaar = true;
         public static ArtifactDef artifact;
 
@@ -15,7 +17,19 @@ namespace Risky_Artifacts.Artifacts
         {
             if (!enabled) return;
             LanguageAPI.Add("RISKYARTIFACTS_CONFORMITY_NAME", "Artifact of Conformity");
-            LanguageAPI.Add("RISKYARTIFACTS_CONFORMITY_DESC", "3D Printers and Scrappers no longer spawn.");
+
+            if (removeScrappers && !removePrinters)
+            {
+                LanguageAPI.Add("RISKYARTIFACTS_CONFORMITY_DESC", "Scrappers no longer spawn.");
+            }
+            else if (removePrinters && !removeScrappers)
+            {
+                LanguageAPI.Add("RISKYARTIFACTS_CONFORMITY_DESC", "3D Printers no longer spawn.");
+            }
+            else
+            {
+                LanguageAPI.Add("RISKYARTIFACTS_CONFORMITY_DESC", "3D Printers and Scrappers no longer spawn.");
+            }
 
             artifact = ScriptableObject.CreateInstance<ArtifactDef>();
             artifact.cachedName = "RiskyArtifactOfConformity";
@@ -26,35 +40,41 @@ namespace Risky_Artifacts.Artifacts
             RiskyArtifacts.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
-            On.EntityStates.Scrapper.ScrapperBaseState.OnEnter += (orig, self) =>
+            if (removeScrappers)
             {
-                orig(self);
-                if (RunArtifactManager.instance.IsArtifactEnabled(artifact))
+                On.EntityStates.Scrapper.ScrapperBaseState.OnEnter += (orig, self) =>
                 {
-                    Debug.Log("Conformity - Removing Scrapper");
-
-                    SceneDef sd = RoR2.SceneCatalog.GetSceneDefForCurrentScene();
-                    if (!(disableInBazaar && sd && sd.baseSceneName.Equals("bazaar")))
+                    orig(self);
+                    if (RunArtifactManager.instance.IsArtifactEnabled(artifact))
                     {
-                        UnityEngine.Object.Destroy(self.gameObject);
-                    }
-                }
-            };
+                        Debug.Log("Conformity - Removing Scrapper");
 
-            On.RoR2.PurchaseInteraction.Awake += (orig, self) =>
+                        SceneDef sd = RoR2.SceneCatalog.GetSceneDefForCurrentScene();
+                        if (!(disableInBazaar && sd && sd.baseSceneName.Equals("bazaar")))
+                        {
+                            UnityEngine.Object.Destroy(self.gameObject);
+                        }
+                    }
+                };
+            }
+
+            if (removePrinters)
             {
-                orig(self);
-                if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && (self.displayNameToken == "DUPLICATOR_NAME" || self.displayNameToken == "DUPLICATOR_WILD_NAME" || self.displayNameToken == "DUPLICATOR_MILITARY_NAME"))
+                On.RoR2.PurchaseInteraction.Awake += (orig, self) =>
                 {
-                    Debug.Log("Conformity - Removing Printer");
-
-                    SceneDef sd = RoR2.SceneCatalog.GetSceneDefForCurrentScene();
-                    if (!(disableInBazaar && sd && sd.baseSceneName.Equals("bazaar")))
+                    orig(self);
+                    if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && (self.displayNameToken == "DUPLICATOR_NAME" || self.displayNameToken == "DUPLICATOR_WILD_NAME" || self.displayNameToken == "DUPLICATOR_MILITARY_NAME"))
                     {
-                        UnityEngine.Object.Destroy(self.gameObject);
+                        Debug.Log("Conformity - Removing Printer");
+
+                        SceneDef sd = RoR2.SceneCatalog.GetSceneDefForCurrentScene();
+                        if (!(disableInBazaar && sd && sd.baseSceneName.Equals("bazaar")))
+                        {
+                            UnityEngine.Object.Destroy(self.gameObject);
+                        }
                     }
-                }
-            };
+                };
+            }
         }
     }
 }
