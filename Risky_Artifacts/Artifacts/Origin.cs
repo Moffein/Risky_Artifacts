@@ -386,7 +386,7 @@ namespace Risky_Artifacts.Artifacts
             t3  //Stage 5
         }
 
-        public static void DropItem(Vector3 position, Xoroshiro128Plus treasureRng, float cost, GameObject victimObject)
+        public static void DropItem(Vector3 position, Xoroshiro128Plus treasureRng, float cost, GameObject victimObject, PickupIndex bossDrop)
         {
             List<PickupIndex> list;
 
@@ -397,7 +397,7 @@ namespace Risky_Artifacts.Artifacts
             whiteChance = Mathf.Lerp(whiteChance, 0f, (cost - 1f) / 2f);   //3 whites = 1 guaranteed green
             greenChance = cost < 3f ? greenChance : Mathf.Lerp(greenChance, 0f, (cost-3f)/12f); //15 whites = 1 guaranteed red
 
-            float yellowChance = (whiteChance + greenChance) > 0 ? (whiteChance + greenChance + redChance) * 0.1111111111f : 0f;
+            float yellowChance = (whiteChance + greenChance) > 0 ? (whiteChance + greenChance + redChance) * 0.08f : 0f;
 
 
             float total = whiteChance + greenChance + redChance + yellowChance;
@@ -427,35 +427,9 @@ namespace Risky_Artifacts.Artifacts
                     }
                     else//drop yellow
                     {
-                        //There's probably a better way of doing this.
-                        PickupIndex pearlIndex;
-                        PickupIndex shinyPearlIndex;
-
-                        list = new List<PickupIndex>();
-                        pearlIndex = PickupCatalog.FindPickupIndex(RoR2Content.Items.Pearl.itemIndex);
-                        bool pearlAvailable = pearlIndex != PickupIndex.none && Run.instance.IsItemAvailable(RoR2Content.Items.Pearl.itemIndex);
-
-                        shinyPearlIndex = PickupCatalog.FindPickupIndex(RoR2Content.Items.ShinyPearl.itemIndex);
-                        bool shinyPearlAvailable = shinyPearlIndex != PickupIndex.none && Run.instance.IsItemAvailable(RoR2Content.Items.ShinyPearl.itemIndex);
-
-                        if (pearlAvailable || shinyPearlAvailable)
+                        if (bossDrop != PickupIndex.none)
                         {
-                            if (pearlAvailable && shinyPearlAvailable)
-                            {
-                                if (cost < 3f && treasureRng.RangeFloat(0f, 100f) <= 80f)
-                                {
-                                    list.Add(pearlIndex);
-                                }
-                                else
-                                {
-                                    list.Add(shinyPearlIndex);
-                                }
-                            }
-                            else
-                            {
-                                if (pearlAvailable) list.Add(pearlIndex);
-                                if (shinyPearlAvailable ) list.Add(shinyPearlIndex);
-                            }
+                            list = new List<PickupIndex>() { bossDrop };
                         }
                         else
                         {
