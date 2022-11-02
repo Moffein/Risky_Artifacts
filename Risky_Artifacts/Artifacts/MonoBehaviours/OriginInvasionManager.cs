@@ -223,7 +223,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                 {
                                     resultMaster.inventory.GiveItem(Origin.OriginBonusItem);
                                     resultMaster.inventory.RemoveItem(RoR2Content.Items.InvadingDoppelganger);
-                                    if (run.stageClearCount >= 5)
+                                    if (Origin.useAdaptiveArmor && run.stageClearCount >= 5)
                                     {
                                         resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
                                     }

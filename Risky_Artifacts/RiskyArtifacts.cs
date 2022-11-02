@@ -12,7 +12,7 @@ namespace Risky_Artifacts
 {
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.7.0")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.7.1")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(LanguageAPI), nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifacts : BaseUnityPlugin
@@ -86,6 +86,8 @@ namespace Risky_Artifacts
 
             Origin.enabled = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
+            Origin.useAdaptiveArmor = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Boss Adaptive Armor"), false,
+                new ConfigDescription("Origin bosses get Mithrix's adaptive armor.")).Value;
             Origin.bossVoidTeam = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Use Void Team"), true,
                 new ConfigDescription("Bosses spawn as part of the Void team.")).Value;
             Origin.combineSpawns = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Combine Spawns"), true,

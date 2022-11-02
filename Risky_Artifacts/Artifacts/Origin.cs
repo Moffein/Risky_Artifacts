@@ -38,6 +38,8 @@ namespace Risky_Artifacts.Artifacts
         public static SpawnCard impCard;
         public static SpawnCard wormCard;
 
+        public static bool useAdaptiveArmor = false;
+
         public static bool combineSpawns = true;
         public static bool disableParticles = false;
         public static bool ignoreHonor = false;
