@@ -20,9 +20,9 @@ namespace Risky_Artifacts.Artifacts
             artifact.cachedName = "RiskyArtifactOfWarfare";
             artifact.nameToken = "RISKYARTIFACTS_WARFARE_NAME";
             artifact.descriptionToken = "RISKYARTIFACTS_WARFARE_DESC";
-            artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArtifactWarDisabled.png");
-            artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArtifactWarEnabled.png");
-            RiskyArtifacts.FixScriptableObjectName(artifact);
+            artifact.smallIconDeselectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texArtifactWarDisabled.png");
+            artifact.smallIconSelectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texArtifactWarEnabled.png");
+            RiskyArtifactsPlugin.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
             On.RoR2.CharacterBody.RecalculateStats += (orig, self) =>

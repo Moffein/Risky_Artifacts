@@ -31,9 +31,9 @@ namespace Risky_Artifacts.Artifacts
             artifact.cachedName = "RiskyArtifactOfConformity";
             artifact.nameToken = "RISKYARTIFACTS_CONFORMITY_NAME";
             artifact.descriptionToken = desc;
-            artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texConformityResizedDisabled.png");
-            artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texConformityResizedEnabled.png");
-            RiskyArtifacts.FixScriptableObjectName(artifact);
+            artifact.smallIconDeselectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texConformityResizedDisabled.png");
+            artifact.smallIconSelectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texConformityResizedEnabled.png");
+            RiskyArtifactsPlugin.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
             if (removeScrappers)

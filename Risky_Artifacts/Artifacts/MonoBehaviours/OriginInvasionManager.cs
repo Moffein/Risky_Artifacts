@@ -170,7 +170,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                             DirectorCore.MonsterSpawnDistance input;
 
                             spawnOnTarget = characterMaster.GetBody().coreTransform;
-                            input = DirectorCore.MonsterSpawnDistance.Close;
+                            input = DirectorCore.MonsterSpawnDistance.Standard;
 
                             //Select Elite Tier
                             CombatDirector.EliteTierDef selectedEliteTier = null;

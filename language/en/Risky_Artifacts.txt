@@ -16,7 +16,7 @@
 	"RISKYARTIFACTS_ORIGIN_DESC" : "Boss monsters invade the map every 10 minutes.",
 	"RISKYARTIFACTS_ORIGIN_DESC_IMPONLY" : "Imp Overlords invade the map every 10 minutes.",
 	"RISKYARTIFACTS_ORIGIN_SUBTITLENAMETOKEN" : "Reclaimer",
-	""RISKYARTIFACTS_ORIGIN_MODIFIER" : "Vanguard",
+	"RISKYARTIFACTS_ORIGIN_MODIFIER" : " Vanguard",
 	
 	"RISKYARTIFACTS_EXPANSION_NAME" : "Artifact of Expansion",
 	"RISKYARTIFACTS_EXPANSION_DESC" : "The Teleporter zone covers the whole map, but charging speed is reduced and prices are increased.",

@@ -29,9 +29,9 @@ namespace Risky_Artifacts.Artifacts
             artifact.cachedName = "RiskyArtifactOfExpansion";
             artifact.nameToken = "RISKYARTIFACTS_EXPANSION_NAME";
             artifact.descriptionToken = desc;
-            artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texExpansionDisabled.png");
-            artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texExpansionEnabled.png");
-            RiskyArtifacts.FixScriptableObjectName(artifact);
+            artifact.smallIconDeselectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texExpansionDisabled.png");
+            artifact.smallIconSelectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texExpansionEnabled.png");
+            RiskyArtifactsPlugin.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
             On.RoR2.Run.IsItemAvailable += (orig, self, itemIndex) =>
@@ -48,7 +48,7 @@ namespace Risky_Artifacts.Artifacts
 
             On.RoR2.HoldoutZoneController.Awake += (orig, self) =>
             {
-                if (RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex) && self && Run.instance.gameModeIndex != RiskyArtifacts.SimulacrumIndex)
+                if (RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex) && self && Run.instance.gameModeIndex != RiskyArtifactsPlugin.SimulacrumIndex)
                 {
                     SceneDef sd = RoR2.SceneCatalog.GetSceneDefForCurrentScene();
                     if (sd && (sd.baseSceneName.Equals("arena") || sd.baseSceneName.Equals("voidstage")))

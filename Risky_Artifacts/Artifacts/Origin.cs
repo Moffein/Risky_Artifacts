@@ -68,9 +68,9 @@ namespace Risky_Artifacts.Artifacts
             artifact.cachedName = "RiskyArtifactOfOrigination";
             artifact.nameToken = "RISKYARTIFACTS_ORIGIN_NAME";
             artifact.descriptionToken = !impOnly ? "RISKYARTIFACTS_ORIGIN_DESC" : "RISKYARTIFACTS_ORIGIN_DESC_IMPONLY";
-            artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texOriginDisabled.png");
-            artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texOriginEnabledClean.png");
-            RiskyArtifacts.FixScriptableObjectName(artifact);
+            artifact.smallIconDeselectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texOriginDisabled.png");
+            artifact.smallIconSelectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texOriginEnabledClean.png");
+            RiskyArtifactsPlugin.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
             CreateOriginItem();
@@ -162,7 +162,7 @@ namespace Risky_Artifacts.Artifacts
                 CharacterBody cb = bodyObject.GetComponent<CharacterBody>();
                 if (cb && cb.inventory && cb.inventory.GetItemCount(OriginBonusItem) > 0)
                 {
-                    toReturn += " " + Language.GetString("RISKYARTIFACTS_ORIGIN_MODIFIER"); ;
+                    toReturn += Language.GetString("RISKYARTIFACTS_ORIGIN_MODIFIER"); ;
                 }
                 return toReturn;
             };

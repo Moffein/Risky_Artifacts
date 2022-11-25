@@ -12,10 +12,10 @@ namespace Risky_Artifacts
 {
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.8.0")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.7.2")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    public class RiskyArtifacts : BaseUnityPlugin
+    public class RiskyArtifactsPlugin : BaseUnityPlugin
     {
         public static AssetBundle assetBundle;
         public static GameModeIndex SimulacrumIndex;

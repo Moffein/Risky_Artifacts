@@ -16,7 +16,7 @@ namespace Risky_Artifacts
         {
             get
             {
-                return System.IO.Path.GetDirectoryName(RiskyArtifacts.pluginInfo.Location);
+                return System.IO.Path.GetDirectoryName(RiskyArtifactsPlugin.pluginInfo.Location);
             }
         }
         public LanguageTokens()

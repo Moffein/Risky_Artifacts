@@ -24,9 +24,9 @@ namespace Risky_Artifacts.Artifacts
             artifact.cachedName = "RiskyArtifactOfArrogance";
             artifact.nameToken = "RISKYARTIFACTS_ARROGANCE_NAME";
             artifact.descriptionToken = "RISKYARTIFACTS_ARROGANCE_DESC";
-            artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArrogDisabled.png");
-            artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texArrogEnabled.png");
-            RiskyArtifacts.FixScriptableObjectName(artifact);
+            artifact.smallIconDeselectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texArrogDisabled.png");
+            artifact.smallIconSelectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texArrogEnabled.png");
+            RiskyArtifactsPlugin.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.KingEnderBrine.ProperSave"))
             {
