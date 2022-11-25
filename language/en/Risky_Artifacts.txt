@@ -1,0 +1,33 @@
+{
+	strings:
+	{
+	"RISKYARTIFACTS_WARFARE_NAME" : "Artifact of Warfare",
+	"RISKYARTIFACTS_WARFARE_DESC" : "Monsters gain greatly increased movement speed, attack speed, and projectile speed.",
+	
+	"RISKYARTIFACTS_ARROGANCE_NAME" : "Artifact of Arrogance",
+	"RISKYARTIFACTS_ARROGANCE_DESC" : "The effects of Shrine of the Mountain are permanent.",
+	
+	"RISKYARTIFACTS_CONFORMITY_NAME" : "Artifact of Conformity",
+	"RISKYARTIFACTS_CONFORMITY_DESC" : "3D Printers and Scrappers no longer spawn.",
+	"RISKYARTIFACTS_CONFORMITY_DESC_NOPRINTERS" : "3D Printers no longer spawn.",
+	"RISKYARTIFACTS_CONFORMITY_DESC_NOSCRAPPERS" : "Scrappers no longer spawn.",
+	
+	"RISKYARTIFACTS_ORIGIN_NAME" : "Artifact of Origination",
+	"RISKYARTIFACTS_ORIGIN_DESC" : "Boss monsters invade the map every 10 minutes.",
+	"RISKYARTIFACTS_ORIGIN_DESC_IMPONLY" : "Imp Overlords invade the map every 10 minutes.",
+	"RISKYARTIFACTS_ORIGIN_SUBTITLENAMETOKEN" : "Reclaimer",
+	""RISKYARTIFACTS_ORIGIN_MODIFIER" : "Vanguard",
+	
+	"RISKYARTIFACTS_EXPANSION_NAME" : "Artifact of Expansion",
+	"RISKYARTIFACTS_EXPANSION_DESC" : "The Teleporter zone covers the whole map, but charging speed is reduced and prices are increased.",
+	"RISKYARTIFACTS_EXPANSION_DESC_NOPRICEINCREASE" : "The Teleporter zone covers the whole map, but charging speed is reduced.",
+	
+	"RISKYARTIFACTS_PRIMORDIAL_NAME" : "Artifact of Primacy",
+	"RISKYARTIFACTS_PRIMORDIAL_DESC" : "The Primordial Teleporter spawns on every stage after looping.",
+	
+	//Hidden Origin Item, not visible in normal gameplay
+	"RISKYARTIFACTS_ORIGINBONUSITEM_NAME" : "Origin Bonus",
+	"RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP" : "The party starts here.",
+	"RISKYARTIFACTS_ORIGINBONUSITEM_DESC" : "Increase <style=cIsUtility>movement speed</style>, <style=cIsDamage>attack speed</style> and <style=cIsDamage>damage</style>, and <style=cIsUtility>reduce skill cooldowns</style>."
+	}
+}

@@ -64,13 +64,10 @@ namespace Risky_Artifacts.Artifacts
         public Origin()
         {
             if (!enabled) return;
-            LanguageAPI.Add("RISKYARTIFACTS_ORIGIN_NAME", "Artifact of Origination");   //Prevent conflicting with Chen's Origin
-            LanguageAPI.Add("RISKYARTIFACTS_ORIGIN_DESC", impOnly ? "Imp Overlords" : "Boss monsters" + " invade the map every 10 minutes.");
-
             artifact = ScriptableObject.CreateInstance<ArtifactDef>();
             artifact.cachedName = "RiskyArtifactOfOrigination";
             artifact.nameToken = "RISKYARTIFACTS_ORIGIN_NAME";
-            artifact.descriptionToken = "RISKYARTIFACTS_ORIGIN_DESC";
+            artifact.descriptionToken = !impOnly ? "RISKYARTIFACTS_ORIGIN_DESC" : "RISKYARTIFACTS_ORIGIN_DESC_IMPONLY";
             artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texOriginDisabled.png");
             artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texOriginEnabledClean.png");
             RiskyArtifacts.FixScriptableObjectName(artifact);
@@ -90,13 +87,6 @@ namespace Risky_Artifacts.Artifacts
 
         private void CreateOriginItem()
         {
-            LanguageAPI.Add("RISKYARTIFACTS_ORIGINBONUSITEM_NAME", "Origin Bonus");
-            LanguageAPI.Add("RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP", "The party starts here.");
-            LanguageAPI.Add("RISKYARTIFACTS_ORIGINBONUSITEM_DESC", "Increase <style=cIsUtility>movement speed</style>, <style=cIsDamage>attack speed</style> and <style=cIsDamage>damage</style>, and <style=cIsUtility>reduce skill cooldowns</style>.");
-
-            LanguageAPI.Add("RISKYARTIFACTS_ORIGIN_SUBTITLENAMETOKEN", "Reclaimer");
-            LanguageAPI.Add("RISKYARTIFACTS_ORIGIN_MODIFIER", "Vanguard");
-
             OriginBonusItem = ScriptableObject.CreateInstance<ItemDef>();
             OriginBonusItem.name = "RiskyArtifactsOriginBonus";
             OriginBonusItem.deprecatedTier = ItemTier.NoTier;

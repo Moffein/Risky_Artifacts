@@ -23,14 +23,12 @@ namespace Risky_Artifacts.Artifacts
         public Expansion()
         {
             if (!enabled) return;
-            LanguageAPI.Add("RISKYARTIFACTS_EXPANSION_NAME", "Artifact of Expansion");
-            LanguageAPI.Add("RISKYARTIFACTS_EXPANSION_DESC", "The Teleporter zone covers the whole map, but charging speed is reduced"
-                + (priceMult > 1f ? " and prices are increased" : "") + ".");
 
+            string desc = priceMult > 1f ? "RISKYARTIFACTS_EXPANSION_DESC" : "RISKYARTIFACTS_EXPANSION_DESC_NOPRICEINCREASE";
             artifact = ScriptableObject.CreateInstance<ArtifactDef>();
             artifact.cachedName = "RiskyArtifactOfExpansion";
             artifact.nameToken = "RISKYARTIFACTS_EXPANSION_NAME";
-            artifact.descriptionToken = "RISKYARTIFACTS_EXPANSION_DESC";
+            artifact.descriptionToken = desc;
             artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texExpansionDisabled.png");
             artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texExpansionEnabled.png");
             RiskyArtifacts.FixScriptableObjectName(artifact);

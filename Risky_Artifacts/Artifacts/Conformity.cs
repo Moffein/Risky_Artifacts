@@ -16,25 +16,21 @@ namespace Risky_Artifacts.Artifacts
         public Conformity()
         {
             if (!enabled) return;
-            LanguageAPI.Add("RISKYARTIFACTS_CONFORMITY_NAME", "Artifact of Conformity");
 
+            string desc = "RISKYARTIFACTS_CONFORMITY_DESC";
             if (removeScrappers && !removePrinters)
             {
-                LanguageAPI.Add("RISKYARTIFACTS_CONFORMITY_DESC", "Scrappers no longer spawn.");
+                desc = "RISKYARTIFACTS_CONFORMITY_DESC_NOSCRAPPERS";
             }
             else if (removePrinters && !removeScrappers)
             {
-                LanguageAPI.Add("RISKYARTIFACTS_CONFORMITY_DESC", "3D Printers no longer spawn.");
-            }
-            else
-            {
-                LanguageAPI.Add("RISKYARTIFACTS_CONFORMITY_DESC", "3D Printers and Scrappers no longer spawn.");
+                desc = "RISKYARTIFACTS_CONFORMITY_DESC_NOPRINTERS";
             }
 
             artifact = ScriptableObject.CreateInstance<ArtifactDef>();
             artifact.cachedName = "RiskyArtifactOfConformity";
             artifact.nameToken = "RISKYARTIFACTS_CONFORMITY_NAME";
-            artifact.descriptionToken = "RISKYARTIFACTS_CONFORMITY_DESC";
+            artifact.descriptionToken = desc;
             artifact.smallIconDeselectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texConformityResizedDisabled.png");
             artifact.smallIconSelectedSprite = RiskyArtifacts.assetBundle.LoadAsset<Sprite>("texConformityResizedEnabled.png");
             RiskyArtifacts.FixScriptableObjectName(artifact);
