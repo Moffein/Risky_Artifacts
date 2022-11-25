@@ -23,6 +23,7 @@ namespace Risky_Artifacts
         public void Awake()
         {
             pluginInfo = Info;
+            new LanguageTokens();
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Risky_Artifacts.riskyartifactsbundle"))
             {
                 assetBundle = AssetBundle.LoadFromStream(stream);
