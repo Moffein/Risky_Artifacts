@@ -46,7 +46,6 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                     triggeredInvasion = true;
                     if (artifactIsEnabled)
                     {
-                        Util.PlaySound("Play_UI_arenaMode_wave_startBoss", base.gameObject);
                         if (NetworkServer.active) RunInvasion(new Xoroshiro128Plus(Run.instance.seed + (ulong)Run.instance.stageClearCount));
                     }
                 }

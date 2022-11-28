@@ -1,5 +1,8 @@
-﻿using Risky_Artifacts.Artifacts;
+﻿using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using Risky_Artifacts.Artifacts;
 using RoR2;
+using System;
 
 namespace Risky_Artifacts
 {
@@ -7,22 +10,26 @@ namespace Risky_Artifacts
     {
         public HookGetBestBodyName()
         {
-            On.RoR2.Util.GetBestBodyName += (orig, bodyObject) =>
+            IL.RoR2.Util.GetBestBodyName += (il) =>
             {
-                string toReturn = orig(bodyObject);
-                CharacterBody cb = bodyObject.GetComponent<CharacterBody>();
-                if (cb && cb.inventory)
+                ILCursor c = new ILCursor(il);
+                c = c.GotoNext(x => x.MatchRet());
+                c.Emit(OpCodes.Ldloc_0);//CharacterBody
+                c.EmitDelegate<Func<string, CharacterBody, string>>((str, cb) =>
                 {
-                    if (cb.inventory.GetItemCount(Origin.OriginBonusItem) > 0)
+                    if (cb.inventory)
                     {
-                        toReturn += Language.GetString("RISKYARTIFACTS_ORIGIN_MODIFIER");
+                        if (cb.inventory.GetItemCount(Origin.OriginBonusItem) > 0)
+                        {
+                            str += Language.GetString("RISKYARTIFACTS_ORIGIN_MODIFIER");
+                        }
+                        if (cb.inventory.GetItemCount(BrotherInvasion.BrotherInvasionBonusItem) > 0)
+                        {
+                            str = Language.GetString("RISKYARTIFACTS_BROTHERINVASION_MODIFIER") + str;
+                        }
                     }
-                    if (cb.inventory.GetItemCount(BrotherInvasion.BrotherInvasionBonusItem) > 0)
-                    {
-                        toReturn = Language.GetString("RISKYARTIFACTS_BROTHERINVASION_MODIFIER") + toReturn;
-                    }
-                }
-                return toReturn;
+                    return str;
+                });
             };
         }
     }
