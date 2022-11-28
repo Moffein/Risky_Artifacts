@@ -26,7 +26,7 @@
 	"RISKYARTIFACTS_PRIMORDIAL_DESC" : "The Primordial Teleporter spawns on every stage after looping.",
 	
 	"RISKYARTIFACTS_BROTHERINVASION_NAME" : "Artifact of the Phantom",
-	"RISKYARTIFACTS_BROTHERINVASION_DESC" : "The Phantom of the King of Nothing hunts you down if you spend too long on a stage.",
+	"RISKYARTIFACTS_BROTHERINVASION_DESC" : "The Phantom of the King of Nothing hunts you down when spending too long on a stage.",
 	"RISKYARTIFACTS_BROTHERINVASION_SUBTITLENAMETOKEN" : "Apparition",
 	"RISKYARTIFACTS_BROTHERINVASION_MODIFIER" : "Phantom of ",
 	
