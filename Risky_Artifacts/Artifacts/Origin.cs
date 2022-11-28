@@ -156,17 +156,6 @@ namespace Risky_Artifacts.Artifacts
                 return orig(self);
             };
 
-            On.RoR2.Util.GetBestBodyName += (orig, bodyObject) =>
-            {
-                string toReturn = orig(bodyObject);
-                CharacterBody cb = bodyObject.GetComponent<CharacterBody>();
-                if (cb && cb.inventory && cb.inventory.GetItemCount(OriginBonusItem) > 0)
-                {
-                    toReturn += Language.GetString("RISKYARTIFACTS_ORIGIN_MODIFIER"); ;
-                }
-                return toReturn;
-            };
-
             if (!disableParticles)
             {
                 IL.RoR2.CharacterBody.UpdateAllTemporaryVisualEffects += (il) =>

@@ -227,6 +227,10 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                     {
                                         resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
                                     }
+                                    if (resultMaster.inventory.GetItemCount(RoR2Content.Items.UseAmbientLevel) <= 0)
+                                    {
+                                        resultMaster.inventory.GiveItem(RoR2Content.Items.UseAmbientLevel);
+                                    }
 
                                     OriginExtraDrops oed = resultMaster.GetComponent<OriginExtraDrops>();
                                     if (!oed)

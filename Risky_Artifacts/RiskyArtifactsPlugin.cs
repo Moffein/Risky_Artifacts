@@ -42,6 +42,10 @@ namespace Risky_Artifacts
             new Expansion();
             new Origin();
             new PrimordialTele();
+            new BrotherInvasion();
+
+            //too lazy to figure out the IL
+            new HookGetBestBodyName();
         }
 
         public void ReadConfig()
@@ -137,6 +141,13 @@ namespace Risky_Artifacts
                 new ConfigDescription("Primordial teleporters will spawn on the first loop.")).Value;
             PrimordialTele.forceEnable = base.Config.Bind<bool>(new ConfigDefinition("Primacy", "Force Enable"), false,
                 new ConfigDescription("The artifact will always be enabled even in game modes that don't have artifacts.")).Value;
+
+            BrotherInvasion.enabled = base.Config.Bind<bool>(new ConfigDefinition("The Phantom", "Enable Artifact"), true,
+                new ConfigDescription("Allows this artifact to be selected.")).Value;
+            BrotherInvasion.bossLunarTeam = base.Config.Bind<bool>(new ConfigDefinition("The Phantom", "Use Lunar Team"), true,
+                new ConfigDescription("The Phantom spawns as part of the Lunar team.")).Value;
+            BrotherInvasion.ignoreHonor = base.Config.Bind<bool>(new ConfigDefinition("The Phantom", "Ignore Honor"), false,
+                new ConfigDescription("The Phantom isn't forced to be elite if Honor is active.")).Value;
         }
 
         public static void FixScriptableObjectName(ArtifactDef ad)

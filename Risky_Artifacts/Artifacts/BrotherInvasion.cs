@@ -14,7 +14,9 @@ namespace Risky_Artifacts.Artifacts
         public static bool enabled = true;
         public static ItemDef BrotherInvasionBonusItem;
         public static ArtifactDef artifact;
-        public static GameObject networkBrotherSpawner;
+        //public static GameObject networkBrotherSpawner;
+        public static bool bossLunarTeam = true;
+        public static bool ignoreHonor = false;
 
         public BrotherInvasion()
         {
@@ -29,12 +31,19 @@ namespace Risky_Artifacts.Artifacts
             RiskyArtifactsPlugin.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
-            networkBrotherSpawner = new GameObject();
+            /*networkBrotherSpawner = new GameObject();
             networkBrotherSpawner.AddComponent<NetworkIdentity>();
             networkBrotherSpawner.AddComponent<Risky_Artifacts.Artifacts.MonoBehaviours.BrotherInvasionController>();
             PrefabAPI.RegisterNetworkPrefab(networkBrotherSpawner);
-            ContentAddition.AddNetworkedObject(networkBrotherSpawner);
+            ContentAddition.AddNetworkedObject(networkBrotherSpawner);*/
 
+            RoR2.Stage.onServerStageBegin += CreateBrotherSpawner;
+
+            InitBrotherItem();
+        }
+
+        private void InitBrotherItem()
+        {
             BrotherInvasionBonusItem = ScriptableObject.CreateInstance<ItemDef>();
             BrotherInvasionBonusItem.name = "RiskyArtifactsBrotherInvasionBonus";
             BrotherInvasionBonusItem.deprecatedTier = ItemTier.NoTier;
@@ -51,25 +60,67 @@ namespace Risky_Artifacts.Artifacts
             //ContentAddition.AddItemDef(BrotherInvasionBonusItem);
             ItemAPI.Add(new CustomItem(BrotherInvasionBonusItem, idr));
 
-            RoR2.Stage.onServerStageBegin += CreateBrotherSpawner;
-
             IL.RoR2.CharacterModel.UpdateOverlays += (il) =>
             {
                 ILCursor c = new ILCursor(il);
-                c.GotoNext(
-                     x => x.MatchLdsfld(typeof(RoR2Content.Items), "InvadingDoppelganger")
+                c.GotoNext(MoveType.After,
+                     x => x.MatchCall(typeof(CharacterModel), "get_isGhost")
                     );
-                c.Index += 2;
                 c.Emit(OpCodes.Ldarg_0);
-                c.EmitDelegate<Func<int, CharacterModel, int>>((vengeanceCount, self) =>
+                c.EmitDelegate<Func<bool, CharacterModel, bool>>((isGhost, self) =>
                 {
-                    int toReturn = vengeanceCount;
+                    bool flag = false;
                     if (self.body && self.body.inventory)
                     {
-                        toReturn += self.body.inventory.GetItemCount(BrotherInvasionBonusItem);
+                        flag = self.body.inventory.GetItemCount(BrotherInvasionBonusItem) > 0;
                     }
-                    return toReturn;
+                    return isGhost || flag;
                 });
+            };
+
+            IL.RoR2.CharacterModel.UpdateRendererMaterials += (il) =>
+            {
+                ILCursor c = new ILCursor(il);
+                c.GotoNext(MoveType.After,
+                     x => x.MatchCall(typeof(CharacterModel), "get_isGhost")
+                    );
+                c.Emit(OpCodes.Ldarg_0);
+                c.EmitDelegate<Func<bool, CharacterModel, bool>>((isGhost, self) =>
+                {
+                    bool flag = false;
+                    if (self.body && self.body.inventory)
+                    {
+                        flag = self.body.inventory.GetItemCount(BrotherInvasionBonusItem) > 0;
+                    }
+                    return isGhost || flag;
+                });
+            };
+
+            On.RoR2.CharacterBody.GetSubtitle += (orig, self) =>
+            {
+                if (self.inventory && self.inventory.GetItemCount(BrotherInvasionBonusItem) > 0)
+                {
+                    return Language.GetString("RISKYARTIFACTS_BROTHERINVASION_SUBTITLENAMETOKEN");
+                }
+                return orig(self);
+            };
+
+            On.RoR2.HealthComponent.TakeDamage += (orig, self, damageInfo) =>
+            {
+                if (NetworkServer.active)
+                {
+                    if (!damageInfo.attacker && !damageInfo.inflictor
+                        && damageInfo.damageColorIndex == DamageColorIndex.Void
+                        && damageInfo.damageType == (DamageType.BypassArmor | DamageType.BypassBlock))
+                    {
+                        if (self.body.inventory && self.body.inventory.GetItemCount(BrotherInvasion.BrotherInvasionBonusItem) > 0)
+                        {
+                            damageInfo.damage = 0f;
+                            damageInfo.rejected = true;
+                        }
+                    }
+                }
+                orig(self, damageInfo);
             };
         }
 
@@ -80,8 +131,12 @@ namespace Risky_Artifacts.Artifacts
                 SceneDef currentScene = SceneCatalog.GetSceneDefForCurrentScene();
                 if (currentScene && !currentScene.isFinalStage && currentScene.sceneType == SceneType.Stage)
                 {
-                    GameObject go = GameObject.Instantiate(networkBrotherSpawner);
-                    NetworkServer.Spawn(go);
+                    if (obj)
+                    {
+                        obj.gameObject.AddComponent<MonoBehaviours.BrotherInvasionController>();
+                    }
+                    /*GameObject go = GameObject.Instantiate(networkBrotherSpawner);
+                    NetworkServer.Spawn(go);*/
                 }
             }
         }
