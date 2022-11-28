@@ -12,8 +12,8 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
 {
     public class BrotherInvasionController : MonoBehaviour
     {
-        public static float minInvasionTimer = 0f;
-        public static float maxInvasionTimer = 10f;
+        public static float minInvasionTimer = 330f;
+        public static float maxInvasionTimer = 420f;
         public static CharacterSpawnCard spawnCard = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/Base/Brother/cscBrother.asset").WaitForCompletion();
 
         private bool triggeredInvasion;
