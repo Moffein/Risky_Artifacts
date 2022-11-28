@@ -17,7 +17,7 @@ namespace Risky_Artifacts
                 c.Emit(OpCodes.Ldloc_0);//CharacterBody
                 c.EmitDelegate<Func<string, CharacterBody, string>>((str, cb) =>
                 {
-                    if (cb.inventory)
+                    if (cb && cb.inventory)
                     {
                         if (cb.inventory.GetItemCount(Origin.OriginBonusItem) > 0)
                         {
