@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/RiskyArtifactsUnity/Assets/Resources/BillingMode.json
+/RiskyArtifactsUnity/Assets/Resources/BillingMode.json.meta
+/RiskyArtifactsUnity/Assets/Resources/BillingMode.json.meta

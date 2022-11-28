@@ -7,6 +7,7 @@ using System.Reflection;
 using BepInEx.Configuration;
 using System.Collections.Generic;
 using R2API.Utils;
+using Risky_Artifacts.Artifacts.MonoBehaviours;
 
 namespace Risky_Artifacts
 {
@@ -44,8 +45,10 @@ namespace Risky_Artifacts
             new PrimordialTele();
             new BrotherInvasion();
 
-            //too lazy to figure out the IL
-            new HookGetBestBodyName();
+            if (Origin.enabled || BrotherInvasion.enabled)
+            {
+                new HookGetBestBodyName();
+            }
         }
 
         public void ReadConfig()
@@ -148,6 +151,11 @@ namespace Risky_Artifacts
                 new ConfigDescription("The Phantom spawns as part of the Lunar team.")).Value;
             BrotherInvasion.ignoreHonor = base.Config.Bind<bool>(new ConfigDefinition("The Phantom", "Ignore Honor"), false,
                 new ConfigDescription("The Phantom isn't forced to be elite if Honor is active.")).Value;
+
+            /*BrotherInvasionController.minInvasionTimer = base.Config.Bind<float>(new ConfigDefinition("The Phantom", "Min Spawn Timer"), 330f,
+                new ConfigDescription("Minimum time before the Phantom spawns.")).Value;
+            BrotherInvasionController.maxInvasionTimer = base.Config.Bind<float>(new ConfigDefinition("The Phantom", "Max Spawn Timer"), 420f,
+                new ConfigDescription("Maximum time before the Phantom spawns.")).Value;*/
         }
 
         public static void FixScriptableObjectName(ArtifactDef ad)
