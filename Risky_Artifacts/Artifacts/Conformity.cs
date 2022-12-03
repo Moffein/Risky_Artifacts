@@ -2,6 +2,7 @@
 using R2API;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.AddressableAssets;
 
 namespace Risky_Artifacts.Artifacts
 {
@@ -12,6 +13,8 @@ namespace Risky_Artifacts.Artifacts
         public static bool removePrinters = true;
         public static bool disableInBazaar = true;
         public static ArtifactDef artifact;
+
+        private static SceneDef bazaarSceneDef = Addressables.LoadAssetAsync<SceneDef>("RoR2/Base/bazaar/bazaar.asset").WaitForCompletion();
 
         public Conformity()
         {
@@ -41,13 +44,12 @@ namespace Risky_Artifacts.Artifacts
                 On.EntityStates.Scrapper.ScrapperBaseState.OnEnter += (orig, self) =>
                 {
                     orig(self);
-                    if (RunArtifactManager.instance.IsArtifactEnabled(artifact))
+                    if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(artifact))
                     {
-                        Debug.Log("Conformity - Removing Scrapper");
-
                         SceneDef sd = RoR2.SceneCatalog.GetSceneDefForCurrentScene();
-                        if (!(disableInBazaar && sd && sd.baseSceneName.Equals("bazaar")))
+                        if (!(disableInBazaar && sd && sd == bazaarSceneDef))
                         {
+                            Debug.Log("Conformity - Removing Scrapper");
                             UnityEngine.Object.Destroy(self.gameObject);
                         }
                     }
@@ -59,13 +61,13 @@ namespace Risky_Artifacts.Artifacts
                 On.RoR2.PurchaseInteraction.Awake += (orig, self) =>
                 {
                     orig(self);
-                    if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && (self.displayNameToken == "DUPLICATOR_NAME" || self.displayNameToken == "DUPLICATOR_WILD_NAME" || self.displayNameToken == "DUPLICATOR_MILITARY_NAME"))
+                    if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(artifact)
+                    && (self.displayNameToken == "DUPLICATOR_NAME" || self.displayNameToken == "DUPLICATOR_WILD_NAME" || self.displayNameToken == "DUPLICATOR_MILITARY_NAME"))
                     {
-                        Debug.Log("Conformity - Removing Printer");
-
                         SceneDef sd = RoR2.SceneCatalog.GetSceneDefForCurrentScene();
-                        if (!(disableInBazaar && sd && sd.baseSceneName.Equals("bazaar")))
+                        if (!(disableInBazaar && sd && sd == bazaarSceneDef))
                         {
+                            Debug.Log("Conformity - Removing Printer");
                             UnityEngine.Object.Destroy(self.gameObject);
                         }
                     }
