@@ -13,7 +13,7 @@ namespace Risky_Artifacts
 {
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.8.1")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.8.2")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -152,10 +152,10 @@ namespace Risky_Artifacts
             BrotherInvasion.ignoreHonor = base.Config.Bind<bool>(new ConfigDefinition("The Phantom", "Ignore Honor"), false,
                 new ConfigDescription("The Phantom isn't forced to be elite if Honor is active.")).Value;
 
-            /*BrotherInvasionController.minInvasionTimer = base.Config.Bind<float>(new ConfigDefinition("The Phantom", "Min Spawn Timer"), 330f,
+            BrotherInvasionController.minInvasionTimer = base.Config.Bind<float>(new ConfigDefinition("The Phantom", "Min Spawn Timer"), 270f,
                 new ConfigDescription("Minimum time before the Phantom spawns.")).Value;
-            BrotherInvasionController.maxInvasionTimer = base.Config.Bind<float>(new ConfigDefinition("The Phantom", "Max Spawn Timer"), 420f,
-                new ConfigDescription("Maximum time before the Phantom spawns.")).Value;*/
+            BrotherInvasionController.maxInvasionTimer = base.Config.Bind<float>(new ConfigDefinition("The Phantom", "Max Spawn Timer"), 360f,
+                new ConfigDescription("Maximum time before the Phantom spawns.")).Value;
         }
 
         public static void FixScriptableObjectName(ArtifactDef ad)

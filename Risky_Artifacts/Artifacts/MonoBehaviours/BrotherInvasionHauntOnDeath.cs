@@ -9,7 +9,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
     {
         public static LunarCoinDef lunarCoinDef = Addressables.LoadAssetAsync<LunarCoinDef>("RoR2/Base/LunarCoin/LunarCoin.asset").WaitForCompletion();
         public static GameObject hauntPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/BrotherHaunt/BrotherHauntMaster.prefab").WaitForCompletion();
-        public static int lunarCoinsToDrop = 4;
+        public static int lunarCoinsToDrop = 5;
 
         private HealthComponent healthComponent;
         private bool triggered;
