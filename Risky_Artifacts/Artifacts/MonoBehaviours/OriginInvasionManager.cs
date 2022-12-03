@@ -232,6 +232,11 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                         resultMaster.inventory.GiveItem(RoR2Content.Items.UseAmbientLevel);
                                     }
 
+                                    if (RunArtifactManager.instance.IsArtifactEnabled(RoR2Content.Artifacts.MonsterTeamGainsItems) && directorSpawnRequest.teamIndexOverride != TeamIndex.Monster)
+                                    {
+                                        resultMaster.inventory.AddItemsFrom(RoR2.Artifacts.MonsterTeamGainsItemsArtifactManager.monsterTeamInventory);
+                                    }
+
                                     OriginExtraDrops oed = resultMaster.GetComponent<OriginExtraDrops>();
                                     if (!oed)
                                     {

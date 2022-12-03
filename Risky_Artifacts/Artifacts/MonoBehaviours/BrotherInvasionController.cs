@@ -109,6 +109,11 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                 resultMaster.inventory.GiveItem(RoR2Content.Items.UseAmbientLevel);
                             }
 
+                            if (RunArtifactManager.instance.IsArtifactEnabled(RoR2Content.Artifacts.MonsterTeamGainsItems) && directorSpawnRequest.teamIndexOverride != TeamIndex.Monster)
+                            {
+                                resultMaster.inventory.AddItemsFrom(RoR2.Artifacts.MonsterTeamGainsItemsArtifactManager.monsterTeamInventory);
+                            }
+
                             float hpMult = 12f; //12f for OL Worm HP
                             float damageMult = 2f;
 
