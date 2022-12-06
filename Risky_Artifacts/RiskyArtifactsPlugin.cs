@@ -8,19 +8,29 @@ using BepInEx.Configuration;
 using System.Collections.Generic;
 using R2API.Utils;
 using Risky_Artifacts.Artifacts.MonoBehaviours;
+using UnityEngine.AddressableAssets;
+using System.Runtime.CompilerServices;
 
 namespace Risky_Artifacts
 {
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.8.4")]
+    [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.8.5")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
     {
+        public static bool artifactPotentialLoaded = false;
         public static AssetBundle assetBundle;
         public static GameModeIndex SimulacrumIndex;
         public static PluginInfo pluginInfo;
+
+        public static PickupDropTable tier1Drops = Addressables.LoadAssetAsync<PickupDropTable>("RoR2/Base/Common/dtTier1Item.asset").WaitForCompletion();
+        public static PickupDropTable tier2Drops = Addressables.LoadAssetAsync<PickupDropTable>("RoR2/Base/Common/dtTier2Item.asset").WaitForCompletion();
+        public static PickupDropTable tier3Drops = Addressables.LoadAssetAsync<PickupDropTable>("RoR2/Base/Common/dtTier3Item.asset").WaitForCompletion();
+        public static GameObject potentialPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/OptionPickup/OptionPickup.prefab").WaitForCompletion();
+
         public void Awake()
         {
             pluginInfo = Info;
@@ -29,6 +39,9 @@ namespace Risky_Artifacts
             {
                 assetBundle = AssetBundle.LoadFromStream(stream);
             }
+
+            artifactPotentialLoaded = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("zombieseatflesh7.ArtifactOfPotential");
+
             ReadConfig();
 
             On.RoR2.GameModeCatalog.LoadGameModes += (orig) =>
@@ -161,6 +174,19 @@ namespace Risky_Artifacts
         public static void FixScriptableObjectName(ArtifactDef ad)
         {
             (ad as ScriptableObject).name = ad.cachedName;
+        }
+
+        public static bool IsPotentialArtifactActive()
+        {
+            bool isActive = false;
+            if (artifactPotentialLoaded) isActive = IsPotentialArtifactActiveInternal();
+            return isActive;
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static bool IsPotentialArtifactActiveInternal()
+        {
+            return RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(ArtifactOfPotential.PotentialArtifact.Potential);
         }
     }
 }

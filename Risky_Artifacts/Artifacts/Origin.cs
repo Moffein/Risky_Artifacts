@@ -386,11 +386,14 @@ namespace Risky_Artifacts.Artifacts
             if (victimObject)
             {
                 position = (SneedUtils.SneedUtils.FindSafeTeleportPosition(victimObject, position));
-            }    
+            }
 
+            bool isYellow = false;
+            ItemTier tier = ItemTier.NoTier;
             if (treasureRng.RangeFloat(0f, total) <= whiteChance)//drop white
             {
                 list = Run.instance.availableTier1DropList.Concat(Run.instance.availableVoidTier1DropList).ToList();
+                tier = ItemTier.Tier1;
             }
             else
             {
@@ -398,6 +401,7 @@ namespace Risky_Artifacts.Artifacts
                 if (treasureRng.RangeFloat(0f, total) <= greenChance)//drop green
                 {
                     list = Run.instance.availableTier2DropList.Concat(Run.instance.availableVoidTier2DropList).ToList();
+                    tier = ItemTier.Tier2;
                 }
                 else
                 {
@@ -405,29 +409,83 @@ namespace Risky_Artifacts.Artifacts
                     if (treasureRng.RangeFloat(0f, total) <= redChance)//drop red
                     {
                         list = Run.instance.availableTier3DropList.Concat(Run.instance.availableVoidTier3DropList).ToList();
+                        tier = ItemTier.Tier3;
                     }
                     else//drop yellow
                     {
                         if (bossDrop != PickupIndex.none)
                         {
                             list = new List<PickupIndex>() { bossDrop };
+                            isYellow = true;
                         }
                         else
                         {
                             if (cost < 15f)
                             {
                                 list = Run.instance.availableTier2DropList;
+                                tier = ItemTier.Tier2;
                             }
                             else
                             {
                                 list = Run.instance.availableTier3DropList;
+                                tier = ItemTier.Tier3;
                             }
                         }
                     }
                 }
             }
+
             int index = treasureRng.RangeInt(0, list.Count);
-            PickupDropletController.CreatePickupDroplet(list[index], position, Vector3.up * 20f);
+            PickupIndex originalIndex = list[index];
+
+            if (isYellow || !RiskyArtifactsPlugin.IsPotentialArtifactActive())
+            {
+                PickupDropletController.CreatePickupDroplet(originalIndex, position, Vector3.up * 20f);
+            }
+            else
+            {
+                PickupDropTable pdt;
+
+                switch(tier)
+                {
+                    case ItemTier.Tier3:
+                        pdt = RiskyArtifactsPlugin.tier3Drops;
+                        break;
+                    case ItemTier.Tier2:
+                        pdt = RiskyArtifactsPlugin.tier2Drops;
+                        break;
+                    default:
+                        pdt = RiskyArtifactsPlugin.tier1Drops;
+                        break;
+                }
+
+                PickupPickerController.Option[] options = PickupPickerController.GenerateOptionsFromDropTable(3, pdt, treasureRng);
+                if (options.Length > 0)
+                {
+                    bool alreadyHasPickup = false;
+                    foreach(PickupPickerController.Option o in options)
+                    {
+                        if (o.pickupIndex == originalIndex)
+                        {
+                            alreadyHasPickup = true;
+                            break;
+                        }
+                    }
+                    if (!alreadyHasPickup) options[0].pickupIndex = originalIndex;
+
+                    PickupDropletController.CreatePickupDroplet(new GenericPickupController.CreatePickupInfo
+                    {
+                        pickupIndex = PickupCatalog.FindPickupIndex(tier),
+                        pickerOptions = options,
+                        rotation = Quaternion.identity,
+                        prefabOverride = RiskyArtifactsPlugin.potentialPrefab
+                    }, position, Vector3.up * 20f);
+                }
+                else
+                {
+                    PickupDropletController.CreatePickupDroplet(originalIndex, position, Vector3.up * 20f);
+                }
+            }
         }
     }
 }
