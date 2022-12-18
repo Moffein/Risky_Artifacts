@@ -84,7 +84,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                     placementMode = DirectorPlacementRule.PlacementMode.NearestNode
                 };
 
-                DirectorCore.GetMonsterSpawnDistance(DirectorCore.MonsterSpawnDistance.Far, out directorPlacementRule.minDistance, out directorPlacementRule.maxDistance);
+                DirectorCore.GetMonsterSpawnDistance(DirectorCore.MonsterSpawnDistance.Standard, out directorPlacementRule.minDistance, out directorPlacementRule.maxDistance);
 
                 DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(spawnCard, directorPlacementRule, rng);
                 directorSpawnRequest.teamIndexOverride = new TeamIndex?(BrotherInvasion.bossLunarTeam ? TeamIndex.Lunar : TeamIndex.Monster);
@@ -115,7 +115,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                             }
 
                             float hpMult = 12f; //12f for OL Worm HP
-                            float damageMult = 2f;
+                            float damageMult = 3f;
 
                             EliteDef selectedElite = null;
                             bool honorEnabled = CombatDirector.IsEliteOnlyArtifactActive();
