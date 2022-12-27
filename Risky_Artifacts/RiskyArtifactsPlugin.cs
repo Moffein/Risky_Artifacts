@@ -16,7 +16,7 @@ namespace Risky_Artifacts
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.8.7")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.8.8")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -169,6 +169,8 @@ namespace Risky_Artifacts
                 new ConfigDescription("Minimum time before the Phantom spawns.")).Value;
             BrotherInvasionController.maxInvasionTimer = base.Config.Bind<float>(new ConfigDefinition("The Phantom", "Max Spawn Timer"), 360f,
                 new ConfigDescription("Maximum time before the Phantom spawns.")).Value;
+            BrotherInvasionController.minStages = base.Config.Bind<int>(new ConfigDefinition("The Phantom", "Min Stages"), 0,
+                new ConfigDescription("Minimum stage completions before the artifact activates.")).Value;
         }
 
         public static void FixScriptableObjectName(ArtifactDef ad)

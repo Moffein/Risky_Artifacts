@@ -16,6 +16,8 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
         public static float maxInvasionTimer = 360f;
         public static CharacterSpawnCard spawnCard = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/Base/Brother/cscBrother.asset").WaitForCompletion();
 
+        public static int minStages = 0;
+
         private bool triggeredInvasion;
         private float stopwatch;
         private float invasionTime;
@@ -37,7 +39,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
 
         public void FixedUpdate()
         {
-            if (!triggeredInvasion)
+            if (!triggeredInvasion && Run.instance && Run.instance.stageClearCount >= minStages)
             {
                 stopwatch += Time.fixedDeltaTime;
 
