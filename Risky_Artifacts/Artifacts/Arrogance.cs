@@ -56,7 +56,7 @@ namespace Risky_Artifacts.Artifacts
                 stageMountainCount = 0;
                 orig(self);
 
-                if (RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex))
+                if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex))
                 {
                     if (TeleporterInteraction.instance)
                     {

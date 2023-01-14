@@ -16,7 +16,7 @@ namespace Risky_Artifacts
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.8.8")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.8.10")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -77,7 +77,6 @@ namespace Risky_Artifacts
                 new ConfigDescription("Prevent Scrappers from spawning when this artifact is enabled.")).Value;
             Conformity.removePrinters = base.Config.Bind<bool>(new ConfigDefinition("Conformity", "Remove Printers"), true,
                 new ConfigDescription("Prevent Printers from spawning when this artifact is enabled.")).Value;
-
 
             Warfare.enabled = base.Config.Bind<bool>(new ConfigDefinition("Warfare", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;

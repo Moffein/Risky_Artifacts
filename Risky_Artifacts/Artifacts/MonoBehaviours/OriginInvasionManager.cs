@@ -205,7 +205,8 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                             DirectorPlacementRule directorPlacementRule = new DirectorPlacementRule
                             {
                                 spawnOnTarget = spawnOnTarget,
-                                placementMode = DirectorPlacementRule.PlacementMode.NearestNode
+                                placementMode = DirectorPlacementRule.PlacementMode.Approximate,
+                                //minDistance = 5f, maxDistance = Mathf.Infinity    //doesnt seem to actually do anything
                             };
                             DirectorCore.GetMonsterSpawnDistance(input, out directorPlacementRule.minDistance, out directorPlacementRule.maxDistance);
                             DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(spawnCard, directorPlacementRule, rng);

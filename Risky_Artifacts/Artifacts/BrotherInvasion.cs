@@ -126,7 +126,7 @@ namespace Risky_Artifacts.Artifacts
 
         private void CreateBrotherSpawner(Stage obj)
         {
-            if (RunArtifactManager.instance.IsArtifactEnabled(BrotherInvasion.artifact))
+            if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(BrotherInvasion.artifact))
             {
                 SceneDef currentScene = SceneCatalog.GetSceneDefForCurrentScene();
                 if (currentScene && !currentScene.isFinalStage && currentScene.sceneType == SceneType.Stage)
