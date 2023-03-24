@@ -16,7 +16,7 @@ namespace Risky_Artifacts
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.8.10")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.9.0")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -68,6 +68,8 @@ namespace Risky_Artifacts
         {
             Arrogance.enabled = base.Config.Bind<bool>(new ConfigDefinition("Arrogance", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
+            Arrogance.guaranteeMountainShrine = base.Config.Bind<bool>(new ConfigDefinition("Arrogance", "Guarantee Mountain Shrine"), true,
+                new ConfigDescription("Guarantees that at least 1 mountain shrine will spawn when this artifact is enabled.")).Value;
 
             Conformity.enabled = base.Config.Bind<bool>(new ConfigDefinition("Conformity", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;

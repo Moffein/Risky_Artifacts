@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
 
 namespace Risky_Artifacts.Artifacts
@@ -14,6 +15,9 @@ namespace Risky_Artifacts.Artifacts
         public static bool enabled = true;
         public static ArtifactDef artifact;
 
+        private static InteractableSpawnCard mountainShrineCard = Addressables.LoadAssetAsync<InteractableSpawnCard>("RoR2/Base/ShrineBoss/iscShrineBoss.asset").WaitForCompletion();
+
+        public static bool guaranteeMountainShrine = true;
         public static int runMountainCount = 0;
         public static int stageMountainCount = 0;
 
@@ -68,7 +72,33 @@ namespace Risky_Artifacts.Artifacts
                 }
             };
 
-            
+            if (Arrogance.guaranteeMountainShrine)
+            {
+                On.RoR2.SceneDirector.PopulateScene += GuaranteeMountainShrine;
+            }
+        }
+
+        private void GuaranteeMountainShrine(On.RoR2.SceneDirector.orig_PopulateScene orig, SceneDirector self)
+        {
+            orig(self);
+
+            if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex))
+            {
+                DirectorPlacementRule placementRule = new DirectorPlacementRule
+                {
+                    placementMode = DirectorPlacementRule.PlacementMode.Random
+                };
+                GameObject gameObject = DirectorCore.instance.TrySpawnObject(new DirectorSpawnRequest(mountainShrineCard, placementRule, self.rng));
+                if (gameObject)
+                {
+                    PurchaseInteraction component = gameObject.GetComponent<PurchaseInteraction>();
+                    if (component && component.costType == CostTypeIndex.Money)
+                    {
+                        component.Networkcost = Run.instance.GetDifficultyScaledCost(component.cost);
+                    }
+                    Debug.Log("Arrogance - Placing guaranteed Mountain Shrine");
+                }
+            }
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
