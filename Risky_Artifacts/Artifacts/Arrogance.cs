@@ -84,19 +84,23 @@ namespace Risky_Artifacts.Artifacts
 
             if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex))
             {
-                DirectorPlacementRule placementRule = new DirectorPlacementRule
+                SceneDef sd = SceneCatalog.GetSceneDefForCurrentScene();
+                if (sd && sd.sceneType == SceneType.Stage)
                 {
-                    placementMode = DirectorPlacementRule.PlacementMode.Random
-                };
-                GameObject gameObject = DirectorCore.instance.TrySpawnObject(new DirectorSpawnRequest(mountainShrineCard, placementRule, self.rng));
-                if (gameObject)
-                {
-                    PurchaseInteraction component = gameObject.GetComponent<PurchaseInteraction>();
-                    if (component && component.costType == CostTypeIndex.Money)
+                    DirectorPlacementRule placementRule = new DirectorPlacementRule
                     {
-                        component.Networkcost = Run.instance.GetDifficultyScaledCost(component.cost);
+                        placementMode = DirectorPlacementRule.PlacementMode.Random
+                    };
+                    GameObject gameObject = DirectorCore.instance.TrySpawnObject(new DirectorSpawnRequest(mountainShrineCard, placementRule, self.rng));
+                    if (gameObject)
+                    {
+                        PurchaseInteraction component = gameObject.GetComponent<PurchaseInteraction>();
+                        if (component && component.costType == CostTypeIndex.Money)
+                        {
+                            component.Networkcost = Run.instance.GetDifficultyScaledCost(component.cost);
+                        }
+                        Debug.Log("Arrogance - Placing guaranteed Mountain Shrine");
                     }
-                    Debug.Log("Arrogance - Placing guaranteed Mountain Shrine");
                 }
             }
         }
