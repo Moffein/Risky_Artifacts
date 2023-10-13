@@ -27,16 +27,18 @@ namespace Risky_Artifacts.Artifacts
         public static float moveSpeedMult = 1.5f;
         public static float extraBossesPerInvasion = 1f;
 
-        private static List<SpawnCard> t1BossCards;
-        private static List<SpawnCard> t2BossCards;
+        private static List<SpawnCard> t1BossCards = new List<SpawnCard>();
+        private static List<SpawnCard> t2BossCards = new List<SpawnCard>();
 
         private static ExpansionDef dlc1Def = Addressables.LoadAssetAsync<ExpansionDef>("RoR2/DLC1/Common/DLC1.asset").WaitForCompletion();
 
-        private static List<SpawnCard> t2BossCards_DLC1;
+        private static List<SpawnCard> t2BossCards_DLC1 = new List<SpawnCard>();
 
-        private static List<SpawnCard> t3BossCards;
+        private static List<SpawnCard> t3BossCards = new List<SpawnCard>();
         public static SpawnCard impCard;
         public static SpawnCard wormCard;
+        public static CharacterSpawnCard scavCard;
+        private static List<SpawnCard> scavCards = new List<SpawnCard>();
 
         public static bool useAdaptiveArmor = false;
 
@@ -58,6 +60,8 @@ namespace Risky_Artifacts.Artifacts
         public static bool enableVoidCrab_DLC1 = true;
 
         public static bool enableGrandparent = true;
+
+        public static bool enableScavenger = true;
 
         public static bool bossVoidTeam = true;
 
@@ -200,11 +204,6 @@ namespace Risky_Artifacts.Artifacts
 
         public static void AddSpawnCard(SpawnCard spawnCard, BossTier tier)
         {
-            if (t1BossCards == null) t1BossCards = new List<SpawnCard>();
-            if (t2BossCards == null) t2BossCards = new List<SpawnCard>();
-            if (t2BossCards_DLC1 == null) t2BossCards_DLC1 = new List<SpawnCard>();
-            if (t3BossCards == null) t3BossCards = new List<SpawnCard>();
-
             if (!impOnly)
             {
                 switch (tier)
@@ -224,6 +223,7 @@ namespace Risky_Artifacts.Artifacts
             }
         }
 
+        //This really needs to be refactored.
         public static SpawnCard SelectSpawnCard(Xoroshiro128Plus rng, ref SpawnCard prevBoss)
         {
             if (impOnly)
@@ -233,13 +233,14 @@ namespace Risky_Artifacts.Artifacts
             }
             else
             {
-                //This is super hard-coded. Weighted selection would be better if I could figure out how to set it up.
+                //This is super hard-coded. Weighted selection would be better.
+                int stageNumber = Run.instance.stageClearCount;
                 bool t1Available = t1BossCards.Count > 0;
                 bool t2Available = t2BossCards.Count > 0;
                 bool t3Available = t3BossCards.Count > 0;
+                bool scavAvailable = enableScavenger && (stageNumber >= 5 || (!t1Available && !t2Available && !t3Available));
 
                 List<SpawnCard> availableBosses = null;
-                int stageNumber = Run.instance.stageClearCount;
                 if (stageNumber < 2)
                 {
                     if (t1Available)
@@ -254,10 +255,14 @@ namespace Risky_Artifacts.Artifacts
                     {
                         availableBosses = t3BossCards;
                     }
+                    else if (scavAvailable)
+                    {
+                        availableBosses = scavCards;
+                    }
                 }
                 else if (stageNumber < 4)
                 {
-                    if (t1Available && rng.RangeInt(1,11) < 4)
+                    if (t1Available && ((!t2Available && !t3Available) || rng.RangeInt(1, 11) < 4))
                     {
                         availableBosses = t1BossCards;
                     }
@@ -271,22 +276,33 @@ namespace Risky_Artifacts.Artifacts
                         {
                             availableBosses = t3BossCards;
                         }
+                        else if (scavAvailable)
+                        {
+                            availableBosses = scavCards;
+                        }
                     }
                 }
                 else
                 {
-                    int roll = rng.RangeInt(10, 100);
-                    if (t1Available && roll < 25)
+                    if (scavAvailable && ((!t1Available && !t2Available && !t3Available) || rng.RangeInt(1, 100) <= 5))
                     {
-                        availableBosses = t1BossCards;
+                        availableBosses = scavCards;
                     }
-                    else if (t2Available && (!t1Available || roll < 90))
+                    else
                     {
-                        availableBosses = t2BossCards;
-                    }
-                    else if (t3Available)
-                    {
-                        availableBosses = t3BossCards;
+                        int roll = rng.RangeInt(1, 100);
+                        if (t1Available && ((!t2Available && !t3Available) || roll < 25))
+                        {
+                            availableBosses = t1BossCards;
+                        }
+                        else if (t2Available && (roll < 90 || !t3Available))
+                        {
+                            availableBosses = t2BossCards;
+                        }
+                        else
+                        {
+                            availableBosses = t3BossCards;
+                        }
                     }
                 }
 
@@ -357,6 +373,25 @@ namespace Risky_Artifacts.Artifacts
                 if (enableXi_DLC1) t2BossCards_DLC1.Add(Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/VoidMegaCrab/cscVoidMegaCrab.asset").WaitForCompletion());
 
                 if (enableGrandparent) t3BossCards.Add(LoadSpawncard("titan/cscGrandparent"));
+
+                if (enableScavenger)
+                {
+                    CharacterSpawnCard origScavCard = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/Base/Scav/cscScav.asset").WaitForCompletion();
+                    scavCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
+                    scavCard.name = "cscRiskyArtifactsScav";
+                    scavCard.prefab = origScavCard.prefab;
+                    scavCard.sendOverNetwork = origScavCard.sendOverNetwork;
+                    scavCard.hullSize = origScavCard.hullSize;
+                    scavCard.nodeGraphType = origScavCard.nodeGraphType;
+                    scavCard.requiredFlags = origScavCard.requiredFlags;
+                    scavCard.forbiddenFlags = origScavCard.forbiddenFlags;
+                    scavCard.directorCreditCost = origScavCard.directorCreditCost;
+                    scavCard.occupyPosition = origScavCard.occupyPosition;
+                    scavCard.loadout = origScavCard.loadout;
+                    scavCard.noElites = origScavCard.noElites;
+                    scavCard.forbiddenAsBoss = origScavCard.forbiddenAsBoss;
+                    scavCards.Add(scavCard);
+                }
             }
         }
 

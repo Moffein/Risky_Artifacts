@@ -16,7 +16,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
         private ulong seed;
         private Run run;
         private Xoroshiro128Plus treasureRng;
-        private float invasionInterval = 600f;
+        public static float invasionInterval = 600f;
 
         public static float spawnDelay = 1f;
         public static int maxSpawns = 120;  //-1 disables limit
@@ -48,7 +48,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
         }
         private int GetCurrentInvasionCycle()
         {
-            return Mathf.FloorToInt(this.run.GetRunStopwatch() / this.invasionInterval);
+            return Mathf.FloorToInt(this.run.GetRunStopwatch() / invasionInterval);
         }
 
         private static void OnRunStartGlobal(Run run)
@@ -152,6 +152,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                 }
                 //float loopFactor = 1 + 0.5f * (run.stageClearCount / 5);
                 float spawnCredits = (playerFactor + teamBeadCount * beadBossCount) * invasionCount;// * loopFactor;
+                if (spawnCard == Origin.scavCard) spawnCredits *= 0.5f;
 
                 while (spawnCredits > 0f && run.livingPlayerCount > 0)
                 {

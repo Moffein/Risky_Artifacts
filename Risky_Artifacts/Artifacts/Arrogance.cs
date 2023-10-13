@@ -17,6 +17,14 @@ namespace Risky_Artifacts.Artifacts
 
         private static InteractableSpawnCard mountainShrineCard = Addressables.LoadAssetAsync<InteractableSpawnCard>("RoR2/Base/ShrineBoss/iscShrineBoss.asset").WaitForCompletion();
 
+        public static List<SceneDef> blacklistedScenes = new List<SceneDef>
+        {
+            Addressables.LoadAssetAsync<SceneDef>("RoR2/Base/moon/moon.asset").WaitForCompletion(),
+            Addressables.LoadAssetAsync<SceneDef>("RoR2/Base/moon2/moon2.asset").WaitForCompletion(),
+            Addressables.LoadAssetAsync<SceneDef>("RoR2/DLC1/voidraid/voidraid.asset").WaitForCompletion(),
+            Addressables.LoadAssetAsync<SceneDef>("RoR2/DLC1/voidstage/voidstage.asset").WaitForCompletion()
+        };
+
         public static bool guaranteeMountainShrine = true;
         public static int runMountainCount = 0;
         public static int stageMountainCount = 0;
@@ -85,7 +93,7 @@ namespace Risky_Artifacts.Artifacts
             if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex))
             {
                 SceneDef sd = SceneCatalog.GetSceneDefForCurrentScene();
-                if (sd && sd.sceneType == SceneType.Stage)
+                if (sd && sd.sceneType == SceneType.Stage && !blacklistedScenes.Contains(sd))
                 {
                     DirectorPlacementRule placementRule = new DirectorPlacementRule
                     {
