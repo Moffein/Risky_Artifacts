@@ -326,7 +326,7 @@ namespace Risky_Artifacts.Artifacts
                 //Attempt to filter out previous boss
                 if (prevBoss != null)
                 {
-                    if (availableBosses.Contains(prevBoss) && availableBosses.Count - 1 > 0)
+                    if (availableBosses.Contains(prevBoss) && availableBosses.Count > 1)
                     {
                         SpawnCard[] temp = new SpawnCard[availableBosses.Count];
                         availableBosses.CopyTo(temp, 0);
