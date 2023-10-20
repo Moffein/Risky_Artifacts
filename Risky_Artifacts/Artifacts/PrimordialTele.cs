@@ -18,7 +18,8 @@ namespace Risky_Artifacts.Artifacts
         private static SpawnCard teleCard;
         private static SpawnCard primordialTeleCard;
 
-        private static bool first = true;
+        public static bool isNaturalLunar = false;
+        private static bool first = true;   //Used for suppressing the chat message?
 
         public PrimordialTele()
         {
@@ -53,7 +54,10 @@ namespace Risky_Artifacts.Artifacts
                 c.Index++;
                 c.EmitDelegate<Func<SpawnCard, SpawnCard>>(origTeleporter =>
                 {
-                    if ((Run.instance.stageClearCount >= 5 || enableOnFirstLoop) && (forceEnable || (enabled && RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex))) && origTeleporter == teleCard)
+                    bool isNormalTele = origTeleporter == teleCard;
+                    isNaturalLunar = !isNormalTele;
+
+                    if ((Run.instance.stageClearCount >= 5 || enableOnFirstLoop) && (forceEnable || (enabled && RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex))) && isNormalTele)
                     {
                         origTeleporter = primordialTeleCard;
                     }
@@ -67,9 +71,10 @@ namespace Risky_Artifacts.Artifacts
                 orig(self);
             };
 
+            //Suppresses the chat message?
             On.EntityStates.LunarTeleporter.IdleToActive.OnExit += (orig, self) =>
             {
-                if (!first || ((Run.instance.stageClearCount + 1) % 5 == 0))
+                if (!first || PrimordialTele.isNaturalLunar)
                 {
                     first = false;
                     orig(self);
@@ -88,7 +93,7 @@ namespace Risky_Artifacts.Artifacts
         {
             if (NetworkServer.active)
             {
-                if ((Run.instance.stageClearCount + 1) % 5 != 0)
+                if (!PrimordialTele.isNaturalLunar)
                 {
                     EntityStateMachine esm = base.GetComponent<EntityStateMachine>();
                     esm.SetNextState(new EntityStates.LunarTeleporter.Idle());
