@@ -13,7 +13,7 @@
 	"RISKYARTIFACTS_CONFORMITY_DESC_NOSCRAPPERS" : "Sucateadoras não são mais geradas.",
 	
 	"RISKYARTIFACTS_ORIGIN_NAME" : "Artefato da Origem",
-	"RISKYARTIFACTS_ORIGIN_DESC" : "Monstos Chefes vão invador o mapa a cada 10 minutos.",
+	"RISKYARTIFACTS_ORIGIN_DESC" : "Monstos Chefes irão invadir o mapa a cada 10 minutos.",
 	"RISKYARTIFACTS_ORIGIN_DESC_IMPONLY" : "Diabretes Suseranos vão invadir o mapa a cada 10 minutosd.",
 	"RISKYARTIFACTS_ORIGIN_SUBTITLENAMETOKEN" : "Recuperador",
 	"RISKYARTIFACTS_ORIGIN_MODIFIER" : " Vanguarda",
