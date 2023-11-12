@@ -175,7 +175,9 @@ namespace Risky_Artifacts.Artifacts
                         int toReturn = vengeanceCount;
                         if (self.inventory)
                         {
-                            toReturn += self.inventory.GetItemCount(OriginBonusItem);
+                            bool isGhost = self.inventory.GetItemCount(RoR2Content.Items.Ghost) > 0;
+                            bool isPlayer = self.teamComponent && self.teamComponent.teamIndex == TeamIndex.Player;
+                            if (!isGhost && !isPlayer) toReturn += self.inventory.GetItemCount(OriginBonusItem);
                         }
                         return toReturn;
                     });
