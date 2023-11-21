@@ -102,7 +102,7 @@ namespace Risky_Artifacts.Artifacts
             {
                 if (characterBody.HasBuff(b) && !currentEliteBuffs.Contains(b)) currentEliteBuffs.Add(b);
             }
-            int eliteBuffs = currentEliteBuffs.Count();
+            //int eliteBuffs = currentEliteBuffs.Count();
 
             bool hasEquip = inventory.GetEquipmentIndex() != EquipmentIndex.None;
 
@@ -112,10 +112,11 @@ namespace Risky_Artifacts.Artifacts
             float desiredHealthMult = currentHealthMult;
             float desiredDamageMult = currentDamageMult;
 
+            bool isNotElite = currentEliteBuffs.Count <= 0 && currentHealthMult == 1f && currentDamageMult == 1f;
+
             List<EliteDef> selectedElites = new List<EliteDef>();
 
             //Roll for failure each time an affix is added.
-            //if ((float)UnityEngine.Random.Range(0, 100) < Cruelty.failureChance) break;
 
             float totalCostMult = 1f;
 
@@ -136,9 +137,7 @@ namespace Risky_Artifacts.Artifacts
                         && ed.eliteEquipmentDef.passiveBuffDef.isElite
                         && !currentEliteBuffs.Contains(ed.eliteEquipmentDef.passiveBuffDef.buffIndex);
                     if (!isBuffValid) continue;
-                    currentEliteBuffs.Add(ed.eliteEquipmentDef.passiveBuffDef.buffIndex);
 
-                    //TODO: Figure out how director credits work
                     bool hasEnoughCredits = true;
                     switch (costScaling)
                     {
@@ -154,7 +153,7 @@ namespace Risky_Artifacts.Artifacts
                             break;
                     }
 
-                    if (hasEnoughCredits && UnityEngine.Random.Range(0, 100) > Cruelty.failureChance)
+                    if (hasEnoughCredits && UnityEngine.Random.Range(1, 100) > Cruelty.failureChance)
                     {
                         switch (costScaling)
                         {
@@ -178,29 +177,40 @@ namespace Risky_Artifacts.Artifacts
                         }
 
                         //Apply Elite Bonus
+                        currentEliteBuffs.Add(ed.eliteEquipmentDef.passiveBuffDef.buffIndex);
                         characterBody.AddBuff(ed.eliteEquipmentDef.passiveBuffDef.buffIndex);
-                        switch (Cruelty.damageScaling)
-                        {
-                            case ScalingMode.Multiplicative:
-                                desiredDamageMult *= ed.damageBoostCoefficient;
-                                break;
-                            case ScalingMode.Additive:
-                                desiredDamageMult += ed.damageBoostCoefficient - 1f;
-                                break;
-                            default:
-                                break;
-                        }
 
-                        switch (Cruelty.healthScaling)
+                        if (isNotElite)
                         {
-                            case ScalingMode.Multiplicative:
-                                desiredHealthMult *= ed.healthBoostCoefficient;
-                                break;
-                            case ScalingMode.Additive:
-                                desiredHealthMult += ed.healthBoostCoefficient - 1f;
-                                break;
-                            default:
-                                break;
+                            desiredDamageMult = ed.damageBoostCoefficient;
+                            desiredHealthMult = ed.healthBoostCoefficient;
+                            isNotElite = false;
+                        }
+                        else
+                        {
+                            switch (Cruelty.damageScaling)
+                            {
+                                case ScalingMode.Multiplicative:
+                                    desiredDamageMult *= ed.damageBoostCoefficient;
+                                    break;
+                                case ScalingMode.Additive:
+                                    desiredDamageMult += ed.damageBoostCoefficient - 1f;
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            switch (Cruelty.healthScaling)
+                            {
+                                case ScalingMode.Multiplicative:
+                                    desiredHealthMult *= ed.healthBoostCoefficient;
+                                    break;
+                                case ScalingMode.Additive:
+                                    desiredHealthMult += ed.healthBoostCoefficient - 1f;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
                 }
