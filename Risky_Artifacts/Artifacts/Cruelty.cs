@@ -133,7 +133,7 @@ namespace Risky_Artifacts.Artifacts
                             hasEnoughCredits = currentDirectorCredits - cardCost * totalCostMult * etd.costMultiplier >= 0f;
                             break;
                         case ScalingMode.Additive:
-                            hasEnoughCredits = availableCredits - (cardCost * etd.costMultiplier) >= 0f;
+                            hasEnoughCredits = availableCredits - (cardCost * (etd.costMultiplier - 1f)) >= 0f;
                             break;
                         default:
                             hasEnoughCredits = true;
@@ -150,7 +150,7 @@ namespace Risky_Artifacts.Artifacts
                                 totalCostMult *= etd.costMultiplier;
                                 break;
                             case ScalingMode.Additive:
-                                availableCredits -= cardCost * etd.costMultiplier;
+                                availableCredits -= cardCost * (etd.costMultiplier - 1f);
                                 break;
                             default:
                                 break;
