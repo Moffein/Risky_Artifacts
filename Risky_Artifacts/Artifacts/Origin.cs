@@ -422,7 +422,7 @@ namespace Risky_Artifacts.Artifacts
 
             if (victimObject)
             {
-                position = (SneedUtils.SneedUtils.FindSafeTeleportPosition(victimObject, position));
+                position = (Utils.FindSafeTeleportPosition(victimObject, position));
             }
 
             bool isYellow = false;

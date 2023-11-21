@@ -16,7 +16,7 @@ namespace Risky_Artifacts
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "1.9.6")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.0.0")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -57,6 +57,7 @@ namespace Risky_Artifacts
             new Origin();
             new PrimordialTele();
             new BrotherInvasion();
+            new Cruelty();
 
             if (Origin.enabled || BrotherInvasion.enabled)
             {
@@ -93,7 +94,7 @@ namespace Risky_Artifacts
 
             Expansion.enabled = base.Config.Bind<bool>(new ConfigDefinition("Expansion", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
-            Expansion.priceMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Cost Multiplier"), 1.2f,
+            Expansion.priceMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Cost Multiplier"), 1f,
                 new ConfigDescription("Multiplier for how much money things cost.")).Value;
             Expansion.teleRadiusMult = base.Config.Bind<float>(new ConfigDefinition("Expansion", "Teleporter Radius Multiplier"), 10000f,
                 new ConfigDescription("Multiplier for radius size.")).Value;
@@ -177,6 +178,16 @@ namespace Risky_Artifacts
                 new ConfigDescription("Maximum time before the Phantom spawns.")).Value;
             BrotherInvasionController.minStages = base.Config.Bind<int>(new ConfigDefinition("The Phantom", "Min Stages"), 0,
                 new ConfigDescription("Minimum stage completions before the artifact activates.")).Value;
+
+
+            Cruelty.enabled = base.Config.Bind<bool>(new ConfigDefinition("Cruelty", "Enable Artifact"), true,
+                new ConfigDescription("Allows this artifact to be selected.")).Value;
+            Cruelty.costScaling = base.Config.Bind<Cruelty.ScalingMode>(new ConfigDefinition("Cruelty", "Cost Scaling"), Cruelty.ScalingMode.Additive,
+                new ConfigDescription("How should director cost scale?")).Value;
+            Cruelty.damageScaling = base.Config.Bind<Cruelty.ScalingMode>(new ConfigDefinition("Cruelty", "Damage Scaling"), Cruelty.ScalingMode.None,
+                new ConfigDescription("How should elite damage scale?")).Value;
+            Cruelty.healthScaling = base.Config.Bind<Cruelty.ScalingMode>(new ConfigDefinition("Cruelty", "Health Scaling"), Cruelty.ScalingMode.Additive,
+                new ConfigDescription("How should elite health scale?")).Value;
         }
 
         public static void FixScriptableObjectName(ArtifactDef ad)

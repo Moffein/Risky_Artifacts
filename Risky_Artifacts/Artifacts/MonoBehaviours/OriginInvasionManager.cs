@@ -114,22 +114,6 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
             StartCoroutine(PerformInvasion(new Xoroshiro128Plus((ulong)damageReport.victim.health)));
         }
 
-        private int CompareEliteTierCost(CombatDirector.EliteTierDef tier1, CombatDirector.EliteTierDef tier2)
-        {
-            if (tier1.costMultiplier == tier2.costMultiplier)
-            {
-                return 0;
-            }
-            else
-            {
-                if (tier1.costMultiplier > tier2.costMultiplier)
-                {
-                    return -1;
-                }
-                return 1;
-            }
-        }
-
         IEnumerator PerformInvasion(Xoroshiro128Plus rng)
         {
             bool honorEnabled = CombatDirector.IsEliteOnlyArtifactActive();
@@ -179,9 +163,8 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                             float cost = 1f;
                             if (Origin.combineSpawns)
                             {
-
                                 List<CombatDirector.EliteTierDef> eliteTiersList = EliteAPI.GetCombatDirectorEliteTiers().ToList();
-                                eliteTiersList.Sort(CompareEliteTierCost);
+                                eliteTiersList.Sort(Utils.CompareEliteTierCost);
                                 //Ordered with the most expensive at the top
                                 foreach (CombatDirector.EliteTierDef etd in eliteTiersList)
                                 {
@@ -189,7 +172,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                     if (etd.costMultiplier <= spawnCredits && etd.eliteTypes.Length > 0 && etd.isAvailable(spawnCard.eliteRules))
                                     {
                                         selectedEliteTier = etd;
-                                        selectedElite = GetRandomElite(etd);
+                                        selectedElite = Utils.GetRandomElite(etd);
                                         cost = etd.costMultiplier;
                                         break;
                                     }
@@ -281,11 +264,6 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                 }
                 yield return null;
             }
-        }
-
-        public static EliteDef GetRandomElite(CombatDirector.EliteTierDef et)
-        {
-            return et.eliteTypes[UnityEngine.Random.Range(0, et.eliteTypes.Length)];
         }
     }
 
