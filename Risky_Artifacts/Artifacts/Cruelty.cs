@@ -14,7 +14,7 @@ namespace Risky_Artifacts.Artifacts
         public static List<EliteDef> BlacklistedElites = new List<EliteDef>();
         public static ArtifactDef artifact;
         public static bool enabled = true;
-
+        public static bool requireElite = true;
         public static ScalingMode damageScaling;
         public static ScalingMode healthScaling;
         public static ScalingMode costScaling;
@@ -76,7 +76,7 @@ namespace Risky_Artifacts.Artifacts
 
         public static float CreateCrueltyElite(CharacterBody characterBody, Inventory inventory, float currentDirectorCredits, int cardCost, float failureChance)
         {
-            if (!characterBody || characterBody.bodyFlags.HasFlag(CharacterBody.BodyFlags.Masterless) || !inventory) return 0f;
+            if (!characterBody || characterBody.bodyFlags.HasFlag(CharacterBody.BodyFlags.Masterless) || (requireElite && !characterBody.isElite) || !inventory) return 0f;
             float availableCredits = currentDirectorCredits;
 
             //Check amount of elite buffs the target has
