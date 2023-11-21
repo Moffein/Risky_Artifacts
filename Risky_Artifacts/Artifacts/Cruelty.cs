@@ -40,33 +40,34 @@ namespace Risky_Artifacts.Artifacts
             RiskyArtifactsPlugin.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
-            On.RoR2.CombatDirector.Awake +=  (orig, self) =>
-            {
-                orig(self);
-                if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Cruelty.artifact))
-                {
-                    self.onSpawnedServer.AddListener(delegate (GameObject targetGameObject)
-                    {
-                        if (!NetworkServer.active) return;
+            On.RoR2.CombatDirector.Awake += CombatDirector_Awake;
 
-                        DirectorCard lastAttemptedMonsterCard = self.lastAttemptedMonsterCard;
-                        float monsterCredit = self.monsterCredit;
-
-                        CharacterMaster master = targetGameObject.GetComponent<CharacterMaster>();
-                        if (master && master.inventory && master.inventory.GetItemCount(RoR2Content.Items.HealthDecay) <= 0)
-                        {
-                            CharacterBody body = master.GetBody();
-                            if (body &&
-                            !body.isPlayerControlled
-                            && !body.bodyFlags.HasFlag(CharacterBody.BodyFlags.Masterless)
-                            && (body.isBoss || body.isChampion || Random.Range(1, 100) <= 25 || (guaranteeRunEndBoss && RunEndBosses.Contains(body.bodyIndex))))
-                                self.monsterCredit -= Cruelty.CreateCrueltyElite(body, master.inventory, monsterCredit, lastAttemptedMonsterCard.cost, Cruelty.failureChance);
-                        }
-                    });
-                }
-            };
+            //Run End bosses arent affected by the CombatDirector hook
 
             RoR2.RoR2Application.onLoad += OnLoad;
+        }
+
+        private void CombatDirector_Awake(On.RoR2.CombatDirector.orig_Awake orig, CombatDirector self)
+        {
+            orig(self);
+            self.onSpawnedServer.AddListener(delegate (GameObject targetGameObject)
+            {
+                if (!NetworkServer.active || !(RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Cruelty.artifact))) return;
+
+                DirectorCard lastAttemptedMonsterCard = self.lastAttemptedMonsterCard;
+                float monsterCredit = self.monsterCredit;
+
+                CharacterMaster master = targetGameObject.GetComponent<CharacterMaster>();
+                if (master && master.inventory && master.inventory.GetItemCount(RoR2Content.Items.HealthDecay) <= 0)
+                {
+                    CharacterBody body = master.GetBody();
+                    if (body &&
+                    !body.isPlayerControlled
+                    && !body.bodyFlags.HasFlag(CharacterBody.BodyFlags.Masterless)
+                    && (body.isBoss || body.isChampion || Random.Range(1, 100) <= 25 || (guaranteeRunEndBoss && RunEndBosses.Contains(body.bodyIndex))))
+                        self.monsterCredit -= Cruelty.CreateCrueltyElite(body, master.inventory, monsterCredit, lastAttemptedMonsterCard.cost, Cruelty.failureChance);
+                }
+            });
         }
 
         private void OnLoad()
