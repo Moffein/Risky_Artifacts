@@ -11,11 +11,11 @@ namespace Risky_Artifacts.Artifacts
 {
     public class Cruelty
     {
-        public static List<BodyIndex> RunEndBosses = new List<BodyIndex>();
         public static List<EliteDef> BlacklistedElites = new List<EliteDef>();
         public static ArtifactDef artifact;
         public static bool enabled = true;
-        public static bool guaranteeRunEndBoss = true;
+        public static bool guaranteeSpecialBoss = true;
+        public static int runEndBossMinAffixes = 3;
         public static ScalingMode damageScaling;
         public static ScalingMode healthScaling;
         public static ScalingMode costScaling;
@@ -42,9 +42,30 @@ namespace Risky_Artifacts.Artifacts
 
             On.RoR2.CombatDirector.Awake += CombatDirector_Awake;
 
-            //Run End bosses arent affected by the CombatDirector hook
+            //Special bosses arent affected by the CombatDirector hook
+            On.RoR2.ScriptedCombatEncounter.BeginEncounter += ScriptedCombatEncounter_BeginEncounter;
 
             RoR2.RoR2Application.onLoad += OnLoad;
+        }
+
+        private void ScriptedCombatEncounter_BeginEncounter(On.RoR2.ScriptedCombatEncounter.orig_BeginEncounter orig, ScriptedCombatEncounter self)
+        {
+            if (NetworkServer.active && self.combatSquad && guaranteeSpecialBoss)
+            {
+                self.combatSquad.onMemberAddedServer += CombatSquadCruelty;
+            }
+            orig(self);
+        }
+
+
+        private void CombatSquadCruelty(CharacterMaster master)
+        {
+            if (master && master.inventory && master.inventory.GetItemCount(RoR2Content.Items.HealthDecay) <= 0)
+            {
+                CharacterBody body = master.GetBody();
+                if (body)
+                    Cruelty.CreateCrueltyElite(body, master.inventory, Mathf.Infinity, 0, Cruelty.failureChance, Cruelty.runEndBossMinAffixes);
+            }
         }
 
         private void CombatDirector_Awake(On.RoR2.CombatDirector.orig_Awake orig, CombatDirector self)
@@ -64,7 +85,7 @@ namespace Risky_Artifacts.Artifacts
                     if (body &&
                     !body.isPlayerControlled
                     && !body.bodyFlags.HasFlag(CharacterBody.BodyFlags.Masterless)
-                    && (body.isBoss || body.isChampion || Random.Range(1, 100) <= 25 || (guaranteeRunEndBoss && RunEndBosses.Contains(body.bodyIndex))))
+                    && (body.isBoss || body.isChampion || Random.Range(1, 100) <= 25))
                         self.monsterCredit -= Cruelty.CreateCrueltyElite(body, master.inventory, monsterCredit, lastAttemptedMonsterCard.cost, Cruelty.failureChance);
                 }
             });
@@ -78,21 +99,9 @@ namespace Risky_Artifacts.Artifacts
                 EquipmentDef ed = EquipmentCatalog.GetEquipmentDef(blightIndex);
                 if (ed && ed.passiveBuffDef && ed.passiveBuffDef.eliteDef) BlacklistedElites.Add(ed.passiveBuffDef.eliteDef);
             }
-
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("BrotherBody"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("VoidRaidCrabBody"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("VoidRaidCrabJointBody"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("MiniVoidRaidCrabBodyBase"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("MiniVoidRaidCrabBodyPhase1"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("MiniVoidRaidCrabBodyPhase2"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("MiniVoidRaidCrabBodyPhase3"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("ScavLunar1Body"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("ScavLunar2Body"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("ScavLunar3Body"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("ScavLunar4Body"));
         }
 
-        public static float CreateCrueltyElite(CharacterBody characterBody, Inventory inventory, float currentDirectorCredits, int cardCost, float failureChance)
+        public static float CreateCrueltyElite(CharacterBody characterBody, Inventory inventory, float currentDirectorCredits, int cardCost, float failureChance, int minAffixes = 0)
         {
             if (!characterBody || !inventory) return 0f;
             float availableCredits = currentDirectorCredits;
@@ -104,6 +113,7 @@ namespace Risky_Artifacts.Artifacts
                 if (characterBody.HasBuff(b) && !currentEliteBuffs.Contains(b)) currentEliteBuffs.Add(b);
             }
             //int eliteBuffs = currentEliteBuffs.Count();
+            int addedAffixes = 0;
 
             bool hasEquip = inventory.GetEquipmentIndex() != EquipmentIndex.None;
 
@@ -154,7 +164,7 @@ namespace Risky_Artifacts.Artifacts
                             break;
                     }
 
-                    if (hasEnoughCredits && UnityEngine.Random.Range(1, 100) > Cruelty.failureChance)
+                    if (hasEnoughCredits && (addedAffixes < minAffixes || UnityEngine.Random.Range(1, 100) > Cruelty.failureChance))
                     {
                         switch (costScaling)
                         {
@@ -180,6 +190,7 @@ namespace Risky_Artifacts.Artifacts
                         //Apply Elite Bonus
                         currentEliteBuffs.Add(ed.eliteEquipmentDef.passiveBuffDef.buffIndex);
                         characterBody.AddBuff(ed.eliteEquipmentDef.passiveBuffDef.buffIndex);
+                        addedAffixes++;
 
                         if (isNotElite)
                         {
