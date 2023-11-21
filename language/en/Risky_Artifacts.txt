@@ -32,7 +32,7 @@
 	
 	"RISKYARTIFACTS_CRUELTY_NAME" : "Artifact of Cruelty",
 	"RISKYARTIFACTS_CRUELTY_DESC" : "Enemies can have multiple elite types.",
-	"RISKYARTIFACTS_CRUELTY_DESC_MULTIPLY" : "Enemies can have multiple elite types that stack multiplicatively.",
+	"RISKYARTIFACTS_CRUELTY_DESC_MULT" : "Enemies can have multiple elite types that stack multiplicatively.",
 	
 	//Hidden Items, not visible in normal gameplay.
 	"RISKYARTIFACTS_ORIGINBONUSITEM_NAME" : "Origin Bonus",
