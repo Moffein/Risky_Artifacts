@@ -11,9 +11,11 @@ namespace Risky_Artifacts.Artifacts
 {
     public class Cruelty
     {
+        public static List<BodyIndex> RunEndBosses = new List<BodyIndex>();
         public static List<EliteDef> BlacklistedElites = new List<EliteDef>();
         public static ArtifactDef artifact;
         public static bool enabled = true;
+        public static bool guaranteeRunEndBoss = true;
         public static ScalingMode damageScaling;
         public static ScalingMode healthScaling;
         public static ScalingMode costScaling;
@@ -51,23 +53,23 @@ namespace Risky_Artifacts.Artifacts
                         float monsterCredit = self.monsterCredit;
 
                         CharacterMaster master = targetGameObject.GetComponent<CharacterMaster>();
-                        if (master && master.inventory)
+                        if (master && master.inventory && master.inventory.GetItemCount(RoR2Content.Items.HealthDecay) <= 0)
                         {
                             CharacterBody body = master.GetBody();
                             if (body &&
                             !body.isPlayerControlled
                             && !body.bodyFlags.HasFlag(CharacterBody.BodyFlags.Masterless)
-                            && ((body.isBoss || body.isChampion) || Random.Range(1, 100) <= 25))
+                            && ((body.isBoss || body.isChampion) || Random.Range(1, 100) <= 25) || (guaranteeRunEndBoss && RunEndBosses.Contains(body.bodyIndex)))
                                 self.monsterCredit -= Cruelty.CreateCrueltyElite(body, master.inventory, monsterCredit, lastAttemptedMonsterCard.cost, Cruelty.failureChance);
                         }
                     });
                 }
             };
 
-            RoR2.RoR2Application.onLoad += BlacklistElites;
+            RoR2.RoR2Application.onLoad += OnLoad;
         }
 
-        private void BlacklistElites()
+        private void OnLoad()
         {
             EquipmentIndex blightIndex = EquipmentCatalog.FindEquipmentIndex("AffixBlightedMoffein");
             if (blightIndex != EquipmentIndex.None)
@@ -75,6 +77,18 @@ namespace Risky_Artifacts.Artifacts
                 EquipmentDef ed = EquipmentCatalog.GetEquipmentDef(blightIndex);
                 if (ed && ed.passiveBuffDef && ed.passiveBuffDef.eliteDef) BlacklistedElites.Add(ed.passiveBuffDef.eliteDef);
             }
+
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("BrotherBody"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/DLC1/VoidRaidCrab/VoidRaidCrabBody.prefab"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/DLC1/VoidRaidCrab/VoidRaidCrabJointBody.prefab"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyBase.prefab"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyPhase1.prefab"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyPhase2.prefab"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyPhase3.prefab"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/Base/ScavLunar/ScavLunar1Body.prefab"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/Base/ScavLunar/ScavLunar2Body.prefab"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/Base/ScavLunar/ScavLunar3Body.prefab"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/Base/ScavLunar/ScavLunar4Body.prefab"));
         }
 
         public static float CreateCrueltyElite(CharacterBody characterBody, Inventory inventory, float currentDirectorCredits, int cardCost, float failureChance)
