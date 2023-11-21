@@ -1,5 +1,5 @@
 ## Risky Artifacts
-Adds 7 artifacts to ruin your run with.
+Adds 8 artifacts to ruin your run with.
 
 - **Artifact of Origination**
 	- Bosses invade the map every 10 minutes.
