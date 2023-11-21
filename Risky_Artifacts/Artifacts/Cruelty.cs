@@ -14,7 +14,6 @@ namespace Risky_Artifacts.Artifacts
         public static List<EliteDef> BlacklistedElites = new List<EliteDef>();
         public static ArtifactDef artifact;
         public static bool enabled = true;
-        public static bool requireElite = true;
         public static ScalingMode damageScaling;
         public static ScalingMode healthScaling;
         public static ScalingMode costScaling;
@@ -55,7 +54,11 @@ namespace Risky_Artifacts.Artifacts
                         if (master && master.inventory)
                         {
                             CharacterBody body = master.GetBody();
-                            self.monsterCredit -= Cruelty.CreateCrueltyElite(body, master.inventory, monsterCredit, lastAttemptedMonsterCard.cost, Cruelty.failureChance);
+                            if (body &&
+                            !body.isPlayerControlled
+                            && !body.bodyFlags.HasFlag(CharacterBody.BodyFlags.Masterless)
+                            && ((body.isBoss || body.isChampion) || Random.Range(1, 100) <= 25))
+                                self.monsterCredit -= Cruelty.CreateCrueltyElite(body, master.inventory, monsterCredit, lastAttemptedMonsterCard.cost, Cruelty.failureChance);
                         }
                     });
                 }
@@ -76,7 +79,7 @@ namespace Risky_Artifacts.Artifacts
 
         public static float CreateCrueltyElite(CharacterBody characterBody, Inventory inventory, float currentDirectorCredits, int cardCost, float failureChance)
         {
-            if (!characterBody || characterBody.bodyFlags.HasFlag(CharacterBody.BodyFlags.Masterless) || (requireElite && !characterBody.isElite) || !inventory) return 0f;
+            if (!characterBody || !inventory) return 0f;
             float availableCredits = currentDirectorCredits;
 
             //Check amount of elite buffs the target has

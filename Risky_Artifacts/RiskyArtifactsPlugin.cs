@@ -188,8 +188,6 @@ namespace Risky_Artifacts
                 new ConfigDescription("How should elite damage scale?")).Value;
             Cruelty.healthScaling = base.Config.Bind<Cruelty.ScalingMode>(new ConfigDefinition("Cruelty", "Health Scaling"), Cruelty.ScalingMode.Additive,
                 new ConfigDescription("How should elite health scale?")).Value;
-            Cruelty.requireElite = base.Config.Bind<bool>(new ConfigDefinition("Cruelty", "Require Elite"), true,
-                new ConfigDescription("Only trigger Cruelty on enemies that are already Elite.")).Value;
         }
 
         public static void FixScriptableObjectName(ArtifactDef ad)
