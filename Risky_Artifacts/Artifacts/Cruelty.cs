@@ -59,7 +59,7 @@ namespace Risky_Artifacts.Artifacts
                             if (body &&
                             !body.isPlayerControlled
                             && !body.bodyFlags.HasFlag(CharacterBody.BodyFlags.Masterless)
-                            && ((body.isBoss || body.isChampion) || Random.Range(1, 100) <= 25) || (guaranteeRunEndBoss && RunEndBosses.Contains(body.bodyIndex)))
+                            && (body.isBoss || body.isChampion || Random.Range(1, 100) <= 25 || (guaranteeRunEndBoss && RunEndBosses.Contains(body.bodyIndex))))
                                 self.monsterCredit -= Cruelty.CreateCrueltyElite(body, master.inventory, monsterCredit, lastAttemptedMonsterCard.cost, Cruelty.failureChance);
                         }
                     });
@@ -79,16 +79,16 @@ namespace Risky_Artifacts.Artifacts
             }
 
             RunEndBosses.Add(BodyCatalog.FindBodyIndex("BrotherBody"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/DLC1/VoidRaidCrab/VoidRaidCrabBody.prefab"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/DLC1/VoidRaidCrab/VoidRaidCrabJointBody.prefab"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyBase.prefab"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyPhase1.prefab"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyPhase2.prefab"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyPhase3.prefab"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/Base/ScavLunar/ScavLunar1Body.prefab"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/Base/ScavLunar/ScavLunar2Body.prefab"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/Base/ScavLunar/ScavLunar3Body.prefab"));
-            RunEndBosses.Add(BodyCatalog.FindBodyIndex("RoR2/Base/ScavLunar/ScavLunar4Body.prefab"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("VoidRaidCrabBody"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("VoidRaidCrabJointBody"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("MiniVoidRaidCrabBodyBase"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("MiniVoidRaidCrabBodyPhase1"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("MiniVoidRaidCrabBodyPhase2"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("MiniVoidRaidCrabBodyPhase3"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("ScavLunar1Body"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("ScavLunar2Body"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("ScavLunar3Body"));
+            RunEndBosses.Add(BodyCatalog.FindBodyIndex("ScavLunar4Body"));
         }
 
         public static float CreateCrueltyElite(CharacterBody characterBody, Inventory inventory, float currentDirectorCredits, int cardCost, float failureChance)
