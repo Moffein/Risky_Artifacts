@@ -50,7 +50,9 @@ namespace Risky_Artifacts.Artifacts
 
         private void ScriptedCombatEncounter_BeginEncounter(On.RoR2.ScriptedCombatEncounter.orig_BeginEncounter orig, ScriptedCombatEncounter self)
         {
-            if (NetworkServer.active && self.combatSquad && guaranteeSpecialBoss)
+            if (NetworkServer.active
+                && (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Cruelty.artifact))
+                && self.combatSquad && guaranteeSpecialBoss)
             {
                 self.combatSquad.onMemberAddedServer += CombatSquadCruelty;
             }
