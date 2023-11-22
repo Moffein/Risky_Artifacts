@@ -16,7 +16,7 @@ namespace Risky_Artifacts
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.0.3")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.0.4")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -184,7 +184,7 @@ namespace Risky_Artifacts
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
             Cruelty.guaranteeSpecialBoss = base.Config.Bind<bool>(new ConfigDefinition("Cruelty", "Guarantee Special Boss"), false,
                 new ConfigDescription("Always apply Cruelty to special bosses.")).Value;
-            Cruelty.runEndBossMinAffixes = base.Config.Bind<int>(new ConfigDefinition("Cruelty", "Guarantee Special Boss - Elite Types"), 3,
+            Cruelty.runEndBossMinAffixes = base.Config.Bind<int>(new ConfigDefinition("Cruelty", "Guarantee Special Boss - Elite Types"), 4,
                 new ConfigDescription("Elite Types to add to special bosses if Guarantee Special Boss is enabled. Set to 0 or below for no limit.")).Value;
             Cruelty.costScaling = base.Config.Bind<Cruelty.ScalingMode>(new ConfigDefinition("Cruelty", "Cost Scaling"), Cruelty.ScalingMode.Additive,
                 new ConfigDescription("How should director cost scale?")).Value;
