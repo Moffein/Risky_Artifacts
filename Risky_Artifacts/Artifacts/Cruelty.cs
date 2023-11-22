@@ -64,7 +64,7 @@ namespace Risky_Artifacts.Artifacts
             {
                 CharacterBody body = master.GetBody();
                 if (body)
-                    Cruelty.CreateCrueltyElite(body, master.inventory, Mathf.Infinity, 0, Cruelty.failureChance, Cruelty.runEndBossMinAffixes);
+                    Cruelty.CreateCrueltyElite(body, master.inventory, Mathf.Infinity, 0, Cruelty.failureChance, true, Cruelty.runEndBossMinAffixes);
             }
         }
 
@@ -86,7 +86,7 @@ namespace Risky_Artifacts.Artifacts
                     !body.isPlayerControlled
                     && !body.bodyFlags.HasFlag(CharacterBody.BodyFlags.Masterless)
                     && (body.isBoss || body.isChampion || Random.Range(1, 100) <= 25))
-                        self.monsterCredit -= Cruelty.CreateCrueltyElite(body, master.inventory, monsterCredit, lastAttemptedMonsterCard.cost, Cruelty.failureChance);
+                        self.monsterCredit -= Cruelty.CreateCrueltyElite(body, master.inventory, monsterCredit, lastAttemptedMonsterCard.cost, Cruelty.failureChance, false);
                 }
             });
         }
@@ -99,9 +99,16 @@ namespace Risky_Artifacts.Artifacts
                 EquipmentDef ed = EquipmentCatalog.GetEquipmentDef(blightIndex);
                 if (ed && ed.passiveBuffDef && ed.passiveBuffDef.eliteDef) BlacklistedElites.Add(ed.passiveBuffDef.eliteDef);
             }
+
+            EquipmentIndex perfectedIndex = EquipmentCatalog.FindEquipmentIndex("EliteLunarEquipment");
+            if (perfectedIndex != EquipmentIndex.None)
+            {
+                EquipmentDef ed = EquipmentCatalog.GetEquipmentDef(perfectedIndex);
+                if (ed && ed.passiveBuffDef && ed.passiveBuffDef.eliteDef) BlacklistedElites.Add(ed.passiveBuffDef.eliteDef);
+            }
         }
 
-        public static float CreateCrueltyElite(CharacterBody characterBody, Inventory inventory, float currentDirectorCredits, int cardCost, float failureChance, int minAffixes = 0)
+        public static float CreateCrueltyElite(CharacterBody characterBody, Inventory inventory, float currentDirectorCredits, int cardCost, float failureChance, bool ignoreAvailableCheck, int affixCount = -1)
         {
             if (!characterBody || !inventory) return 0f;
             float availableCredits = currentDirectorCredits;
@@ -137,8 +144,7 @@ namespace Risky_Artifacts.Artifacts
             eliteTiersList.Sort(Utils.CompareEliteTierCost);
             foreach (CombatDirector.EliteTierDef etd in eliteTiersList)
             {
-
-                List<EliteDef> availableElitesInTier = etd.availableDefs.Where(x => !selectedElites.Contains(x) && !BlacklistedElites.Contains(x)).ToList();
+                List <EliteDef> availableElitesInTier = (ignoreAvailableCheck ? etd.eliteTypes.ToList() : etd.availableDefs).Where(x => !selectedElites.Contains(x) && !BlacklistedElites.Contains(x)).ToList();
                 Utils.Shuffle(availableElitesInTier);
                 foreach (EliteDef ed in availableElitesInTier)
                 {
@@ -164,7 +170,7 @@ namespace Risky_Artifacts.Artifacts
                             break;
                     }
 
-                    if (hasEnoughCredits && (addedAffixes < minAffixes || UnityEngine.Random.Range(1, 100) > Cruelty.failureChance))
+                    if (hasEnoughCredits && ((affixCount > 0 && addedAffixes < affixCount) || (affixCount <= 0 && UnityEngine.Random.Range(1, 100) > Cruelty.failureChance)))
                     {
                         switch (costScaling)
                         {
