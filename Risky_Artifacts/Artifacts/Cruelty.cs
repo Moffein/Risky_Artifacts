@@ -19,6 +19,7 @@ namespace Risky_Artifacts.Artifacts
         public static ScalingMode damageScaling;
         public static ScalingMode healthScaling;
         public static ScalingMode costScaling;
+        public static ScalingMode rewardScaling;
 
         public static int maxT2Affixes = 1;
         public static int maxGeneralAffixes = 3;
@@ -155,6 +156,9 @@ namespace Risky_Artifacts.Artifacts
             float totalCostMult = 1f;
             bool isT2 = false;
 
+            float deathRewardsMultiplier = 1f;  //Only used for multiplicative DR scaling
+            float deathRewardsAdd = 0f; //Used for additive DR scaling
+
             //Iterate through all elites, starting from the most expensive
             //Seems very inefficient
             List<CombatDirector.EliteTierDef> eliteTiersList = EliteAPI.GetCombatDirectorEliteTiers().ToList();
@@ -207,6 +211,21 @@ namespace Risky_Artifacts.Artifacts
                                 break;
                             default:
                                 break;
+                        }
+
+                        if (etd.costMultiplier > 1f)
+                        {
+                            switch (rewardScaling)
+                            {
+                                case ScalingMode.Multiplicative:
+                                    deathRewardsMultiplier *= etd.costMultiplier;
+                                    break;
+                                case ScalingMode.Additive:
+                                    deathRewardsAdd += etd.costMultiplier - 1f;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
 
                         //Fill in equipment slot if it isn't filled
@@ -271,6 +290,22 @@ namespace Risky_Artifacts.Artifacts
 
             int boostHealthcount = Mathf.FloorToInt((desiredHealthMult - currentHealthMult) / 0.1f);
             inventory.GiveItem(RoR2Content.Items.BoostHp, boostHealthcount);
+
+            if (Cruelty.rewardScaling != ScalingMode.None)
+            {
+                DeathRewards dr = characterBody.GetComponent<DeathRewards>();
+                if (dr)
+                {
+                    float scaledXpRewards = (dr.expReward + dr.expReward * deathRewardsAdd) * deathRewardsMultiplier;
+                    float scaledGoldRewards = (dr.goldReward + dr.goldReward * deathRewardsAdd) * deathRewardsMultiplier;
+
+                    uint scaledXpFloor = (uint)Mathf.CeilToInt(scaledXpRewards);
+                    uint scaledGoldFloor = (uint)Mathf.CeilToInt(scaledGoldRewards);
+
+                    if (scaledXpFloor > dr.expReward) dr.expReward = scaledXpFloor;
+                    if (scaledGoldFloor > dr.goldReward) dr.goldReward = scaledGoldFloor;
+                }
+            }
 
             return currentDirectorCredits - availableCredits;
         }

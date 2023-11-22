@@ -16,7 +16,7 @@ namespace Risky_Artifacts
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.0.4")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.0.5")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -192,6 +192,8 @@ namespace Risky_Artifacts
                 new ConfigDescription("How should elite damage scale?")).Value;
             Cruelty.healthScaling = base.Config.Bind<Cruelty.ScalingMode>(new ConfigDefinition("Cruelty", "Health Scaling"), Cruelty.ScalingMode.Additive,
                 new ConfigDescription("How should elite health scale?")).Value;
+            Cruelty.rewardScaling = base.Config.Bind<Cruelty.ScalingMode>(new ConfigDefinition("Cruelty", "Reward Scaling"), Cruelty.ScalingMode.Additive,
+                new ConfigDescription("How should elite kill rewards scale?")).Value;
             Cruelty.maxT2Affixes = base.Config.Bind<int>(new ConfigDefinition("Cruelty", "Max T2 Affixes"), 1,
                 new ConfigDescription("Maximum T2 Affixes that Cruelty can add. Set to 0 or below for no limit.")).Value;
             Cruelty.maxGeneralAffixes = base.Config.Bind<int>(new ConfigDefinition("Cruelty", "Max Non-T2 Affixes"), 3,
