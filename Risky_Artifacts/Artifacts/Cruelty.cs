@@ -20,7 +20,13 @@ namespace Risky_Artifacts.Artifacts
         public static ScalingMode healthScaling;
         public static ScalingMode costScaling;
 
+        public static int maxT2Affixes = 1;
+        public static int maxGeneralAffixes = 3;
+
+        public static float triggerChance = 25f;
         public static float failureChance = 25f;
+
+        private static EliteDef MalachiteDef, CelestineDef;
 
         public enum ScalingMode
         {
@@ -87,7 +93,7 @@ namespace Risky_Artifacts.Artifacts
                     if (body &&
                     !body.isPlayerControlled
                     && !body.bodyFlags.HasFlag(CharacterBody.BodyFlags.Masterless)
-                    && (body.isBoss || body.isChampion || Random.Range(1, 100) <= 25))
+                    && (body.isBoss || body.isChampion || Random.Range(1, 100) <= Cruelty.triggerChance))
                         self.monsterCredit -= Cruelty.CreateCrueltyElite(body, master.inventory, monsterCredit, lastAttemptedMonsterCard.cost, Cruelty.failureChance, false);
                 }
             });
@@ -108,6 +114,9 @@ namespace Risky_Artifacts.Artifacts
                 EquipmentDef ed = EquipmentCatalog.GetEquipmentDef(perfectedIndex);
                 if (ed && ed.passiveBuffDef && ed.passiveBuffDef.eliteDef) BlacklistedElites.Add(ed.passiveBuffDef.eliteDef);
             }
+
+            MalachiteDef = RoR2Content.Elites.Poison;
+            CelestineDef = RoR2Content.Elites.Haunted;
         }
 
         public static float CreateCrueltyElite(CharacterBody characterBody, Inventory inventory, float currentDirectorCredits, int cardCost, float failureChance, bool ignoreAvailableCheck, int affixCount = -1)
@@ -119,10 +128,15 @@ namespace Risky_Artifacts.Artifacts
             List<BuffIndex> currentEliteBuffs = new List<BuffIndex>();
             foreach (BuffIndex b in BuffCatalog.eliteBuffIndices)
             {
-                if (characterBody.HasBuff(b) && !currentEliteBuffs.Contains(b)) currentEliteBuffs.Add(b);
+                if (characterBody.HasBuff(b) && !currentEliteBuffs.Contains(b))
+                {
+                    currentEliteBuffs.Add(b);
+                }
             }
             //int eliteBuffs = currentEliteBuffs.Count();
             int addedAffixes = 0;
+            int t2Count = 0;
+            int generalCount = 0;
 
             bool hasEquip = inventory.GetEquipmentIndex() != EquipmentIndex.None;
 
@@ -139,6 +153,7 @@ namespace Risky_Artifacts.Artifacts
             //Roll for failure each time an affix is added.
 
             float totalCostMult = 1f;
+            bool isT2 = false;
 
             //Iterate through all elites, starting from the most expensive
             //Seems very inefficient
@@ -148,8 +163,14 @@ namespace Risky_Artifacts.Artifacts
             {
                 List <EliteDef> availableElitesInTier = (ignoreAvailableCheck ? etd.eliteTypes.ToList() : etd.availableDefs).Where(x => !selectedElites.Contains(x) && !BlacklistedElites.Contains(x)).ToList();
                 Utils.Shuffle(availableElitesInTier);
+
+                isT2 = availableElitesInTier.Contains(Cruelty.MalachiteDef) || availableElitesInTier.Contains(Cruelty.CelestineDef);
+
                 foreach (EliteDef ed in availableElitesInTier)
                 {
+                    bool reachedTierLimit = (isT2 && Cruelty.maxT2Affixes > 0 && t2Count >= Cruelty.maxT2Affixes) || (!isT2 && Cruelty.maxGeneralAffixes > 0 && generalCount >= Cruelty.maxGeneralAffixes);
+                    if (reachedTierLimit) break;
+
                     //Check if EliteDef has an associated buff and the character doesn't already have the buff.
                     bool isBuffValid = ed && ed.eliteEquipmentDef
                         && ed.eliteEquipmentDef.passiveBuffDef
@@ -199,6 +220,14 @@ namespace Risky_Artifacts.Artifacts
                         currentEliteBuffs.Add(ed.eliteEquipmentDef.passiveBuffDef.buffIndex);
                         characterBody.AddBuff(ed.eliteEquipmentDef.passiveBuffDef.buffIndex);
                         addedAffixes++;
+                        if (isT2)
+                        {
+                            t2Count++;
+                        }
+                        else
+                        {
+                            generalCount++;
+                        }
 
                         if (isNotElite)
                         {
