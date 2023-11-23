@@ -34,6 +34,9 @@
 	"RISKYARTIFACTS_CRUELTY_DESC" : "Enemies can have multiple elite types.",
 	"RISKYARTIFACTS_CRUELTY_DESC_MULT" : "Enemies can have multiple elite types that stack multiplicatively.",
 	
+	"RISKYARTIFACTS_HUNTED_NAME" : "Artifact of the Hunted",
+	"RISKYARTIFACTS_HUNTED_DESC" : "Survivors can spawn as enemies.",
+	
 	//Hidden Items, not visible in normal gameplay.
 	"RISKYARTIFACTS_ORIGINBONUSITEM_NAME" : "Origin Bonus",
 	"RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP" : "The party starts here.",
@@ -42,6 +45,10 @@
 	
 	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_NAME" : "Phantom Bonus",
 	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_PICKUP" : "You look like you've seen a ghost.",
-	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_DESC" : "Look like a ghost and become <style=cIsUtility>immune to Void Fog</style>."
+	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_DESC" : "Look like a ghost and become <style=cIsUtility>immune to Void Fog</style>.",
+	
+	"RISKYARTIFACTS_HUNTEDSTATITEM_NAME" : "Hunted Stat Modifier",
+	"RISKYARTIFACTS_HUNTEDSTATITEM_PICKUP" : "Nowhere to run, nowhere to hide.",
+	"RISKYARTIFACTS_HUNTEDSTATITEM_DESC" : "<style=cIsHealing>Increase max health</style>... <style=cIsHealth>BUT reduce damage</style>."
 	}
 }

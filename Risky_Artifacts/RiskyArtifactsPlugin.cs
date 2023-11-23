@@ -16,7 +16,7 @@ namespace Risky_Artifacts
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.0.5")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.1.0")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -58,6 +58,7 @@ namespace Risky_Artifacts
             new PrimordialTele();
             new BrotherInvasion();
             new Cruelty();
+            new Hunted();
 
             if (Origin.enabled || BrotherInvasion.enabled)
             {
@@ -198,6 +199,17 @@ namespace Risky_Artifacts
                 new ConfigDescription("Maximum T2 Affixes that Cruelty can add. Set to 0 or below for no limit.")).Value;
             Cruelty.maxGeneralAffixes = base.Config.Bind<int>(new ConfigDefinition("Cruelty", "Max Non-T2 Affixes"), 3,
                 new ConfigDescription("Maximum Non-T2 Affixes that Cruelty can add. Set to 0 or below for no limit.")).Value;
+
+            Hunted.enabled = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Enable Artifact"), true,
+                new ConfigDescription("Allows this artifact to be selected.")).Value;
+            Hunted.allSurvivors = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "All Survivors"), false,
+                new ConfigDescription("Allow all survivors to spawn, even if not listed in the Spawnlist")).Value;
+            Hunted.spawnInfoInput = base.Config.Bind<string>(new ConfigDefinition("Hunted", "Spawnlist"), "CommandoBody, HuntressBody, Bandit2Body, ToolbotBody, MercBody, MageBody, LoaderBody, CrocoBody, RailgunnerBody, RocketSurvivorBody, CHEF, SniperClassicBody, MinerBody, HANDOverclockedBody, RobPaladinBody, SS2UChirrBody, SS2UCyborgBody, SS2UExecutionerBody, SS2UPyroBody, SS2UNemmandoBody, NemesisEnforcerBody, RobDriverBody, DeputyBody",
+                new ConfigDescription("List of bodies to be added. Format is BodyName separated by comma. To specify a custom director cost, do BodyName:Cost (cost must be a positive integer)")).Value;
+            Hunted.nerfEngiTurrets = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Nerf Engi Turrets"), true,
+                new ConfigDescription("Engi Turrets receive no health boost.")).Value;
+            Hunted.nerfPercentHeal = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Nerf Percent Heal"), true,
+                new ConfigDescription("Percent heal effects are unaffected by the increased HP multiplier.")).Value;
         }
 
         public static void FixScriptableObjectName(ArtifactDef ad)
