@@ -19,19 +19,23 @@
 	"RISKYARTIFACTS_ORIGIN_MODIFIER" : " Vanguarda",
 	
 	"RISKYARTIFACTS_EXPANSION_NAME" : "Artefato da Expansão",
-	"RISKYARTIFACTS_EXPANSION_DESC" : "A área do Teletransporte abrange o Estágio por completo, mas sua velocidade de carregamento é reduzida e os preços são aumentados.",
-	"RISKYARTIFACTS_EXPANSION_DESC_NOPRICEINCREASE" : "A área do Teletransporte abrange o Estágio por completo, mas sua velocidade de carregamento é reduzida.",
+	"RISKYARTIFACTS_EXPANSION_DESC" : "A área do Teleportador abrange a fase por completo, mas sua velocidade de carregamento é reduzida e os preços são aumentados.",
+	"RISKYARTIFACTS_EXPANSION_DESC_NOPRICEINCREASE" : "A área do Teleportador abrange a fase por completo, mas sua velocidade de carregamento é reduzida.",
 	
 	"RISKYARTIFACTS_PRIMORDIAL_NAME" : "Artefato da Primazia",
-	"RISKYARTIFACTS_PRIMORDIAL_DESC" : "O Teletransporte Primoridal é gerado em todos os Estágios após o Estágio 5.",
+	"RISKYARTIFACTS_PRIMORDIAL_DESC" : "O Teleportador Primoridal é gerado em todas as fases após a fase 5.",
 	
 	"RISKYARTIFACTS_BROTHERINVASION_NAME" : "Artefato do Espectro",
-	"RISKYARTIFACTS_BROTHERINVASION_DESC" : "O Rei Espectro do Vazio caça você se passar tempo demais em um Estágio.",
+	"RISKYARTIFACTS_BROTHERINVASION_DESC" : "O Espectro do Rei do Nada caça você se passar tempo demais em uma fase.",
 	"RISKYARTIFACTS_BROTHERINVASION_SUBTITLENAMETOKEN" : "Aparição",
 	"RISKYARTIFACTS_BROTHERINVASION_MODIFIER" : "Espectro ",
+
+	"RISKYARTIFACTS_CRUELTY_NAME" : "Artefato da Crueldade",
+	"RISKYARTIFACTS_CRUELTY_DESC" : "Inimigos podem ter múltiplos tipos de elite.",
+	"RISKYARTIFACTS_CRUELTY_DESC_MULT" : "Inimigos podem ter múltiplos tipos de elite que se acumulam multiplicativamente.",
 	
 	//Hidden Items, not visible in normal gameplay.
-	"RISKYARTIFACTS_ORIGINBONUSITEM_NAME" : "Origin Bonus",
+	"RISKYARTIFACTS_ORIGINBONUSITEM_NAME" : "Bônus de Origem",
 	"RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP" : "O grupo começa aqui.",
 	"RISKYARTIFACTS_ORIGINBONUSITEM_DESC" : "Aumenta a <style=cIsUtility>velocidade de movimento</style>, <style=cIsDamage>velocidade de ataque</style> e <style=cIsDamage>dano</style>, e <style=cIsUtility>reduz o tempo de recarga das habilidades</style>.",
 	
