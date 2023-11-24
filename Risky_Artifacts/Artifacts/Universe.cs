@@ -54,25 +54,63 @@ namespace Risky_Artifacts.Artifacts
 
             //Just copied from RiskyMod
             Universe_Spawncards.Init();
-            Universe_DirectorCards.Init();
+            //Universe_DirectorCards.Init();
 
-            RoR2.RoR2Application.onLoad += OnLoad;
+            RoR2Application.onLoad += OnLoad;
         }
 
         private void OnLoad()
         {
-            Universe_Spawncards.FindCardByBodyname("CommandoBody");
+            ParseSpawnlist(Universe.InputInfo.Champions);
         }
 
-        public static DirectorCard GenerateDirectorCard(DirectorInfo info)
+        private void ParseSpawnlist(string inputString)
         {
-            Debug.Log("RiskyArtifacts: Universe: Creating card for " + info.bodyIndex + " - " + info.bodyName);
-            GameObject master = MasterCatalog.GetMasterPrefab(MasterCatalog.FindAiMasterIndexForBody(info.bodyIndex));
-            if (!master)
+            inputString = new string(inputString.ToCharArray().Where(c => !System.Char.IsWhiteSpace(c)).ToArray());
+            string[] splitStages = inputString.Split(',');
+            foreach (string str in splitStages)
             {
-                Debug.LogError("RiskyArtifacts: Universe: Master could not be found for body " + info.bodyIndex + " - " + info.bodyName);
+                string[] current = str.Split(':');
+
+                string name = current[0];
+
+                Universe_Spawncards.CardDict.TryGetValue(name, out CharacterSpawnCard spawnCard);
+                if (spawnCard == null)
+                {
+                    Debug.LogError("RiskyArtifacts: Universe: Could not find spawncard for " + name);
+                    continue;
+                    //todo: create spawncard
+                }
+
+                int cost = spawnCard.directorCreditCost;
+                int minStages = 0;
+
+                if (current.Length > 1)
+                {
+                    for (int i = 1; i < current.Length; i++)
+                    {
+                        switch (i)
+                        {
+                            case 1:
+                                if (int.TryParse(current[1], out int parsedCost))
+                                {
+                                    cost = parsedCost;
+                                }
+                                break;
+                            case 2:
+                                if (int.TryParse(current[2], out int parsedMinStages))
+                                {
+                                    minStages = parsedMinStages;
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                
+                //Todo: Build director card;
             }
-            return null;
         }
     }
 }

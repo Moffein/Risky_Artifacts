@@ -58,6 +58,7 @@ namespace Risky_Artifacts
             new PrimordialTele();
             new BrotherInvasion();
             new Cruelty();
+            new Universe();
             new Hunted();
 
             if (Origin.enabled || BrotherInvasion.enabled)
@@ -218,10 +219,21 @@ namespace Risky_Artifacts
                 new ConfigDescription("Default health multiplier for Hunted survivors. Vengeance is 10")).Value;
             Hunted.damageMult = base.Config.Bind<float>(new ConfigDefinition("Hunted", "Stats - Damage Multiplier"), 0.2f,
                 new ConfigDescription("Default damage multiplier for Hunted survivors. Vengeance is 0.1")).Value;
+            Hunted.disableRegen = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Stats - Disable Regen"), true,
+                new ConfigDescription("Disable health regeneration for Hunted Survivors.")).Value;
             Hunted.directorCost = base.Config.Bind<int>(new ConfigDefinition("Hunted", "Director Cost"), 125,
                 new ConfigDescription("Default director cost for Hunted survivors.")).Value;
             Hunted.useOverlay = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Overlay Texture"), true,
                 new ConfigDescription("Hunted survivors use the Vengeance texture.")).Value;
+
+            Universe.enabled = base.Config.Bind<bool>(new ConfigDefinition("Universe", "Enable Artifact"), true,
+                new ConfigDescription("Allows this artifact to be selected.")).Value;
+            Universe.InputInfo.Basic_Monsters = base.Config.Bind<string>(new ConfigDefinition("Universe", "Spawnlist - Basic Monsters"), "BeetleBody, WispBody, LemurianBody, JellyfishBody, HermitCrabBody, VoidBarnacleBody, ImpBody, VultureBody, RoboBallMiniBody, GipBody, AcidLarvaBody, MinorConstructBody, FlyingVerminBody, VerminBody",
+               new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost:MinStages")).Value;
+            Universe.InputInfo.Minibosses = base.Config.Bind<string>(new ConfigDefinition("Universe", "Spawnlist - Minibosses"), "LunarExploderBody, LunarGolemBody, LunarWispBody, GupBody, GeepBody, ClayGrenadierBody, ClayBruiserBody, MiniMushroomBody, BisonBody, BellBody, ParentBody, GolemBody, GreaterWispBody, BeetleGuardBody, NullifierBody, VoidJailerBody, LemurianBruiserBody",
+                new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost:MinStages")).Value;
+            Universe.InputInfo.Champions = base.Config.Bind<string>(new ConfigDefinition("Universe", "Spawnlist - Champions"), "VagrantBody, TitanBody, BeetleQueen2Body, ClayBossBody, MagmaWormBody, ImpBossBody, RoboBallBossBody, GravekeeperBody, MegaConstructBody, VoidMegaCrabBody, GrandparentBody, ScavBody, ElectricWormBody",
+                new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost:MinStages")).Value;
         }
 
         public static void FixScriptableObjectName(ArtifactDef ad)

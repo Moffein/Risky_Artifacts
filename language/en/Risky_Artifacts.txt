@@ -37,6 +37,9 @@
 	"RISKYARTIFACTS_HUNTED_NAME" : "Artifact of the Hunted",
 	"RISKYARTIFACTS_HUNTED_DESC" : "Survivors can spawn as enemies.",
 	
+	"RISKYARTIFACTS_UNIVERSE_NAME" : "Artifact of the Universe",
+	"RISKYARTIFACTS_UNIVERSE_DESC" : "All monsters can spawn on all stages.",
+	
 	//Hidden Items, not visible in normal gameplay.
 	"RISKYARTIFACTS_ORIGINBONUSITEM_NAME" : "Origin Bonus",
 	"RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP" : "The party starts here.",

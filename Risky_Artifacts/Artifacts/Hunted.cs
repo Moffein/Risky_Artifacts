@@ -1,11 +1,10 @@
-﻿using EntityStates.AffixVoid;
-using HarmonyLib;
-using Mono.Cecil.Cil;
+﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
 using RoR2;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -25,6 +24,7 @@ namespace Risky_Artifacts.Artifacts
         public static bool nerfEngiTurrets = true;
         public static bool nerfPercentHeal = true;
         public static bool useOverlay = true;
+        public static bool disableRegen = true;
 
         public static bool survivorsOnly = false;
         public static bool enabled = true;
@@ -83,14 +83,14 @@ namespace Risky_Artifacts.Artifacts
                                 }    
                                 break;
                             case 2:
-                                if (float.TryParse(current[1], out float parsedHP))
+                                if (float.TryParse(current[1], NumberStyles.Any, CultureInfo.InvariantCulture, out float parsedHP))
                                 {
                                     shouldOverride = true;
                                     hpOverride = parsedHP;
                                 }
                                 break;
                             case 3:
-                                if (float.TryParse(current[1], out float parsedDamage))
+                                if (float.TryParse(current[1], NumberStyles.Any, CultureInfo.InvariantCulture, out float parsedDamage))
                                 {
                                     shouldOverride = true;
                                     damageOverride = parsedDamage;
@@ -163,11 +163,11 @@ namespace Risky_Artifacts.Artifacts
         {
             foreach (SpawnInfo info in SpawnInfoList)
             {
-                Debug.Log("RiskyArtifacts: Creating card for " + info.bodyIndex + " - " + info.bodyName);
+                Debug.Log("RiskyArtifacts: Hunted: Creating card for " + info.bodyIndex + " - " + info.bodyName);
                 GameObject master = MasterCatalog.GetMasterPrefab(MasterCatalog.FindAiMasterIndexForBody(info.bodyIndex));
                 if (!master)
                 {
-                    Debug.LogError("RiskyArtifacts: Master could not be found for survivor " + info.bodyIndex + " - " + info.bodyName);
+                    Debug.LogError("RiskyArtifacts: Hunted:  Master could not be found for survivor " + info.bodyIndex + " - " + info.bodyName);
                     continue;
                 }
 
@@ -332,11 +332,19 @@ namespace Risky_Artifacts.Artifacts
         private void SetHuntedHealth(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
         {
 
-            if (sender.inventory && sender.inventory.GetItemCount(Hunted.HuntedStatItem) > 0 && !(Hunted.nerfEngiTurrets && Hunted.TurretNerfList.Contains(sender.bodyIndex)))
+            if (sender.inventory && sender.inventory.GetItemCount(Hunted.HuntedStatItem) > 0 )
             {
-                float healthMult = Hunted.healthMult;
-                if (StatOverrideBodies.TryGetValue(sender.bodyIndex, out SpawnInfo info)) healthMult = info.hpMultOverride;
-                args.healthMultAdd += healthMult - 1f;
+                if (!(Hunted.nerfEngiTurrets && Hunted.TurretNerfList.Contains(sender.bodyIndex)))
+                {
+                    float healthMult = Hunted.healthMult;
+                    if (StatOverrideBodies.TryGetValue(sender.bodyIndex, out SpawnInfo info)) healthMult = info.hpMultOverride;
+                    args.healthMultAdd += healthMult - 1f;
+                }
+
+                if (disableRegen)
+                {
+                    args.baseRegenAdd -= sender.baseRegen + (sender.level - 1f) * sender.levelRegen;
+                }
             }
         }
 

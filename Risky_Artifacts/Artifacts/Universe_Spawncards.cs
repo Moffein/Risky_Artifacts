@@ -11,136 +11,92 @@ namespace Risky_Artifacts.Artifacts
     {
         public static bool initialized = false;
 
-        public static List<CharacterSpawnCard> AllSpawnCards = new List<CharacterSpawnCard>();
-
-        public static CharacterSpawnCard AlphaConstruct;
-
-        public static CharacterSpawnCard Beetle;
-        public static CharacterSpawnCard Lemurian;
-
-        public static CharacterSpawnCard Wisp;
-        public static CharacterSpawnCard Jellyfish;
-        public static CharacterSpawnCard BlindPestSnowy;
-        public static CharacterSpawnCard BlindVerminSnowy;
-
-        public static CharacterSpawnCard Imp;
-        public static CharacterSpawnCard Vulture;
-
-        public static CharacterSpawnCard Golem;
-        public static CharacterSpawnCard BeetleGuard;
-        public static CharacterSpawnCard Mushrum;
-        public static CharacterSpawnCard Bison;
-        public static CharacterSpawnCard ClayApothecary;
-
-        public static CharacterSpawnCard Bronzong;
-        public static CharacterSpawnCard GreaterWisp;
-
-        public static CharacterSpawnCard TitanBlackBeach;
-        public static CharacterSpawnCard TitanDampCave;
-        public static CharacterSpawnCard TitanGolemPlains;
-        public static CharacterSpawnCard TitanGooLake;
-
-        public static CharacterSpawnCard Vagrant;
-        public static CharacterSpawnCard BeetleQueen;
-        public static CharacterSpawnCard Dunestrider;
-
-        public static CharacterSpawnCard MagmaWorm;
-        public static CharacterSpawnCard ImpOverlord;
-        public static CharacterSpawnCard Grovetender;
-        public static CharacterSpawnCard RoboBall;
-        public static CharacterSpawnCard XiConstruct;
-
-        public static CharacterSpawnCard Reminder;
+        //It would be better to to based on Mastername, but Hunted was built to be based on BodyName so now this has to do that for consistency.
+        //But Hunted should have been based on Mastername as well in retrospect.
+        public static Dictionary<string, CharacterSpawnCard> CardDict = new Dictionary<string, CharacterSpawnCard>();
 
         public static void Init()
         {
             if (initialized) return;
             initialized = true;
 
-            AlphaConstruct = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/MajorAndMinorConstruct/cscMinorConstruct.asset").WaitForCompletion();
+            //Common
+            AddDictEntry("VerminBody", LoadCSC("RoR2/DLC1/Vermin/cscVermin.asset"));
+            AddDictEntry("FlyingVerminBody", LoadCSC("RoR2/DLC1/FlyingVermin/cscFlyingVermin.asset"));
+            AddDictEntry("MinorConstructBody", LoadCSC("RoR2/DLC1/MajorAndMinorConstruct/cscMinorConstruct.asset"));
+            AddDictEntry("AcidLarvaBody", LoadCSC("RoR2/DLC1/AcidLarva/cscAcidLarva.asset"));
+            AddDictEntry("GipBody", LoadCSC("RoR2/DLC1/Gup/cscGipBody.asset"));
+            AddDictEntry("RoboBallMiniBody", LoadCSC("RoR2/Base/RoboBallBoss/cscRoboBallMini.asset"));
+            AddDictEntry("ImpBody", LoadCSC("RoR2/Base/Imp/cscImp.asset"));
+            AddDictEntry("VultureBody", LoadCSC("RoR2/Base/Vulture/cscVulture.asset"));
+            AddDictEntry("JellyfishBody", LoadCSC("RoR2/Base/Jellyfish/cscJellyfish.asset"));
+            AddDictEntry("WispBody", LoadCSC("RoR2/Base/Wisp/cscLesserWisp.asset"));
+            AddDictEntry("BeetleBody", LoadCSC("RoR2/Base/Beetle/cscBeetle.asset"));
+            AddDictEntry("HermitCrabBody", LoadCSC("RoR2/Base/HermitCrab/cscHermitCrab.asset"));
+            AddDictEntry("LemurianBody", LoadCSC("RoR2/Base/Lemurian/cscLemurian.asset"));
+            AddDictEntry("VoidBarnacleBody", LoadCSC("RoR2/DLC1/VoidBarnacle/cscVoidBarnacle.asset"));
 
-            Beetle = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscbeetle");
-            Lemurian = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/csclemurian");
+            //Miniboss
+            AddDictEntry("LunarExploderBody", LoadCSC("RoR2/Base/LunarExploder/cscLunarExploder.asset"));
+            AddDictEntry("LunarGolemBody", LoadCSC("RoR2/Base/LunarGolem/cscLunarGolem.asset"));
+            AddDictEntry("LunarWispBody", LoadCSC("RoR2/Base/LunarWisp/cscLunarWisp.asset"));
+            AddDictEntry("GupBody", LoadCSC("RoR2/DLC1/Gup/cscGupBody.asset"));
+            AddDictEntry("GeepBody", LoadCSC("RoR2/DLC1/Gup/cscGeepBody.asset"));
+            AddDictEntry("ClayGrenadierBody", LoadCSC("RoR2/DLC1/ClayGrenadier/cscClayGrenadier.asset"));
+            AddDictEntry("ClayBruiserBody", LoadCSC("RoR2/Base/ClayBruiser/cscClayBruiser.asset"));
+            AddDictEntry("MiniMushroomBody", LoadCSC("RoR2/Base/MiniMushroom/cscMiniMushroom.asset"));
+            AddDictEntry("BisonBody", LoadCSC("RoR2/Base/Bison/cscBison.asset"));
+            AddDictEntry("BellBody", LoadCSC("RoR2/Base/Bell/cscBell.asset"));
+            AddDictEntry("ParentBody", LoadCSC("RoR2/Base/Parent/cscParent.asset"));
+            AddDictEntry("GolemBody", LoadCSC("RoR2/Base/Golem/cscGolem.asset"));
+            AddDictEntry("GreaterWispBody", LoadCSC("RoR2/Base/GreaterWisp/cscGreaterWisp.asset"));
+            AddDictEntry("BeetleGuardBody", LoadCSC("RoR2/Base/Beetle/cscBeetleGuard.asset"));
+            AddDictEntry("NullifierBody", LoadCSC("RoR2/Base/Nullifier/cscNullifier.asset"));
+            AddDictEntry("VoidJailerBody", LoadCSC("RoR2/DLC1/VoidJailer/cscVoidJailer.asset"));
+            AddDictEntry("LemurianBruiserBody", LoadCSC("RoR2/Base/LemurianBruiser/cscLemurianBruiser.asset"));
 
-            Wisp = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/csclesserwisp");
-            Jellyfish = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscjellyfish");
+            //Champions
+            AddDictEntry("TitanBody", LoadCSC("RoR2/Base/Titan/cscTitanGolemPlains.asset"));
+            AddDictEntry("ClayBossBody", LoadCSC("RoR2/Base/ClayBoss/cscClayBoss.asset"));
+            AddDictEntry("BeetleQueen2Body", LoadCSC("RoR2/Base/Beetle/cscBeetleQueen.asset"));
+            AddDictEntry("VagrantBody", LoadCSC("RoR2/Base/Vagrant/cscVagrant.asset"));
 
-            Imp = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscimp");
-            Vulture = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscvulture");
+            AddDictEntry("MagmaWormBody", LoadCSC("RoR2/Base/MagmaWorm/cscMagmaWorm.asset"));
+            AddDictEntry("ImpBossBody", LoadCSC("RoR2/Base/ImpBoss/cscImpBoss.asset"));
+            AddDictEntry("GravekeeperBody", LoadCSC("RoR2/Base/Gravekeeper/cscGravekeeper.asset"));
+            AddDictEntry("RoboBallBossBody", LoadCSC("RoR2/Base/RoboBallBoss/cscRoboBallBoss.asset"));
+            AddDictEntry("MegaConstructBody", LoadCSC("RoR2/DLC1/MajorAndMinorConstruct/cscMegaConstruct.asset"));
+            AddDictEntry("VoidMegaCrabBody", LoadCSC("RoR2/DLC1/VoidMegaCrab/cscVoidMegaCrab.asset"));
 
-            Golem = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/Base/Golem/cscGolem.asset").WaitForCompletion();
-            BeetleGuard = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscbeetleguard");
-            Mushrum = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscminimushroom");
-            Bison = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/Base/Bison/cscBison.asset").WaitForCompletion();
-
-            Bronzong = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscbell");
-            GreaterWisp = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscgreaterwisp");
-
-            TitanBlackBeach = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/csctitanblackbeach");
-            TitanDampCave = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/csctitandampcave");
-            TitanGolemPlains = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/csctitangolemplains");
-            TitanGooLake = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/csctitangoolake");
-
-            Vagrant = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscvagrant");
-            BeetleQueen = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscbeetlequeen");
-            Dunestrider = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscclayboss");
-
-            MagmaWorm = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscmagmaworm");
-            ImpOverlord = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscimpboss");
-            Grovetender = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscgravekeeper");
-            RoboBall = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscroboballboss");
-
-            Reminder = LegacyResourcesAPI.Load<CharacterSpawnCard>("spawncards/characterspawncards/cscelectricworm");
-
-            BlindVerminSnowy = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/Vermin/cscVerminSnowy.asset").WaitForCompletion();
-            BlindPestSnowy = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/FlyingVermin/cscFlyingVerminSnowy.asset").WaitForCompletion();
-            ClayApothecary = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/ClayGrenadier/cscClayGrenadier.asset").WaitForCompletion();
-
-            XiConstruct = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/MajorAndMinorConstruct/cscMegaConstruct.asset").WaitForCompletion();
-
-            List<CharacterSpawnCard> cards = new List<CharacterSpawnCard>()
-            {
-                Beetle, Lemurian, Wisp, Jellyfish,
-                Imp, Vulture, Golem, BeetleGuard,
-                Mushrum, Bison, Bronzong,
-                GreaterWisp,
-                TitanBlackBeach, TitanDampCave, TitanGolemPlains, TitanGooLake,
-                Vagrant, BeetleQueen, Dunestrider, MagmaWorm, ImpOverlord,
-                Grovetender, RoboBall,
-                Reminder,
-                BlindVerminSnowy, BlindPestSnowy, ClayApothecary, XiConstruct
-            };
-            AllSpawnCards.AddRange(cards);
-
-            Universe_DirectorCards.Init();
+            AddDictEntry("GrandparentBody", LoadCSC("RoR2/Base/Grandparent/cscGrandparent.asset"));
+            AddDictEntry("ScavBody", LoadCSC("RoR2/Base/Scav/cscScav.asset"));
+            AddDictEntry("ElectricWormBody", LoadCSC("RoR2/Base/ElectricWorm/cscElectricWorm.asset"));
         }
 
-        //Only works after BodyCatalog init
-        public static CharacterSpawnCard FindCardByBodyname(string bodyName)
+        public static void AddDictEntry(string bodyname, CharacterSpawnCard spawnCard)
         {
-            Debug.Log("RiskyArtifacts: Listing cards");
-            /*BodyIndex desiredIndex = BodyCatalog.FindBodyIndex(bodyName);
-            if (desiredIndex == BodyIndex.None) return null;*/
-
-            foreach (CharacterSpawnCard csc in AllSpawnCards)
+            if (spawnCard == null)
             {
-                if (csc != null && csc.prefab)
-                {
-                    Debug.Log(csc.prefab.name);
-                }
+                Debug.LogError("RiskyArtifacts: Universe: Null spawncard for " + bodyname);
+                return;
             }
 
-            return null;
+            CardDict.Add(bodyname, spawnCard);
+        }
+
+        private static CharacterSpawnCard LoadCSC(string path)
+        {
+            return Addressables.LoadAssetAsync<CharacterSpawnCard>(path).WaitForCompletion();
         }
     }
 
-    public static class Universe_DirectorCards
+    /*public static class Universe_DirectorCards
     {
         public static bool initialized = false;
 
         public static List<DirectorCard> AllDirectorCards = new List<DirectorCard>();
 
-        public static DirectorCard AlphaConstructLoop;
+        //public static DirectorCard AlphaConstructLoop;
 
         public static DirectorCard Beetle;
         public static DirectorCard Lemurian;
@@ -190,7 +146,7 @@ namespace Risky_Artifacts.Artifacts
             if (initialized) return;
             initialized = true;
 
-            AlphaConstructLoop = BuildDirectorCard(Universe_Spawncards.AlphaConstruct, 1, 5, DirectorCore.MonsterSpawnDistance.Standard);
+            //AlphaConstructLoop = BuildDirectorCard(Universe_Spawncards.AlphaConstruct, 1, 5, DirectorCore.MonsterSpawnDistance.Standard);
 
             Beetle = BuildDirectorCard(Universe_Spawncards.Beetle);
             Lemurian = BuildDirectorCard(Universe_Spawncards.Lemurian);
@@ -251,5 +207,5 @@ namespace Risky_Artifacts.Artifacts
             };
             return dc;
         }
-    }
+    }*/
 }
