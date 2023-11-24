@@ -26,14 +26,15 @@ namespace Risky_Artifacts.Artifacts
         public static bool nerfPercentHeal = true;
         public static bool useOverlay = true;
 
+        public static bool survivorsOnly = false;
         public static bool enabled = true;
         public static ArtifactDef artifact;
         public static ItemDef HuntedStatItem;
 
         public static float categoryWeight = 1f;
-        public static float healthMult = 8f;
-        public static float damageMult = 0.25f;
-        public static int directorCost = 100;
+        public static float healthMult = 10f;
+        public static float damageMult = 0.2f;
+        public static int directorCost = 125;
 
         public Hunted()
         {
@@ -252,29 +253,54 @@ namespace Risky_Artifacts.Artifacts
             RecalculateStatsAPI.GetStatCoefficients += SetHuntedHealth;
             if (Hunted.nerfPercentHeal)On.RoR2.HealthComponent.HealFraction += ReduceHuntedPercentHeal;
 
-            IL.RoR2.MapZone.TryZoneStart += (il) =>
-            {
-                ILCursor c = new ILCursor(il);
-                if (c.TryGotoNext(
-                     x => x.MatchLdcI4(0),
-                     x => x.MatchStloc(3),
-                     x => x.MatchLdloc(0)
-                    ))
-                {
-                    c.Index++;
-                    c.Emit(OpCodes.Ldloc, 0);   //CharacterBody
-                    c.EmitDelegate<Func<bool, CharacterBody, bool>>((flag, body) =>
-                    {
-                        return flag || (body.inventory && body.inventory.GetItemCount(Hunted.HuntedStatItem) > 0);
-                    });
-                }
-                else
-                {
-                    Debug.LogError("RiskyArtifacts: Hunted MapZone fall death prevention IL hook failed.");
-                }
-            };
+            On.RoR2.MapZone.TryZoneStart += MapZone_TryZoneStart;
 
             CharacterBody.onBodyInventoryChangedGlobal += CharacterBody_onBodyInventoryChangedGlobal;
+            IL.RoR2.Util.GetBestBodyName += (il) =>
+            {
+                ILCursor c = new ILCursor(il);
+                c.GotoNext(
+                         x => x.MatchLdsfld(typeof(RoR2Content.Items), "InvadingDoppelganger")
+                        );
+                c.Index += 2;
+                c.Emit(OpCodes.Ldloc_0);
+                c.EmitDelegate<Func<int, CharacterBody, int>>((vengeanceCount, body) =>
+                {
+                    int toReturn = vengeanceCount;
+                    if (body && body.inventory)
+                    {
+                        toReturn += body.inventory.GetItemCount(HuntedStatItem);
+                    }
+                    return toReturn;
+                });
+            };
+        }
+
+        private void MapZone_TryZoneStart(On.RoR2.MapZone.orig_TryZoneStart orig, MapZone self, Collider other)
+        {
+            if (other.gameObject)
+            {
+                CharacterBody body = other.GetComponent<CharacterBody>();
+                if (body)
+                {
+                    if (body.inventory && body.inventory.GetItemCount(Hunted.HuntedStatItem) > 0)
+                    {
+                        var teamComponent = body.teamComponent;
+                        if (teamComponent)
+                        {
+                            if (teamComponent.teamIndex != TeamIndex.Player)
+                            {
+                                TeamIndex origIndex = teamComponent.teamIndex;
+                                teamComponent.teamIndex = TeamIndex.Player;
+                                orig(self, other);
+                                teamComponent.teamIndex = origIndex;
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+            orig(self, other);
         }
 
         private void CharacterBody_onBodyInventoryChangedGlobal(CharacterBody body)
@@ -372,24 +398,41 @@ namespace Risky_Artifacts.Artifacts
                     Debug.Log("RiskyArtifacts: Hunted ClassicStageInfo.OnArtifactDisabled IL Hook failed.");
                 }
             };
-            On.RoR2.ClassicStageInfo.RebuildCards += ClassicStageInfo_RebuildCards;
+
+            //Add Hunted Survivors to enemy spawning
+            IL.RoR2.ClassicStageInfo.RebuildCards += (il) =>
+            {
+                ILCursor c = new ILCursor(il);
+                if (c.TryGotoNext(x => x.MatchStfld(typeof(ClassicStageInfo), "modifiableMonsterCategories")))
+                {
+                    c.EmitDelegate<Func<DirectorCardCategorySelection, DirectorCardCategorySelection>>(dccs =>
+                    {
+                        if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Hunted.artifact)) CreateHuntedCategory(dccs);
+                        return dccs;
+                    });
+                }
+                else
+                {
+                    Debug.Log("RiskyArtifacts: Hunted ClassicStageInfo.RebuildCards IL Hook failed.");
+                }
+            };
+
+            On.RoR2.ClassicStageInfo.HandleMixEnemyArtifact += ClassicStageInfo_HandleMixEnemyArtifact;
         }
 
-        //This'll bypass other monster pool-modifying artifacts. Replace with proper IL hook later.
-        private void ClassicStageInfo_RebuildCards(On.RoR2.ClassicStageInfo.orig_RebuildCards orig, ClassicStageInfo self)
+        private void ClassicStageInfo_HandleMixEnemyArtifact(On.RoR2.ClassicStageInfo.orig_HandleMixEnemyArtifact orig, DirectorCardCategorySelection monsterCategories, Xoroshiro128Plus rng)
         {
-            orig(self);
-
-            if (!RunArtifactManager.instance || !RunArtifactManager.instance.IsArtifactEnabled(Hunted.artifact)) return;
-
-            CreateHuntedCategory(self.modifiableMonsterCategories);
-            self.monsterSelection = self.modifiableMonsterCategories.GenerateDirectorCardWeightedSelection();
+            orig(monsterCategories, rng);
+            if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Hunted.artifact)) CreateHuntedCategory(monsterCategories);
         }
-
 
         private static void CreateHuntedCategory(DirectorCardCategorySelection selection)
         {
             if (!selection) return;
+            if (survivorsOnly)
+            {
+                selection.categories = new DirectorCardCategorySelection.Category[0];
+            }
             selection.AddCategory("RiskyArtifactsHunted", Hunted.categoryWeight);
             selection.categories[selection.categories.Length - 1].cards = DirectorCards.ToArray();
         }
@@ -412,7 +455,7 @@ namespace Risky_Artifacts.Artifacts
     {
         private bool origImmuneToExecute = true;
 
-        private void OnEnable()
+        private void Start()
         {
             origImmuneToExecute = body && body.bodyFlags.HasFlag(CharacterBody.BodyFlags.ImmuneToExecutes);
             if (origImmuneToExecute) body.bodyFlags &= ~CharacterBody.BodyFlags.ImmuneToExecutes;
