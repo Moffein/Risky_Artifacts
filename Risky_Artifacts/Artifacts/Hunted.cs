@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using EntityStates.AffixVoid;
+using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
@@ -29,7 +30,7 @@ namespace Risky_Artifacts.Artifacts
 
         public static float healthMult = 10f;
         public static float damageMult = 0.2f;
-        public static int directorCost = 10;
+        public static int directorCost = 300;
 
         public Hunted()
         {
@@ -153,7 +154,9 @@ namespace Risky_Artifacts.Artifacts
                     spawnCard = csc,
                     spawnDistance = DirectorCore.MonsterSpawnDistance.Standard,
                     preventOverhead = false,
-                    minimumStageCompletions = 0
+                    minimumStageCompletions = 0,
+                    forbiddenUnlockableDef = null,
+                    requiredUnlockableDef = null
                 };
                 DirectorCards.Add(dc);
             }
@@ -200,7 +203,8 @@ namespace Risky_Artifacts.Artifacts
             }
 
             On.RoR2.HealthComponent.TakeDamage += BlockFallDamageAndVoidDamage;
-            On.RoR2.CharacterBody.RecalculateStats += HuntedStats;
+            On.RoR2.CharacterBody.RecalculateStats += ReduceHuntedDamage;
+            RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
             if (Hunted.nerfPercentHeal)On.RoR2.HealthComponent.HealFraction += ReduceHuntedPercentHeal;
 
             IL.RoR2.MapZone.TryZoneStart += (il) =>
@@ -224,6 +228,15 @@ namespace Risky_Artifacts.Artifacts
                     Debug.LogError("RiskyArtifacts: Hunted MapZone fall death prevention IL hook failed.");
                 }
             };
+        }
+
+        private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
+        {
+
+            if (sender.inventory && sender.inventory.GetItemCount(Hunted.HuntedStatItem) > 0 && !(Hunted.nerfEngiTurrets && Hunted.TurretNerfList.Contains(sender.bodyIndex)))
+            {
+                args.healthMultAdd += Hunted.healthMult - 1f;
+            }
         }
 
         private void BlockFallDamageAndVoidDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
@@ -253,18 +266,12 @@ namespace Risky_Artifacts.Artifacts
             return orig(self, fraction, procChainMask);
         }
 
-        private void HuntedStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
+        private void ReduceHuntedDamage(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
         {
             orig(self);
             if (self.inventory && self.inventory.GetItemCount(Hunted.HuntedStatItem) > 0)
             {
                 self.damage *= Hunted.damageMult;
-
-                if (!(Hunted.nerfEngiTurrets && Hunted.TurretNerfList.Contains(self.bodyIndex)))
-                {
-                    self.maxHealth *= Hunted.healthMult;
-                    self.maxShield *= Hunted.healthMult;
-                }
             }
         }
 
@@ -287,7 +294,6 @@ namespace Risky_Artifacts.Artifacts
                     Debug.Log("RiskyArtifacts: Hunted ClassicStageInfo.OnArtifactEnabled IL Hook failed.");
                 }
             };
-
             IL.RoR2.ClassicStageInfo.OnArtifactDisabled += (il) =>
             {
                 //Cursed hook. Ldarg 2 = ArtifactDef added. It wants to rebuild cards if Dissonance/Kin are enabled, so trick it into thinking they are.
@@ -305,36 +311,26 @@ namespace Risky_Artifacts.Artifacts
                     Debug.Log("RiskyArtifacts: Hunted ClassicStageInfo.OnArtifactDisabled IL Hook failed.");
                 }
             };
-
             On.RoR2.ClassicStageInfo.RebuildCards += ClassicStageInfo_RebuildCards;
         }
 
-        //This'll bypass other monster pool-modifying artifacts.
+        //This'll bypass other monster pool-modifying artifacts. Replace with proper IL hook later.
         private void ClassicStageInfo_RebuildCards(On.RoR2.ClassicStageInfo.orig_RebuildCards orig, ClassicStageInfo self)
         {
             orig(self);
 
             if (!RunArtifactManager.instance || !RunArtifactManager.instance.IsArtifactEnabled(Hunted.artifact)) return;
 
-            if (self.modifiableMonsterCategories != null)
-            {
-                foreach (DirectorCardCategorySelection.Category category in self.modifiableMonsterCategories.categories)
-                {
-                    if (category.name == "Minibosses")
-                    {
-                        AddToCategory(category, DirectorCards);
-                        break;
-                    }
-                }
-            }
+            CreateHuntedCategory(self.modifiableMonsterCategories);
             self.monsterSelection = self.modifiableMonsterCategories.GenerateDirectorCardWeightedSelection();
         }
 
-        private static void AddToCategory(DirectorCardCategorySelection.Category category, List<DirectorCard> cardsToAdd)
+
+        private static void CreateHuntedCategory(DirectorCardCategorySelection selection)
         {
-            List<DirectorCard> cardsInCategory = category.cards.ToList();
-            cardsInCategory.AddRange(cardsToAdd);
-            category.cards = cardsInCategory.ToArray();
+            if (!selection) return;
+            selection.AddCategory("RiskyArtifactsHunted", 1f);
+            selection.categories[selection.categories.Length - 1].cards = DirectorCards.ToArray();
         }
 
         //Used to construct spawncards when reading from config
