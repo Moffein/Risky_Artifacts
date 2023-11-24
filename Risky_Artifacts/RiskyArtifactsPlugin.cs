@@ -16,7 +16,7 @@ namespace Risky_Artifacts
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.1.0")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.1.2")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -220,6 +220,8 @@ namespace Risky_Artifacts
                 new ConfigDescription("Default damage multiplier for Hunted survivors. Vengeance is 0.1")).Value;
             Hunted.directorCost = base.Config.Bind<int>(new ConfigDefinition("Hunted", "Director Cost"), 125,
                 new ConfigDescription("Default director cost for Hunted survivors.")).Value;
+            Hunted.useOverlay = Hunted.allSurvivors = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Overlay Texture"), true,
+                new ConfigDescription("Hunted survivors use the Vengeance texture.")).Value;
         }
 
         public static void FixScriptableObjectName(ArtifactDef ad)
