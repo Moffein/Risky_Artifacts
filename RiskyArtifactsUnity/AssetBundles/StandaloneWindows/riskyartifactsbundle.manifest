@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2439398274
+CRC: 3874462761
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 2994e2bfbd5d64514c50e155da72790a
+    Hash: 051727abe7cf40989631725bbc3a40e2
   TypeTreeHash:
     serializedVersion: 2
     Hash: c90fc19e2679e5295d10bd00f33cb4c3
@@ -27,6 +27,8 @@ Assets:
 - Assets/Resources/texPrimacyEnabled.png
 - Assets/Resources/texPhantomDisabled.png
 - Assets/Resources/texArrogEnabled.png
+- Assets/Resources/texHuntedEnabled.png
+- Assets/Resources/texHuntedDisabled.png
 - Assets/Resources/texExpansionEnabled.png
 - Assets/Resources/texOriginEnabledClean.png
 - Assets/Resources/texPhantomEnabled.png

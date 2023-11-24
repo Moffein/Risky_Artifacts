@@ -17,6 +17,8 @@ namespace Risky_Artifacts.Artifacts
         public static HashSet<BodyIndex> TurretNerfList = new HashSet<BodyIndex>();
         public static List<CharacterSpawnCard> SpawnCards = new List<CharacterSpawnCard>();
         public static List<DirectorCard> DirectorCards = new List<DirectorCard>();
+        public static Dictionary<BodyIndex, SpawnInfo> StatOverrideBodies = new Dictionary<BodyIndex, SpawnInfo>();
+
         private List<SpawnInfo> SpawnInfoList = new List<SpawnInfo>();
         public static string spawnInfoInput;
         public static bool allSurvivors = false;
@@ -28,9 +30,10 @@ namespace Risky_Artifacts.Artifacts
         public static ArtifactDef artifact;
         public static ItemDef HuntedStatItem;
 
-        public static float healthMult = 10f;
-        public static float damageMult = 0.2f;
-        public static int directorCost = 300;
+        public static float categoryWeight = 1f;
+        public static float healthMult = 8f;
+        public static float damageMult = 0.25f;
+        public static int directorCost = 100;
 
         public Hunted()
         {
@@ -39,8 +42,8 @@ namespace Risky_Artifacts.Artifacts
             artifact.cachedName = "RiskyArtifactOfHunted";
             artifact.nameToken = "RISKYARTIFACTS_HUNTED_NAME";
             artifact.descriptionToken = "RISKYARTIFACTS_HUNTED_DESC";
-            artifact.smallIconDeselectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texOriginDisabled.png");//todo
-            artifact.smallIconSelectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texOriginEnabledClean.png");//todo
+            artifact.smallIconDeselectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texHuntedDisabled.png");
+            artifact.smallIconSelectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texHuntedEnabled.png");
             RiskyArtifactsPlugin.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
@@ -60,16 +63,53 @@ namespace Risky_Artifacts.Artifacts
                 string[] current = str.Split(':');
 
                 string name = current[0];
+
                 int cost = Hunted.directorCost;
-                if (current.Length > 1 && int.TryParse(current[1], out int parsedCost))
+                float hpOverride = Hunted.healthMult;
+                float damageOverride = Hunted.damageMult;
+
+                bool shouldOverride = false;
+                if (current.Length > 1)
                 {
-                    cost = parsedCost;
+                    for (int i = 1; i < current.Length; i++)
+                    {
+                        switch(i)
+                        {
+                            case 1:
+                                if (int.TryParse(current[1], out int parsedCost))
+                                {
+                                    cost = parsedCost;
+                                }    
+                                break;
+                            case 2:
+                                if (float.TryParse(current[1], out float parsedHP))
+                                {
+                                    shouldOverride = true;
+                                    hpOverride = parsedHP;
+                                }
+                                break;
+                            case 3:
+                                if (float.TryParse(current[1], out float parsedDamage))
+                                {
+                                    shouldOverride = true;
+                                    damageOverride = parsedDamage;
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
-                SpawnInfoList.Add(new SpawnInfo()
+
+                SpawnInfo spawnInfo = new SpawnInfo()
                 {
+                    isOverride = shouldOverride,
                     bodyName = name,
-                    directorCost = cost
-                });
+                    directorCost = cost,
+                    hpMultOverride = hpOverride,
+                    damageMultOverride = damageOverride
+                };
+                SpawnInfoList.Add(spawnInfo);
             }
         }
         
@@ -128,6 +168,11 @@ namespace Risky_Artifacts.Artifacts
                 {
                     Debug.LogError("RiskyArtifacts: Master could not be found for survivor " + info.bodyIndex + " - " + info.bodyName);
                     continue;
+                }
+
+                if (info.isOverride)
+                {
+                    StatOverrideBodies.Add(info.bodyIndex, info);
                 }
 
                 CharacterSpawnCard csc = ScriptableObject.CreateInstance<CharacterSpawnCard>();
@@ -204,7 +249,7 @@ namespace Risky_Artifacts.Artifacts
 
             On.RoR2.HealthComponent.TakeDamage += BlockFallDamageAndVoidDamage;
             On.RoR2.CharacterBody.RecalculateStats += ReduceHuntedDamage;
-            RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
+            RecalculateStatsAPI.GetStatCoefficients += SetHuntedHealth;
             if (Hunted.nerfPercentHeal)On.RoR2.HealthComponent.HealFraction += ReduceHuntedPercentHeal;
 
             IL.RoR2.MapZone.TryZoneStart += (il) =>
@@ -228,15 +273,13 @@ namespace Risky_Artifacts.Artifacts
                     Debug.LogError("RiskyArtifacts: Hunted MapZone fall death prevention IL hook failed.");
                 }
             };
+
+            CharacterBody.onBodyInventoryChangedGlobal += CharacterBody_onBodyInventoryChangedGlobal;
         }
 
-        private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
+        private void CharacterBody_onBodyInventoryChangedGlobal(CharacterBody body)
         {
-
-            if (sender.inventory && sender.inventory.GetItemCount(Hunted.HuntedStatItem) > 0 && !(Hunted.nerfEngiTurrets && Hunted.TurretNerfList.Contains(sender.bodyIndex)))
-            {
-                args.healthMultAdd += Hunted.healthMult - 1f;
-            }
+            body.AddItemBehavior<HuntedItemBehavior>(body.inventory.GetItemCount(Hunted.HuntedStatItem));
         }
 
         private void BlockFallDamageAndVoidDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
@@ -260,9 +303,25 @@ namespace Risky_Artifacts.Artifacts
             orig(self, damageInfo);
         }
 
+        private void SetHuntedHealth(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
+        {
+
+            if (sender.inventory && sender.inventory.GetItemCount(Hunted.HuntedStatItem) > 0 && !(Hunted.nerfEngiTurrets && Hunted.TurretNerfList.Contains(sender.bodyIndex)))
+            {
+                float healthMult = Hunted.healthMult;
+                if (StatOverrideBodies.TryGetValue(sender.bodyIndex, out SpawnInfo info)) healthMult = info.hpMultOverride;
+                args.healthMultAdd += healthMult - 1f;
+            }
+        }
+
         private float ReduceHuntedPercentHeal(On.RoR2.HealthComponent.orig_HealFraction orig, HealthComponent self, float fraction, ProcChainMask procChainMask)
         {
-            if (self.body.inventory && self.body.inventory.GetItemCount(Hunted.HuntedStatItem) > 0) fraction /= Hunted.healthMult;
+            if (self.body.inventory && self.body.inventory.GetItemCount(Hunted.HuntedStatItem) > 0)
+            {
+                float healthMult = Hunted.healthMult;
+                if (StatOverrideBodies.TryGetValue(self.body.bodyIndex, out SpawnInfo info)) healthMult = info.hpMultOverride;
+                fraction /= healthMult;
+            }
             return orig(self, fraction, procChainMask);
         }
 
@@ -271,7 +330,9 @@ namespace Risky_Artifacts.Artifacts
             orig(self);
             if (self.inventory && self.inventory.GetItemCount(Hunted.HuntedStatItem) > 0)
             {
-                self.damage *= Hunted.damageMult;
+                float mult = Hunted.damageMult;
+                if (StatOverrideBodies.TryGetValue(self.bodyIndex, out SpawnInfo info)) mult = info.damageMultOverride;
+                self.damage *= mult;
             }
         }
 
@@ -329,7 +390,7 @@ namespace Risky_Artifacts.Artifacts
         private static void CreateHuntedCategory(DirectorCardCategorySelection selection)
         {
             if (!selection) return;
-            selection.AddCategory("RiskyArtifactsHunted", 1f);
+            selection.AddCategory("RiskyArtifactsHunted", Hunted.categoryWeight);
             selection.categories[selection.categories.Length - 1].cards = DirectorCards.ToArray();
         }
 
@@ -339,6 +400,27 @@ namespace Risky_Artifacts.Artifacts
             public string bodyName;
             public BodyIndex bodyIndex = BodyIndex.None;
             public int directorCost;
+
+            //Only used if the config specifies this body needs an override
+            public bool isOverride = false;
+            public float hpMultOverride;
+            public float damageMultOverride;
+        }
+    }
+
+    public class HuntedItemBehavior : CharacterBody.ItemBehavior
+    {
+        private bool origImmuneToExecute = true;
+
+        private void OnEnable()
+        {
+            origImmuneToExecute = body && body.bodyFlags.HasFlag(CharacterBody.BodyFlags.ImmuneToExecutes);
+            if (origImmuneToExecute) body.bodyFlags &= ~CharacterBody.BodyFlags.ImmuneToExecutes;
+        }
+
+        private void OnDisable()
+        {
+            if (origImmuneToExecute && body) body.bodyFlags |= CharacterBody.BodyFlags.ImmuneToExecutes;
         }
     }
 }

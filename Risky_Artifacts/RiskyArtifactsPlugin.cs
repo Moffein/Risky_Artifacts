@@ -205,11 +205,19 @@ namespace Risky_Artifacts
             Hunted.allSurvivors = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "All Survivors"), false,
                 new ConfigDescription("Allow all survivors to spawn, even if not listed in the Spawnlist")).Value;
             Hunted.spawnInfoInput = base.Config.Bind<string>(new ConfigDefinition("Hunted", "Spawnlist"), "CommandoBody, HuntressBody, Bandit2Body, ToolbotBody, MercBody, MageBody, LoaderBody, CrocoBody, RailgunnerBody, RocketSurvivorBody, CHEF, SniperClassicBody, MinerBody, HANDOverclockedBody, RobPaladinBody, SS2UChirrBody, SS2UCyborgBody, SS2UExecutionerBody, SS2UPyroBody, SS2UNemmandoBody, NemesisEnforcerBody, RobDriverBody, DeputyBody",
-                new ConfigDescription("List of bodies to be added. Format is BodyName separated by comma. To specify a custom director cost, do BodyName:Cost (cost must be a positive integer)")).Value;
+                new ConfigDescription("List of bodies to be added. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost:HPMult:DamageMult")).Value;
             Hunted.nerfEngiTurrets = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Nerf Engi Turrets"), true,
                 new ConfigDescription("Engi Turrets receive no health boost.")).Value;
             Hunted.nerfPercentHeal = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Nerf Percent Heal"), true,
                 new ConfigDescription("Percent heal effects are unaffected by the increased HP multiplier.")).Value;
+            Hunted.categoryWeight = base.Config.Bind<float>(new ConfigDefinition("Hunted", "Stats - Director Category Weight"), 1f,
+                new ConfigDescription("Weight of the Hunted survivor director category. Usually it's 2 for Bosses and Minibosses, 3-4 for Common enemies.")).Value;
+            Hunted.healthMult = base.Config.Bind<float>(new ConfigDefinition("Hunted", "Stats - Health Multiplier"), 8f,
+                new ConfigDescription("Default health multiplier for Hunted survivors. Vengeance is 10")).Value;
+            Hunted.damageMult = base.Config.Bind<float>(new ConfigDefinition("Hunted", "Stats - Damage Multiplier"), 0.25f,
+                new ConfigDescription("Default damage multiplier for Hunted survivors. Vengeance is 0.1")).Value;
+            Hunted.directorCost = base.Config.Bind<int>(new ConfigDefinition("Hunted", "Director Cost"), 100,
+                new ConfigDescription("Default director cost for Hunted survivors.")).Value;
         }
 
         public static void FixScriptableObjectName(ArtifactDef ad)

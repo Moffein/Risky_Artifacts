@@ -48,7 +48,7 @@
 	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_DESC" : "Look like a ghost and become <style=cIsUtility>immune to Void Fog</style>.",
 	
 	"RISKYARTIFACTS_HUNTEDSTATITEM_NAME" : "Hunted Stat Modifier",
-	"RISKYARTIFACTS_HUNTEDSTATITEM_PICKUP" : "Nowhere to run, nowhere to hide.",
+	"RISKYARTIFACTS_HUNTEDSTATITEM_PICKUP" : "The hunter becomes the hunted.",
 	"RISKYARTIFACTS_HUNTEDSTATITEM_DESC" : "<style=cIsHealing>Increase max health</style>... <style=cIsHealth>BUT reduce damage</style>."
 	}
 }
