@@ -1,4 +1,5 @@
-﻿using Mono.Cecil.Cil;
+﻿using HarmonyLib;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
 using RoR2;
@@ -16,6 +17,7 @@ namespace Risky_Artifacts.Artifacts
         public static bool enabled = true;
         public static ArtifactDef artifact;
         public static DirectorCardCategorySelection MonsterCardSelection;
+        public static ItemDef UniverseScriptedEncounterStatItem;
 
         public static class InputInfo
         {
@@ -46,6 +48,12 @@ namespace Risky_Artifacts.Artifacts
             category = MonsterCategory.Special
         };
 
+        public static CategoryInfo CatLunarScav = new CategoryInfo()
+        {
+            weight = 0f,
+            category = MonsterCategory.LunarScav
+        };
+
         public class CategoryInfo
         {
             public MonsterCategory category;
@@ -71,7 +79,7 @@ namespace Risky_Artifacts.Artifacts
 
         public enum MonsterCategory
         {
-            Basic_Monsters, Minibosses, Champions, Special, LunarScav, Mithrix, Voidling, Drone
+            Basic_Monsters, Minibosses, Champions, Special, LunarScav, Mithrix, MithrixHurt, Voidling, Drone, Newt
         }
 
         public Universe()
@@ -86,12 +94,10 @@ namespace Risky_Artifacts.Artifacts
             RiskyArtifactsPlugin.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
-            //Just copied from RiskyMod
             Universe_Spawncards.Init();
-            //Universe_DirectorCards.Init();
-
             RoR2Application.onLoad += OnLoad;
             ArtifactHooks();
+            BuildItem();
         }
 
         private void OnLoad()
@@ -149,6 +155,43 @@ namespace Risky_Artifacts.Artifacts
                     Debug.Log("RiskyArtifacts: Universe RebuildCards IL Hook failed.");
                 }
             };
+        }
+
+        private void BuildItem()
+        {
+            UniverseScriptedEncounterStatItem = ScriptableObject.CreateInstance<ItemDef>();
+            UniverseScriptedEncounterStatItem.name = "RiskyArtifactsUniverseScriptedEncounterStatItem";
+            UniverseScriptedEncounterStatItem.deprecatedTier = ItemTier.NoTier;
+            UniverseScriptedEncounterStatItem.nameToken = "RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_NAME";
+            UniverseScriptedEncounterStatItem.pickupToken = "RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_PICKUP";
+            UniverseScriptedEncounterStatItem.descriptionToken = "RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_DESC";
+            UniverseScriptedEncounterStatItem.tags = new[]
+            {
+                ItemTag.WorldUnique,
+                ItemTag.BrotherBlacklist,
+                ItemTag.CannotSteal
+            };
+            ItemDisplayRule[] idr = new ItemDisplayRule[0];
+            //ContentAddition.AddItemDef(OriginBonusItem);
+            ItemAPI.Add(new CustomItem(UniverseScriptedEncounterStatItem, idr));
+
+            RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
+        }
+
+        private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
+        {
+            if (sender.inventory && sender.inventory.GetItemCount(Universe.UniverseScriptedEncounterStatItem) > 0)
+            {
+                float healthFactor = 1f;
+                float damageFactor = 1f;
+                healthFactor += Run.instance.difficultyCoefficient / 2.5f;
+                damageFactor += Run.instance.difficultyCoefficient / 30f;
+                int playerFactor = Mathf.Max(1, Run.instance.livingPlayerCount);
+                healthFactor *= Mathf.Pow((float)playerFactor, 0.5f);
+
+                args.healthMultAdd += healthFactor - 1f;
+                args.damageMultAdd = damageFactor - 1f;
+            }
         }
 
         private void ClassicStageInfo_OnArtifactEnabled(On.RoR2.ClassicStageInfo.orig_OnArtifactEnabled orig, ClassicStageInfo self, RunArtifactManager runArtifactManager, ArtifactDef artifactDef)
@@ -226,7 +269,6 @@ namespace Risky_Artifacts.Artifacts
                         spawnCard.hullSize = HullClassification.Human;
                         spawnCard.noElites = false;
                         spawnCard.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Ground;
-                        spawnCard.itemsToGrant = new ItemCountPair[] {};
                         spawnCard.forbiddenFlags = RoR2.Navigation.NodeFlags.NoCharacterSpawn;
                         spawnCard.occupyPosition = false;
                         spawnCard.loadout = new SerializableLoadout();
@@ -251,18 +293,6 @@ namespace Risky_Artifacts.Artifacts
                             {
                                 case MonsterCategory.Special:
                                     spawnCard.directorCreditCost = 4000;
-                                    spawnCard.itemsToGrant = new ItemCountPair[] {
-                                        new ItemCountPair()
-                                        {
-                                            itemDef = RoR2Content.Items.BoostDamage,
-                                            count = 10
-                                        },
-                                        new ItemCountPair()
-                                        {
-                                            itemDef = RoR2Content.Items.BoostHp,
-                                            count = 40
-                                        },
-                                    };
                                     break;
                                 case MonsterCategory.Champions:
                                     spawnCard.directorCreditCost = Mathf.RoundToInt(body.baseMaxHealth / 3.5f);
@@ -289,6 +319,15 @@ namespace Risky_Artifacts.Artifacts
                         }
                         Debug.Log("RiskyArtifacts: Universe: Created spawncard for " + name + " with cost " + spawnCard.directorCreditCost + ".");
                     }
+                }
+
+                if (monsterCategory == MonsterCategory.Special)
+                {
+                    if (spawnCard.itemsToGrant == null) spawnCard.itemsToGrant = new ItemCountPair[0];
+                    List<ItemCountPair> itemList = spawnCard.itemsToGrant.ToList();
+                    itemList.Add(new ItemCountPair() { count = 1,
+                    itemDef = Universe.UniverseScriptedEncounterStatItem});
+                    spawnCard.itemsToGrant = itemList.ToArray();
                 }
 
                 //Jellyfish thing is jank, but it's the only monster that actually uses this.

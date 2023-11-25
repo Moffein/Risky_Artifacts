@@ -52,6 +52,10 @@
 	
 	"RISKYARTIFACTS_HUNTEDSTATITEM_NAME" : "Hunted Stat Modifier",
 	"RISKYARTIFACTS_HUNTEDSTATITEM_PICKUP" : "The hunter becomes the hunted.",
-	"RISKYARTIFACTS_HUNTEDSTATITEM_DESC" : "<style=cIsHealing>Increase max health</style>... <style=cIsHealth>BUT reduce damage</style>."
+	"RISKYARTIFACTS_HUNTEDSTATITEM_DESC" : "<style=cIsHealing>Increase max health</style>... <style=cIsHealth>BUT reduce damage</style>.",
+	
+	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_NAME" : "Universe Scripted Encounter Stat Modifier",
+	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_PICKUP" : "Gain the stat boosts that Scripted Bosses use.",
+	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_DESC" : "Gain the stat boosts that Scripted Bosses use.",
 	}
 }

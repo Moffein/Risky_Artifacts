@@ -228,6 +228,7 @@ namespace Risky_Artifacts
 
             Universe.enabled = base.Config.Bind<bool>(new ConfigDefinition("Universe", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
+
             Universe.CatBasicMonsters.weight = base.Config.Bind<float>(new ConfigDefinition("Universe", "Category Weight - Basic Monsters"), 3f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
             Universe.CatMinibosses.weight = base.Config.Bind<float>(new ConfigDefinition("Universe", "Category Weight - Minibosses"), 2f,
@@ -235,6 +236,7 @@ namespace Risky_Artifacts
             Universe.CatChampions.weight = base.Config.Bind<float>(new ConfigDefinition("Universe", "Category Weight - Champions"), 2f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
             Universe.CatSpecial.weight = base.Config.Bind<float>(new ConfigDefinition("Universe", "Category Weight - Special"), 1f,
+
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
             Universe.InputInfo.Basic_Monsters = base.Config.Bind<string>(new ConfigDefinition("Universe", "Spawnlist - Basic Monsters"), "BeetleBody, WispBody, LemurianBody, JellyfishBody, HermitCrabBody, VoidBarnacleBody, ImpBody, VultureBody, RoboBallMiniBody, AcidLarvaBody, MinorConstructBody, FlyingVerminBody, VerminBody, MoffeinClayManBody:28",
                new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost:MinStages")).Value;
@@ -243,7 +245,7 @@ namespace Risky_Artifacts
             Universe.InputInfo.Champions = base.Config.Bind<string>(new ConfigDefinition("Universe", "Spawnlist - Champions"), "VagrantBody, TitanBody, BeetleQueen2Body, ClayBossBody, MagmaWormBody, ImpBossBody, RoboBallBossBody, GravekeeperBody, MegaConstructBody, VoidMegaCrabBody, GrandparentBody, ScavBody, ElectricWormBody, MoffeinAncientWispBody:1000, MechorillaBody:600, RegigigasBody:1000",
                 new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost:MinStages")).Value;
             Universe.InputInfo.Special = base.Config.Bind<string>(new ConfigDefinition("Universe", "Spawnlist - Special"), "TitanGoldBody:4000, SuperRoboBallBossBody:4000, DireseekerBossBody:4000",
-               new ConfigDescription("List of bodies to be added to this category. Bodies in this category will receive increased health and damage. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost:MinStages")).Value;
+               new ConfigDescription("List of bodies to be added to this category. Bodies in this category will receive increased health and damage. To specify custom stats, do BodyName:Cost:MinStages")).Value;
         }
 
         public static void FixScriptableObjectName(ArtifactDef ad)
