@@ -22,12 +22,22 @@ namespace Risky_Artifacts.Artifacts
         public static ItemDef UniverseScriptedEncounterStatItem;
 
         public static SpawnCard.EliteRules mithrixEliteRules = SpawnCard.EliteRules.ArtifactOnly;
-        public static int mithrixMinStages = 0;
+        public static int mithrixMinStages = 5;
         public static int mithrixCost = 4000;
 
         public static SpawnCard.EliteRules mithrixHurtEliteRules = SpawnCard.EliteRules.ArtifactOnly;
-        public static int mithrixHurtMinStages = 0;
-        public static int mithrixHurtCost = 9001;
+        public static int mithrixHurtMinStages = 5;
+        public static int mithrixHurtCost = 12000;
+
+        public static SpawnCard.EliteRules voidlingEliteRules = SpawnCard.EliteRules.ArtifactOnly;
+        public static int voidlingMinStages = 5;
+        public static int voidlingCost = 8000;
+        public static bool voidlingPhase2 = true;
+
+        public static SpawnCard.EliteRules newtEliteRules = SpawnCard.EliteRules.Lunar;
+        public static bool newtAllowElite = false;
+        public static int newtMinStages = 5;
+        public static int newtCost = 12000;
 
         public static class InputInfo
         {
@@ -82,6 +92,12 @@ namespace Risky_Artifacts.Artifacts
             category = MonsterCategory.LunarScav
         };
 
+        public static CategoryInfo CatNewt = new CategoryInfo()
+        {
+            weight = 0f,
+            category = MonsterCategory.Newt
+        };
+
         public class CategoryInfo
         {
             public MonsterCategory category;
@@ -126,8 +142,12 @@ namespace Risky_Artifacts.Artifacts
             CatMinibosses.cards = ParseSpawnlist(Universe.InputInfo.Minibosses, MonsterCategory.Minibosses);
             CatChampions.cards = ParseSpawnlist(Universe.InputInfo.Champions, MonsterCategory.Champions);
             CatSpecial.cards = ParseSpawnlist(Universe.InputInfo.Special, MonsterCategory.Special);
+
+            //Special cards are separate so they don't get overwritten
             BuildCatMithrix();
             BuildCatMithrixHurt();
+            BuildCatVoidling();
+            BuildCatNewt();
 
             MonsterCardSelection = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
 
@@ -160,9 +180,26 @@ namespace Risky_Artifacts.Artifacts
                 MonsterCardSelection.AddCategory("Mithrix", CatMithrix.weight);
                 MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatMithrix.cards.ToArray();
             }
+
+            if (CatMithrixHurt.weight > 0f)
+            {
+                MonsterCardSelection.AddCategory("Mithrix Hurt", CatMithrixHurt.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatMithrixHurt.cards.ToArray();
+            }
+
+            if (CatVoidling.weight > 0f)
+            {
+                MonsterCardSelection.AddCategory("Voidling", CatVoidling.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatVoidling.cards.ToArray();
+            }
+
+            if (CatNewt.weight > 0f)
+            {
+                MonsterCardSelection.AddCategory("Newt", CatNewt.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatNewt.cards.ToArray();
+            }
         }
 
-        //Build Brother card separately so it doesn't get overwritten if he's added to normal monsters and such
         private void BuildCatMithrix()
         {
             CharacterSpawnCard itBrotherCard = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/GameModes/InfiniteTowerRun/InfiniteTowerAssets/cscBrotherIT.asset").WaitForCompletion();
@@ -195,6 +232,7 @@ namespace Risky_Artifacts.Artifacts
             brotherCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
             brotherCard.loadout = itBrotherCard.loadout;
             brotherCard.sendOverNetwork = true;
+            brotherCard.hullSize = HullClassification.Golem;
             brotherCard.name = "cscUniverseBrotherUnique";
             (brotherCard as ScriptableObject).name = brotherCard.name;
 
@@ -216,7 +254,7 @@ namespace Risky_Artifacts.Artifacts
             CharacterSpawnCard itBrotherCard = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/GameModes/InfiniteTowerRun/InfiniteTowerAssets/cscBrotherIT.asset").WaitForCompletion();
 
             CharacterSpawnCard brotherHurtCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
-            brotherHurtCard.prefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Brother/cscBrotherHurt.asset").WaitForCompletion();
+            brotherHurtCard.prefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Brother/BrotherHurtMaster.prefab").WaitForCompletion();
             brotherHurtCard.directorCreditCost = mithrixHurtCost;
             brotherHurtCard.itemsToGrant = new ItemCountPair[]
             {
@@ -243,6 +281,7 @@ namespace Risky_Artifacts.Artifacts
             brotherHurtCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
             brotherHurtCard.loadout = itBrotherCard.loadout;
             brotherHurtCard.sendOverNetwork = true;
+            brotherHurtCard.hullSize = HullClassification.Golem;
             brotherHurtCard.name = "cscUniverseBrotherHurtUnique";
             (brotherHurtCard as ScriptableObject).name = brotherHurtCard.name;
 
@@ -257,6 +296,85 @@ namespace Risky_Artifacts.Artifacts
                 requiredUnlockableDef = null
             };
             CatMithrixHurt.cards = new List<DirectorCard>() { dc };
+        }
+
+        private void BuildCatVoidling()
+        {
+            string prefabPath = voidlingPhase2 ? "RoR2/DLC1/VoidRaidCrab/cscMiniVoidRaidCrabPhase2.asset" : "RoR2/DLC1/VoidRaidCrab/cscMiniVoidRaidCrabPhase1.asset";
+            CharacterSpawnCard origCard = Addressables.LoadAssetAsync<CharacterSpawnCard>(prefabPath).WaitForCompletion();
+
+            CharacterSpawnCard voidlingCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
+            voidlingCard.prefab = origCard.prefab;
+            voidlingCard.directorCreditCost = voidlingCost;
+            voidlingCard.itemsToGrant = new ItemCountPair[]
+            {
+                new ItemCountPair()
+                {
+                    itemDef = RoR2Content.Items.TeleportWhenOob,
+                    count = 1
+                },
+                new ItemCountPair()
+                {
+                    itemDef = UniverseScriptedEncounterStatItem,
+                    count = 1
+                },
+                new ItemCountPair()
+                {
+                    itemDef = RoR2Content.Items.AdaptiveArmor,
+                    count = 1
+                }
+            };
+            voidlingCard.eliteRules = voidlingEliteRules;
+            voidlingCard.noElites = false;
+            voidlingCard.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Air;
+            voidlingCard.occupyPosition = false;
+            voidlingCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
+            voidlingCard.hullSize = origCard.hullSize;
+            voidlingCard.loadout = origCard.loadout;
+            voidlingCard.sendOverNetwork = true;
+            voidlingCard.name = "cscUniverseVoidlingUnique";
+            (voidlingCard as ScriptableObject).name = voidlingCard.name;
+
+            DirectorCard dc = new DirectorCard()
+            {
+                selectionWeight = 1,
+                spawnCard = voidlingCard,
+                spawnDistance = DirectorCore.MonsterSpawnDistance.Far,
+                preventOverhead = false,
+                minimumStageCompletions = mithrixHurtMinStages,
+                forbiddenUnlockableDef = null,
+                requiredUnlockableDef = null
+            };
+            CatVoidling.cards = new List<DirectorCard>() { dc };
+        }
+
+        private void BuildCatNewt()
+        {
+            CharacterSpawnCard newtCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
+            newtCard.prefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Shopkeeper/ShopkeeperMaster.prefab").WaitForCompletion();
+            newtCard.directorCreditCost = newtCost;
+            newtCard.eliteRules = newtEliteRules;
+            newtCard.noElites = newtAllowElite;
+            newtCard.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Ground;
+            newtCard.occupyPosition = false;
+            newtCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
+            newtCard.hullSize = HullClassification.Golem;
+            newtCard.loadout = new SerializableLoadout();
+            newtCard.sendOverNetwork = true;
+            newtCard.name = "cscUniverseNewtUnique";
+            (newtCard as ScriptableObject).name = newtCard.name;
+
+            DirectorCard dc = new DirectorCard()
+            {
+                selectionWeight = 1,
+                spawnCard = newtCard,
+                spawnDistance = DirectorCore.MonsterSpawnDistance.Standard,
+                preventOverhead = false,
+                minimumStageCompletions =newtMinStages,
+                forbiddenUnlockableDef = null,
+                requiredUnlockableDef = null
+            };
+            CatNewt.cards = new List<DirectorCard>() { dc };
         }
 
         private void ArtifactHooks()

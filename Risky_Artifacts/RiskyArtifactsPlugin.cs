@@ -229,7 +229,7 @@ namespace Risky_Artifacts
             Universe.enabled = base.Config.Bind<bool>(new ConfigDefinition("Universe", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
 
-            Universe.CatBasicMonsters.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Basic Monsters"), 3f,
+            Universe.CatBasicMonsters.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Basic Monsters"), 4f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
             Universe.CatMinibosses.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Minibosses"), 2f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
@@ -237,9 +237,14 @@ namespace Risky_Artifacts
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
             Universe.CatSpecial.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Special"), 1f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
-            Universe.CatMithrix.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Mithrix"), 0.25f,
+
+            Universe.CatMithrix.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Mithrix"), 0.3f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
             Universe.CatMithrixHurt.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Mithrix Phase 4"), 0.05f,
+                new ConfigDescription("Chance of this monster category being selected.")).Value;
+            Universe.CatVoidling.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Voidling"), 0.15f,
+                new ConfigDescription("Chance of this monster category being selected.")).Value;
+            Universe.CatNewt.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Newt"), 0f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
 
             Universe.InputInfo.Basic_Monsters = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Basic Monsters"), "BeetleBody, WispBody, LemurianBody, JellyfishBody, HermitCrabBody, VoidBarnacleBody, ImpBody, VultureBody, RoboBallMiniBody, AcidLarvaBody, MinorConstructBody, FlyingVerminBody, VerminBody, MoffeinClayManBody:28",
@@ -248,22 +253,41 @@ namespace Risky_Artifacts
                 new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cos(int)t:MinStages(int)")).Value;
             Universe.InputInfo.Champions = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Champions"), "VagrantBody, TitanBody, BeetleQueen2Body, ClayBossBody, MagmaWormBody, ImpBossBody, RoboBallBossBody, GravekeeperBody, MegaConstructBody, VoidMegaCrabBody, GrandparentBody, ScavBody, ElectricWormBody, MoffeinAncientWispBody:1000, MechorillaBody:600, RegigigasBody:1000",
                 new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost(int):MinStages(int)")).Value;
-            Universe.InputInfo.Special = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Special"), "TitanGoldBody:4000, SuperRoboBallBossBody:4000, DireseekerBossBody:4000",
+            Universe.InputInfo.Special = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Special"), "TitanGoldBody:4000:5, SuperRoboBallBossBody:4000:5, DireseekerBossBody:4000:5",
                new ConfigDescription("List of bodies to be added to this category. Bodies in this category will receive increased health and damage. To specify custom stats, do BodyName:Cost(int):MinStages(int)")).Value;
 
             Universe.mithrixCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix", "Director Cost"), 4000,
                 new ConfigDescription("Director cost of Mithrix.")).Value;
-            Universe.mithrixMinStages = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix", "Min Stages"), 0,
+            Universe.mithrixMinStages = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix", "Min Stages"), 5,
                 new ConfigDescription("Min stages completed before Mithrix can spawn.")).Value;
             Universe.mithrixEliteRules = base.Config.Bind<SpawnCard.EliteRules>(new ConfigDefinition("Universe - Mithrix", "Elite Rules"), SpawnCard.EliteRules.ArtifactOnly,
-                new ConfigDescription("Affects whether Mithrix can be elite.")).Value;
+                new ConfigDescription("Affects elite type.")).Value;
 
-            Universe.mithrixHurtCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix Phase 4", "Director Cost"), 9001,
-                new ConfigDescription("Director cost of Mithrix.")).Value;
+            Universe.mithrixHurtCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix Phase 4", "Director Cost"), 12000,
+                new ConfigDescription("Director cost of Mithrix Phase 4.")).Value;
             Universe.mithrixHurtMinStages = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix Phase 4", "Min Stages"), 5,
                 new ConfigDescription("Min stages completed before Mithrix Phase 4 can spawn.")).Value;
             Universe.mithrixHurtEliteRules = base.Config.Bind<SpawnCard.EliteRules>(new ConfigDefinition("Universe - Mithrix Phase 4", "Elite Rules"), SpawnCard.EliteRules.ArtifactOnly,
-                new ConfigDescription("Affects whether Mithrix Phase 4 can be elite.")).Value;
+                new ConfigDescription("Affects elite type.")).Value;
+
+            Universe.voidlingCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Voidling", "Director Cost"), 8000,
+                new ConfigDescription("Director cost of Voidling.")).Value;
+            Universe.voidlingMinStages = base.Config.Bind<int>(new ConfigDefinition("Universe - Voidling", "Min Stages"), 5,
+                new ConfigDescription("Min stages completed before Voidling can spawn.")).Value;
+            Universe.voidlingEliteRules = base.Config.Bind<SpawnCard.EliteRules>(new ConfigDefinition("Universe - Voidling", "Elite Rules"), SpawnCard.EliteRules.ArtifactOnly,
+                new ConfigDescription("Affects elite type.")).Value;
+            Universe.voidlingPhase2 = base.Config.Bind<bool>(new ConfigDefinition("Universe - Voidling", "Enable Phase 2 Attacks"), true,
+                new ConfigDescription("Allow Voidling to use its Phase 2 attacks.")).Value;
+
+
+            Universe.newtCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Newt", "Director Cost"), 12000,
+                new ConfigDescription("Director cost of Mithrix Phase 4.")).Value;
+            Universe.newtMinStages = base.Config.Bind<int>(new ConfigDefinition("Universe - Newt", "Min Stages"), 5,
+                new ConfigDescription("Min stages completed before Newt can spawn.")).Value;
+            Universe.newtEliteRules = base.Config.Bind<SpawnCard.EliteRules>(new ConfigDefinition("Universe - Newt", "Elite Rules"), SpawnCard.EliteRules.Lunar,
+                new ConfigDescription("Affects elite type.")).Value;
+            Universe.newtAllowElite = base.Config.Bind<bool>(new ConfigDefinition("Universe - Newt", "Allow Elite"), false,
+                new ConfigDescription("Affects whether Newt can be elite.")).Value;
         }
 
         public static void FixScriptableObjectName(ArtifactDef ad)
