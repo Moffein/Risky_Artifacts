@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
 using UnityEngine.Timeline;
+using static Risky_Artifacts.Artifacts.Universe;
 
 namespace Risky_Artifacts.Artifacts
 {
@@ -19,7 +20,7 @@ namespace Risky_Artifacts.Artifacts
         public static bool enabled = true;
         public static ArtifactDef artifact;
         public static DirectorCardCategorySelection MonsterCardSelection;
-        public static ItemDef UniverseScriptedEncounterStatItem;
+        public static ItemDef UniverseScriptedEncounterStatItem, UniverseDroneStatItem;
 
         public static SpawnCard.EliteRules mithrixEliteRules = SpawnCard.EliteRules.ArtifactOnly;
         public static int mithrixMinStages = 5;
@@ -42,64 +43,75 @@ namespace Risky_Artifacts.Artifacts
         public static int newtMinStages = 5;
         public static int newtCost = 12000;
 
+        public static float droneDamageMult = 0.1f;
+
         public static class InputInfo
         {
-            public static string Basic_Monsters, Minibosses, Champions, Special, LunarScav;
+            public static string Basic_Monsters, Minibosses, Champions, Special, LunarScav, Drone;
         }
 
-        public static CategoryInfo CatBasicMonsters = new CategoryInfo()
+        public static class Categories
         {
-            weight = 3f,
-            category = MonsterCategory.Basic_Monsters
-        };
+            public static CategoryInfo CatBasicMonsters = new CategoryInfo()
+            {
+                weight = 3f,
+                category = MonsterCategory.Basic_Monsters
+            };
 
-        public static CategoryInfo CatMinibosses = new CategoryInfo()
-        {
-            weight = 2f,
-            category = MonsterCategory.Minibosses
-        };
+            public static CategoryInfo CatMinibosses = new CategoryInfo()
+            {
+                weight = 2f,
+                category = MonsterCategory.Minibosses
+            };
 
-        public static CategoryInfo CatChampions = new CategoryInfo()
-        {
-            weight = 2f,
-            category = MonsterCategory.Champions
-        };
+            public static CategoryInfo CatChampions = new CategoryInfo()
+            {
+                weight = 2f,
+                category = MonsterCategory.Champions
+            };
 
-        public static CategoryInfo CatSpecial = new CategoryInfo()
-        {
-            weight = 1f,
-            category = MonsterCategory.Special
-        };
+            public static CategoryInfo CatSpecial = new CategoryInfo()
+            {
+                weight = 1f,
+                category = MonsterCategory.Special
+            };
 
-        public static CategoryInfo CatLunarScav = new CategoryInfo()
-        {
-            weight = 0f,
-            category = MonsterCategory.LunarScav
-        };
+            public static CategoryInfo CatLunarScav = new CategoryInfo()
+            {
+                weight = 0f,
+                category = MonsterCategory.LunarScav
+            };
 
-        public static CategoryInfo CatMithrix = new CategoryInfo()
-        {
-            weight = 0f,
-            category = MonsterCategory.Mithrix
-        };
+            public static CategoryInfo CatMithrix = new CategoryInfo()
+            {
+                weight = 0f,
+                category = MonsterCategory.Mithrix
+            };
 
-        public static CategoryInfo CatMithrixHurt = new CategoryInfo()
-        {
-            weight = 0f,
-            category = MonsterCategory.MithrixHurt
-        };
+            public static CategoryInfo CatMithrixHurt = new CategoryInfo()
+            {
+                weight = 0f,
+                category = MonsterCategory.MithrixHurt
+            };
 
-        public static CategoryInfo CatVoidling = new CategoryInfo()
-        {
-            weight = 0f,
-            category = MonsterCategory.Voidling
-        };
+            public static CategoryInfo CatVoidling = new CategoryInfo()
+            {
+                weight = 0f,
+                category = MonsterCategory.Voidling
+            };
 
-        public static CategoryInfo CatNewt = new CategoryInfo()
-        {
-            weight = 0f,
-            category = MonsterCategory.Newt
-        };
+            public static CategoryInfo CatNewt = new CategoryInfo()
+            {
+                weight = 0f,
+                category = MonsterCategory.Newt
+            };
+
+            public static CategoryInfo CatDrone = new CategoryInfo()
+            {
+                weight = 0f,
+                category = MonsterCategory.Drone
+            };
+        }
 
         public class CategoryInfo
         {
@@ -133,19 +145,21 @@ namespace Risky_Artifacts.Artifacts
             RiskyArtifactsPlugin.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
+            BuildItem();
+
             Universe_Spawncards.Init();
             RoR2Application.onLoad += OnLoad;
             ArtifactHooks();
-            BuildItem();
         }
 
         private void OnLoad()
         {
-            CatBasicMonsters.cards = ParseSpawnlist(Universe.InputInfo.Basic_Monsters, CatBasicMonsters.category);
-            CatMinibosses.cards = ParseSpawnlist(Universe.InputInfo.Minibosses, CatMinibosses.category);
-            CatChampions.cards = ParseSpawnlist(Universe.InputInfo.Champions, CatChampions.category);
-            CatSpecial.cards = ParseSpawnlist(Universe.InputInfo.Special, CatSpecial.category);
-            CatLunarScav.cards = ParseSpawnlist(Universe.InputInfo.LunarScav, CatLunarScav.category);
+            Categories.CatBasicMonsters.cards = ParseSpawnlist(Universe.InputInfo.Basic_Monsters, Categories.CatBasicMonsters.category);
+            Categories.CatMinibosses.cards = ParseSpawnlist(Universe.InputInfo.Minibosses, Categories.CatMinibosses.category);
+            Categories.CatChampions.cards = ParseSpawnlist(Universe.InputInfo.Champions, Categories.CatChampions.category);
+            Categories.CatSpecial.cards = ParseSpawnlist(Universe.InputInfo.Special, Categories.CatSpecial.category);
+            Categories.CatLunarScav.cards = ParseSpawnlist(Universe.InputInfo.LunarScav, Categories.CatLunarScav.category);
+            Categories.CatDrone.cards = ParseSpawnlist(Universe.InputInfo.Drone, Categories.CatDrone.category);
 
             //Special cards are separate so they don't get overwritten
             BuildCatMithrix();
@@ -155,58 +169,64 @@ namespace Risky_Artifacts.Artifacts
 
             MonsterCardSelection = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
 
-            if (CatBasicMonsters.weight > 0f)
+            if (Categories.CatBasicMonsters.weight > 0f)
             {
-                MonsterCardSelection.AddCategory("Basic Monsters", CatBasicMonsters.weight);
-                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatBasicMonsters.cards.ToArray();
+                MonsterCardSelection.AddCategory("Basic Monsters", Categories.CatBasicMonsters.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = Categories.CatBasicMonsters.cards.ToArray();
             }
 
-            if (CatMinibosses.weight > 0f)
+            if (Categories.CatMinibosses.weight > 0f)
             {
-                MonsterCardSelection.AddCategory("Minibosses", CatMinibosses.weight);
-                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatMinibosses.cards.ToArray();
+                MonsterCardSelection.AddCategory("Minibosses", Categories.CatMinibosses.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = Categories.CatMinibosses.cards.ToArray();
             }
 
-            if (CatChampions.weight > 0f)
+            if (Categories.CatChampions.weight > 0f)
             {
-                MonsterCardSelection.AddCategory("Champions", CatChampions.weight);
-                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatChampions.cards.ToArray();
+                MonsterCardSelection.AddCategory("Champions", Categories.CatChampions.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = Categories.CatChampions.cards.ToArray();
             }
 
-            if (CatSpecial.weight > 0f)
+            if (Categories.CatSpecial.weight > 0f)
             {
-                MonsterCardSelection.AddCategory("Special", CatSpecial.weight);
-                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatSpecial.cards.ToArray();
+                MonsterCardSelection.AddCategory("Special", Categories.CatSpecial.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = Categories.CatSpecial.cards.ToArray();
             }
 
-            if (CatMithrix.weight > 0f)
+            if (Categories.CatMithrix.weight > 0f)
             {
-                MonsterCardSelection.AddCategory("Mithrix", CatMithrix.weight);
-                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatMithrix.cards.ToArray();
+                MonsterCardSelection.AddCategory("Mithrix", Categories.CatMithrix.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = Categories.CatMithrix.cards.ToArray();
             }
 
-            if (CatMithrixHurt.weight > 0f)
+            if (Categories.CatMithrixHurt.weight > 0f)
             {
-                MonsterCardSelection.AddCategory("Mithrix Hurt", CatMithrixHurt.weight);
-                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatMithrixHurt.cards.ToArray();
+                MonsterCardSelection.AddCategory("Mithrix Hurt", Categories.CatMithrixHurt.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = Categories.CatMithrixHurt.cards.ToArray();
             }
 
-            if (CatVoidling.weight > 0f)
+            if (Categories.CatVoidling.weight > 0f)
             {
-                MonsterCardSelection.AddCategory("Voidling", CatVoidling.weight);
-                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatVoidling.cards.ToArray();
+                MonsterCardSelection.AddCategory("Voidling", Categories.CatVoidling.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = Categories.CatVoidling.cards.ToArray();
             }
 
-            if (CatNewt.weight > 0f)
+            if (Categories.CatNewt.weight > 0f)
             {
-                MonsterCardSelection.AddCategory("Newt", CatNewt.weight);
-                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatNewt.cards.ToArray();
+                MonsterCardSelection.AddCategory("Newt", Categories.CatNewt.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = Categories.CatNewt.cards.ToArray();
             }
 
-            if (CatLunarScav.weight > 0f)
+            if (Categories.CatLunarScav.weight > 0f)
             {
-                MonsterCardSelection.AddCategory("Newt", CatNewt.weight);
-                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatLunarScav.cards.ToArray();
+                MonsterCardSelection.AddCategory("Newt", Categories.CatNewt.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = Categories.CatLunarScav.cards.ToArray();
+            }
+
+            if (Categories.CatDrone.weight > 0f)
+            {
+                MonsterCardSelection.AddCategory("Drone", Categories.CatDrone.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = Categories.CatDrone.cards.ToArray();
             }
         }
 
@@ -256,7 +276,7 @@ namespace Risky_Artifacts.Artifacts
                 forbiddenUnlockableDef = null,
                 requiredUnlockableDef = null
             };
-            CatMithrix.cards = new List<DirectorCard>() { dc };
+            Categories.CatMithrix.cards = new List<DirectorCard>() { dc };
         }
 
         private void BuildCatMithrixHurt()
@@ -300,7 +320,7 @@ namespace Risky_Artifacts.Artifacts
                 forbiddenUnlockableDef = null,
                 requiredUnlockableDef = null
             };
-            CatMithrixHurt.cards = new List<DirectorCard>() { dc };
+            Categories.CatMithrixHurt.cards = new List<DirectorCard>() { dc };
         }
 
         private void BuildCatVoidling()
@@ -350,7 +370,7 @@ namespace Risky_Artifacts.Artifacts
                 forbiddenUnlockableDef = null,
                 requiredUnlockableDef = null
             };
-            CatVoidling.cards = new List<DirectorCard>() { dc };
+            Categories.CatVoidling.cards = new List<DirectorCard>() { dc };
         }
 
         private void BuildCatNewt()
@@ -379,7 +399,7 @@ namespace Risky_Artifacts.Artifacts
                 forbiddenUnlockableDef = null,
                 requiredUnlockableDef = null
             };
-            CatNewt.cards = new List<DirectorCard>() { dc };
+            Categories.CatNewt.cards = new List<DirectorCard>() { dc };
         }
 
         private void ArtifactHooks()
@@ -419,26 +439,53 @@ namespace Risky_Artifacts.Artifacts
                 ItemTag.BrotherBlacklist,
                 ItemTag.CannotSteal
             };
-            ItemDisplayRule[] idr = new ItemDisplayRule[0];
-            //ContentAddition.AddItemDef(OriginBonusItem);
-            ItemAPI.Add(new CustomItem(UniverseScriptedEncounterStatItem, idr));
+
+
+            UniverseDroneStatItem = ScriptableObject.CreateInstance<ItemDef>();
+            UniverseDroneStatItem.name = "RiskyArtifactsUniverseDroneStatItem";
+            UniverseDroneStatItem.deprecatedTier = ItemTier.NoTier;
+            UniverseDroneStatItem.nameToken = "RISKYARTIFACTS_UNIVERSEDRONESTATITEM_NAME";
+            UniverseDroneStatItem.pickupToken = "RISKYARTIFACTS_UNIVERSEDRONESTATITEM_PICKUP";
+            UniverseDroneStatItem.descriptionToken = "RISKYARTIFACTS_UNIVERSEDRONESTATITEM_DESC";
+            UniverseDroneStatItem.tags = new[]
+            {
+                ItemTag.WorldUnique,
+                ItemTag.BrotherBlacklist,
+                ItemTag.CannotSteal
+            };
+
+            ItemAPI.Add(new CustomItem(UniverseScriptedEncounterStatItem, new ItemDisplayRule[0]));
+            ItemAPI.Add(new CustomItem(UniverseDroneStatItem, new ItemDisplayRule[0]));
 
             RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
+            On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
+        }
+
+        private void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
+        {
+            orig(self);
+            if (self.inventory && self.inventory.GetItemCount(Universe.UniverseDroneStatItem) > 0)
+            {
+                self.damage *= Universe.droneDamageMult;
+            }
         }
 
         private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
         {
-            if (sender.inventory && sender.inventory.GetItemCount(Universe.UniverseScriptedEncounterStatItem) > 0)
+            if (sender.inventory)
             {
-                float healthFactor = 1f;
-                float damageFactor = 1f;
-                healthFactor += Run.instance.difficultyCoefficient / 2.5f;
-                damageFactor += Run.instance.difficultyCoefficient / 30f;
-                int playerFactor = Mathf.Max(1, Run.instance.livingPlayerCount);
-                healthFactor *= Mathf.Pow((float)playerFactor, 0.5f);
+                if (sender.inventory.GetItemCount(Universe.UniverseScriptedEncounterStatItem) > 0)
+                {
+                    float healthFactor = 1f;
+                    float damageFactor = 1f;
+                    healthFactor += Run.instance.difficultyCoefficient / 2.5f;
+                    damageFactor += Run.instance.difficultyCoefficient / 30f;
+                    int playerFactor = Mathf.Max(1, Run.instance.livingPlayerCount);
+                    healthFactor *= Mathf.Pow((float)playerFactor, 0.5f);
 
-                args.healthMultAdd += healthFactor - 1f;
-                args.damageMultAdd = damageFactor - 1f;
+                    args.healthMultAdd += healthFactor - 1f;
+                    args.damageMultAdd = damageFactor - 1f;
+                }
             }
         }
 
@@ -488,6 +535,12 @@ namespace Risky_Artifacts.Artifacts
                                 if (int.TryParse(current[2], out int parsedMinStages))
                                 {
                                     minStages = parsedMinStages;
+                                }
+                                break;
+                            case 3:
+                                if (int.TryParse(current[3], out int parsedWeight))
+                                {
+                                    directorCardWeight = parsedWeight;
                                 }
                                 break;
                             default:
@@ -600,17 +653,25 @@ namespace Risky_Artifacts.Artifacts
                     }
                 }
 
-                if(monsterCategory == MonsterCategory.Special || monsterCategory == MonsterCategory.LunarScav)
+                if (newCard.itemsToGrant == null) newCard.itemsToGrant = new ItemCountPair[0];
+                List<ItemCountPair> itemList = newCard.itemsToGrant.ToList();
+                if (monsterCategory == MonsterCategory.Special || monsterCategory == MonsterCategory.LunarScav)
                 {
-                    if (newCard.itemsToGrant == null) newCard.itemsToGrant = new ItemCountPair[0];
-                    List<ItemCountPair> itemList = newCard.itemsToGrant.ToList();
                     itemList.Add(new ItemCountPair()
                     {
                         itemDef = Universe.UniverseScriptedEncounterStatItem,
                         count = 1
                     });
-                    newCard.itemsToGrant = itemList.ToArray();
                 }
+                else if (monsterCategory == MonsterCategory.Drone)
+                {
+                    itemList.Add(new ItemCountPair()
+                    {
+                        itemDef = Universe.UniverseDroneStatItem,
+                        count = 1
+                    });
+                }
+                newCard.itemsToGrant = itemList.ToArray();
 
                 bool cardExists = Universe_Spawncards.CardDict.ContainsKey(name);
                 if (cardExists)

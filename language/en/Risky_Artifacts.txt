@@ -57,5 +57,9 @@
 	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_NAME" : "Universe Scripted Encounter Stat Modifier",
 	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_PICKUP" : "Gain the stat boosts that Scripted Bosses use.",
 	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_DESC" : "Gain the stat boosts that Scripted Bosses use.",
+	
+	"RISKYARTIFACTS_UNIVERSEDRONESTATITEM_NAME" : "Universe Drone Stat Modifier",
+	"RISKYARTIFACTS_UNIVERSEDRONESTATITEM_PICKUP" : "<style=cIsHealth>Reduce damage</style>.",
+	"RISKYARTIFACTS_UNIVERSEDRONESTATITEM_DESC" : "<style=cIsHealth>Reduce damage</style>.",
 	}
 }
