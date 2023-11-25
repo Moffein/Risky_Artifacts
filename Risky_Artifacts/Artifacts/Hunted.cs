@@ -357,7 +357,6 @@ namespace Risky_Artifacts.Artifacts
                 {
                     c.EmitDelegate<Func<DirectorCardCategorySelection, DirectorCardCategorySelection>>(dccs =>
                     {
-                        Debug.Log("RiskyArtifacts: Hunted");
                         if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Hunted.artifact)) CreateHuntedCategory(dccs);
                         return dccs;
                     });

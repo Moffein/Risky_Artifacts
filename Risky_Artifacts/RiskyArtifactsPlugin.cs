@@ -238,11 +238,11 @@ namespace Risky_Artifacts
             Universe.CatSpecial.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Special"), 1f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
 
-            Universe.CatMithrix.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Mithrix"), 0.3f,
+            Universe.CatMithrix.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Mithrix"), 0.1f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
-            Universe.CatMithrixHurt.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Mithrix Phase 4"), 0.05f,
+            Universe.CatMithrixHurt.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Mithrix Phase 4"), 0.01f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
-            Universe.CatVoidling.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Voidling"), 0.15f,
+            Universe.CatVoidling.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Voidling"), 0.05f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
             Universe.CatNewt.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Newt"), 0f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;

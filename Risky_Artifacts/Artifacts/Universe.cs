@@ -394,7 +394,6 @@ namespace Risky_Artifacts.Artifacts
                 {
                     c.EmitDelegate<Func<DirectorCardCategorySelection, DirectorCardCategorySelection>>(dccs =>
                     {
-                        Debug.Log("RiskyArtifacts: Universe");
                         if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Universe.artifact)) return Universe.MonsterCardSelection;
                         return dccs;
                     });
