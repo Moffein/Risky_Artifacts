@@ -24,15 +24,18 @@ namespace Risky_Artifacts.Artifacts
         public static SpawnCard.EliteRules mithrixEliteRules = SpawnCard.EliteRules.ArtifactOnly;
         public static int mithrixMinStages = 5;
         public static int mithrixCost = 4000;
+        public static bool mithrixAllowElite = true;
 
         public static SpawnCard.EliteRules mithrixHurtEliteRules = SpawnCard.EliteRules.ArtifactOnly;
         public static int mithrixHurtMinStages = 5;
         public static int mithrixHurtCost = 12000;
+        public static bool mithrixHurtAllowElite = true;
 
         public static SpawnCard.EliteRules voidlingEliteRules = SpawnCard.EliteRules.ArtifactOnly;
         public static int voidlingMinStages = 5;
         public static int voidlingCost = 8000;
         public static bool voidlingPhase2 = true;
+        public static bool voidlingAllowElite = true;
 
         public static SpawnCard.EliteRules newtEliteRules = SpawnCard.EliteRules.Lunar;
         public static bool newtAllowElite = false;
@@ -41,7 +44,7 @@ namespace Risky_Artifacts.Artifacts
 
         public static class InputInfo
         {
-            public static string Basic_Monsters, Minibosses, Champions, Special;
+            public static string Basic_Monsters, Minibosses, Champions, Special, LunarScav;
         }
 
         public static CategoryInfo CatBasicMonsters = new CategoryInfo()
@@ -89,7 +92,7 @@ namespace Risky_Artifacts.Artifacts
         public static CategoryInfo CatVoidling = new CategoryInfo()
         {
             weight = 0f,
-            category = MonsterCategory.LunarScav
+            category = MonsterCategory.Voidling
         };
 
         public static CategoryInfo CatNewt = new CategoryInfo()
@@ -138,10 +141,11 @@ namespace Risky_Artifacts.Artifacts
 
         private void OnLoad()
         {
-            CatBasicMonsters.cards = ParseSpawnlist(Universe.InputInfo.Basic_Monsters, MonsterCategory.Basic_Monsters);
-            CatMinibosses.cards = ParseSpawnlist(Universe.InputInfo.Minibosses, MonsterCategory.Minibosses);
-            CatChampions.cards = ParseSpawnlist(Universe.InputInfo.Champions, MonsterCategory.Champions);
-            CatSpecial.cards = ParseSpawnlist(Universe.InputInfo.Special, MonsterCategory.Special);
+            CatBasicMonsters.cards = ParseSpawnlist(Universe.InputInfo.Basic_Monsters, CatBasicMonsters.category);
+            CatMinibosses.cards = ParseSpawnlist(Universe.InputInfo.Minibosses, CatMinibosses.category);
+            CatChampions.cards = ParseSpawnlist(Universe.InputInfo.Champions, CatChampions.category);
+            CatSpecial.cards = ParseSpawnlist(Universe.InputInfo.Special, CatSpecial.category);
+            CatLunarScav.cards = ParseSpawnlist(Universe.InputInfo.LunarScav, CatLunarScav.category);
 
             //Special cards are separate so they don't get overwritten
             BuildCatMithrix();
@@ -198,6 +202,12 @@ namespace Risky_Artifacts.Artifacts
                 MonsterCardSelection.AddCategory("Newt", CatNewt.weight);
                 MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatNewt.cards.ToArray();
             }
+
+            if (CatLunarScav.weight > 0f)
+            {
+                MonsterCardSelection.AddCategory("Newt", CatNewt.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatLunarScav.cards.ToArray();
+            }
         }
 
         private void BuildCatMithrix()
@@ -226,7 +236,7 @@ namespace Risky_Artifacts.Artifacts
                 }
             };
             brotherCard.eliteRules = mithrixEliteRules;
-            brotherCard.noElites = false;
+            brotherCard.noElites = !mithrixAllowElite;
             brotherCard.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Ground;
             brotherCard.occupyPosition = false;
             brotherCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
@@ -260,11 +270,6 @@ namespace Risky_Artifacts.Artifacts
             {
                 new ItemCountPair()
                 {
-                    itemDef = RoR2Content.Items.TeleportWhenOob,
-                    count = 1
-                },
-                new ItemCountPair()
-                {
                     itemDef = UniverseScriptedEncounterStatItem,
                     count = 1
                 },
@@ -275,11 +280,11 @@ namespace Risky_Artifacts.Artifacts
                 }
             };
             brotherHurtCard.eliteRules = mithrixHurtEliteRules;
-            brotherHurtCard.noElites = false;
+            brotherHurtCard.noElites = !mithrixHurtAllowElite;
             brotherHurtCard.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Ground;
             brotherHurtCard.occupyPosition = false;
             brotherHurtCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
-            brotherHurtCard.loadout = itBrotherCard.loadout;
+            brotherHurtCard.loadout = new SerializableLoadout();
             brotherHurtCard.sendOverNetwork = true;
             brotherHurtCard.hullSize = HullClassification.Golem;
             brotherHurtCard.name = "cscUniverseBrotherHurtUnique";
@@ -325,7 +330,7 @@ namespace Risky_Artifacts.Artifacts
                 }
             };
             voidlingCard.eliteRules = voidlingEliteRules;
-            voidlingCard.noElites = false;
+            voidlingCard.noElites = !voidlingAllowElite;
             voidlingCard.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Air;
             voidlingCard.occupyPosition = false;
             voidlingCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
@@ -354,7 +359,7 @@ namespace Risky_Artifacts.Artifacts
             newtCard.prefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Shopkeeper/ShopkeeperMaster.prefab").WaitForCompletion();
             newtCard.directorCreditCost = newtCost;
             newtCard.eliteRules = newtEliteRules;
-            newtCard.noElites = newtAllowElite;
+            newtCard.noElites = !newtAllowElite;
             newtCard.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Ground;
             newtCard.occupyPosition = false;
             newtCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
@@ -389,6 +394,7 @@ namespace Risky_Artifacts.Artifacts
                 {
                     c.EmitDelegate<Func<DirectorCardCategorySelection, DirectorCardCategorySelection>>(dccs =>
                     {
+                        Debug.Log("RiskyArtifacts: Universe");
                         if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Universe.artifact)) return Universe.MonsterCardSelection;
                         return dccs;
                     });
@@ -552,6 +558,7 @@ namespace Risky_Artifacts.Artifacts
                     newCard.occupyPosition = origSpawnCard.occupyPosition;
                     newCard.loadout = origSpawnCard.loadout;
                     newCard.requiredFlags = origSpawnCard.requiredFlags;
+                    newCard.itemsToGrant = origSpawnCard.itemsToGrant;
                 }
                 else
                 {
@@ -564,6 +571,7 @@ namespace Risky_Artifacts.Artifacts
                     newCard.occupyPosition = false;
                     newCard.loadout = new SerializableLoadout();
                     newCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
+                    newCard.itemsToGrant = new ItemCountPair[0];
                 }
                 newCard.sendOverNetwork = true;
                 newCard.name = "cscUniverse" + name;
@@ -574,6 +582,9 @@ namespace Risky_Artifacts.Artifacts
                 {
                     switch (monsterCategory)
                     {
+                        case MonsterCategory.LunarScav:
+                            newCard.directorCreditCost = 6000;
+                            break;
                         case MonsterCategory.Special:
                             newCard.directorCreditCost = 4000;
                             break;
@@ -590,6 +601,18 @@ namespace Risky_Artifacts.Artifacts
                     }
                 }
 
+                if(monsterCategory == MonsterCategory.Special || monsterCategory == MonsterCategory.LunarScav)
+                {
+                    if (newCard.itemsToGrant == null) newCard.itemsToGrant = new ItemCountPair[0];
+                    List<ItemCountPair> itemList = newCard.itemsToGrant.ToList();
+                    itemList.Add(new ItemCountPair()
+                    {
+                        itemDef = Universe.UniverseScriptedEncounterStatItem,
+                        count = 1
+                    });
+                    newCard.itemsToGrant = itemList.ToArray();
+                }
+
                 bool cardExists = Universe_Spawncards.CardDict.ContainsKey(name);
                 if (cardExists)
                 {
@@ -601,15 +624,6 @@ namespace Risky_Artifacts.Artifacts
                     Universe_Spawncards.CardDict.Add(name, newCard);
                 }
                 Debug.Log("RiskyArtifacts: Universe: Created spawncard for " + name + " with cost " + newCard.directorCreditCost + ".");
-
-                if (monsterCategory == MonsterCategory.Special)
-                {
-                    if (newCard.itemsToGrant == null) newCard.itemsToGrant = new ItemCountPair[0];
-                    List<ItemCountPair> itemList = newCard.itemsToGrant.ToList();
-                    itemList.Add(new ItemCountPair() { count = 1,
-                    itemDef = Universe.UniverseScriptedEncounterStatItem});
-                    newCard.itemsToGrant = itemList.ToArray();
-                }
 
                 //Jellyfish thing is jank, but it's the only monster that actually uses this spawndistance.
                 DirectorCard dc = new DirectorCard()

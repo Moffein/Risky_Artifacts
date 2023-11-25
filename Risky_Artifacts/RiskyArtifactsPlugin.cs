@@ -233,7 +233,7 @@ namespace Risky_Artifacts
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
             Universe.CatMinibosses.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Minibosses"), 2f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
-            Universe.CatChampions.weight = base.Config.Bind<float>(new ConfigDefinition("Univers - Categoriese", "Category Weight - Champions"), 2f,
+            Universe.CatChampions.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Champions"), 2f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
             Universe.CatSpecial.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Special"), 1f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
@@ -246,6 +246,8 @@ namespace Risky_Artifacts
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
             Universe.CatNewt.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Newt"), 0f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
+            Universe.CatLunarScav.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Lunar Scavenger"), 0.05f,
+                new ConfigDescription("Chance of this monster category being selected.")).Value;
 
             Universe.InputInfo.Basic_Monsters = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Basic Monsters"), "BeetleBody, WispBody, LemurianBody, JellyfishBody, HermitCrabBody, VoidBarnacleBody, ImpBody, VultureBody, RoboBallMiniBody, AcidLarvaBody, MinorConstructBody, FlyingVerminBody, VerminBody, MoffeinClayManBody:28",
                new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost(int):MinStages(int)")).Value;
@@ -255,6 +257,8 @@ namespace Risky_Artifacts
                 new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost(int):MinStages(int)")).Value;
             Universe.InputInfo.Special = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Special"), "TitanGoldBody:4000:5, SuperRoboBallBossBody:4000:5, DireseekerBossBody:4000:5",
                new ConfigDescription("List of bodies to be added to this category. Bodies in this category will receive increased health and damage. To specify custom stats, do BodyName:Cost(int):MinStages(int)")).Value;
+            Universe.InputInfo.LunarScav = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Lunar Scavenger"), "ScavLunar1Body:6000:5, ScavLunar2Body:6000: 5,ScavLunar3Body:6000:5, ScavLunar4Body:6000:5",
+               new ConfigDescription("List of bodies to be added to this category. Bodies in this category will receive increased health and damage. To specify custom stats, do BodyName:Cost(int):MinStages(int)")).Value;
 
             Universe.mithrixCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix", "Director Cost"), 4000,
                 new ConfigDescription("Director cost of Mithrix.")).Value;
@@ -262,6 +266,8 @@ namespace Risky_Artifacts
                 new ConfigDescription("Min stages completed before Mithrix can spawn.")).Value;
             Universe.mithrixEliteRules = base.Config.Bind<SpawnCard.EliteRules>(new ConfigDefinition("Universe - Mithrix", "Elite Rules"), SpawnCard.EliteRules.ArtifactOnly,
                 new ConfigDescription("Affects elite type.")).Value;
+            Universe.mithrixAllowElite = base.Config.Bind<bool>(new ConfigDefinition("Universe - Mithrix", "Allow Elite"), true,
+                new ConfigDescription("Allow elites to spawn?.")).Value;
 
             Universe.mithrixHurtCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix Phase 4", "Director Cost"), 12000,
                 new ConfigDescription("Director cost of Mithrix Phase 4.")).Value;
@@ -269,6 +275,8 @@ namespace Risky_Artifacts
                 new ConfigDescription("Min stages completed before Mithrix Phase 4 can spawn.")).Value;
             Universe.mithrixHurtEliteRules = base.Config.Bind<SpawnCard.EliteRules>(new ConfigDefinition("Universe - Mithrix Phase 4", "Elite Rules"), SpawnCard.EliteRules.ArtifactOnly,
                 new ConfigDescription("Affects elite type.")).Value;
+            Universe.mithrixHurtAllowElite = base.Config.Bind<bool>(new ConfigDefinition("Universe - Mithrix Phase 4", "Allow Elite"), true,
+                new ConfigDescription("Allow elites to spawn?.")).Value;
 
             Universe.voidlingCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Voidling", "Director Cost"), 8000,
                 new ConfigDescription("Director cost of Voidling.")).Value;
@@ -278,16 +286,17 @@ namespace Risky_Artifacts
                 new ConfigDescription("Affects elite type.")).Value;
             Universe.voidlingPhase2 = base.Config.Bind<bool>(new ConfigDefinition("Universe - Voidling", "Enable Phase 2 Attacks"), true,
                 new ConfigDescription("Allow Voidling to use its Phase 2 attacks.")).Value;
-
+            Universe.voidlingAllowElite = base.Config.Bind<bool>(new ConfigDefinition("Universe - Voidling", "Allow Elite"), true,
+                new ConfigDescription("Allow elites to spawn?.")).Value;
 
             Universe.newtCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Newt", "Director Cost"), 12000,
-                new ConfigDescription("Director cost of Mithrix Phase 4.")).Value;
+                new ConfigDescription("Director cost of Newt.")).Value;
             Universe.newtMinStages = base.Config.Bind<int>(new ConfigDefinition("Universe - Newt", "Min Stages"), 5,
                 new ConfigDescription("Min stages completed before Newt can spawn.")).Value;
             Universe.newtEliteRules = base.Config.Bind<SpawnCard.EliteRules>(new ConfigDefinition("Universe - Newt", "Elite Rules"), SpawnCard.EliteRules.Lunar,
                 new ConfigDescription("Affects elite type.")).Value;
             Universe.newtAllowElite = base.Config.Bind<bool>(new ConfigDefinition("Universe - Newt", "Allow Elite"), false,
-                new ConfigDescription("Affects whether Newt can be elite.")).Value;
+                new ConfigDescription("Allow elites to spawn?")).Value;
         }
 
         public static void FixScriptableObjectName(ArtifactDef ad)
