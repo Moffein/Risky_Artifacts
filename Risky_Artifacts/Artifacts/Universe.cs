@@ -6,7 +6,9 @@ using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
 using UnityEngine.Timeline;
 
@@ -54,19 +56,18 @@ namespace Risky_Artifacts.Artifacts
             category = MonsterCategory.LunarScav
         };
 
+
+        public static CategoryInfo CatVoidling = new CategoryInfo()
+        {
+            weight = 0f,
+            category = MonsterCategory.LunarScav
+        };
+
         public class CategoryInfo
         {
             public MonsterCategory category;
             public float weight;
             public List<DirectorCard> cards;
-        }
-
-        public static class DirectorCards
-        {
-            public static List<DirectorCard> Basic_Monsters = new List<DirectorCard>();
-            public static List<DirectorCard> Minibosses = new List<DirectorCard>();
-            public static List<DirectorCard> Champions = new List<DirectorCard>();
-            public static List<DirectorCard> Special = new List<DirectorCard>();
         }
 
         public class DirectorInfo
@@ -107,6 +108,8 @@ namespace Risky_Artifacts.Artifacts
             CatChampions.cards = ParseSpawnlist(Universe.InputInfo.Champions, MonsterCategory.Champions);
             CatSpecial.cards = ParseSpawnlist(Universe.InputInfo.Special, MonsterCategory.Special);
 
+            BuildCatMithrix();
+
             MonsterCardSelection = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
 
             if (CatBasicMonsters.weight > 0f)
@@ -132,6 +135,12 @@ namespace Risky_Artifacts.Artifacts
                 MonsterCardSelection.AddCategory("Special", CatSpecial.weight);
                 MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatSpecial.cards.ToArray();
             }
+        }
+
+        //todo
+        private void BuildCatMithrix()
+        {
+            CharacterSpawnCard itBrotherCard = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/GameModes/InfiniteTowerRun/InfiniteTowerAssets/cscBrotherIT.asset").WaitForCompletion();
         }
 
         private void ArtifactHooks()
@@ -218,8 +227,8 @@ namespace Risky_Artifacts.Artifacts
 
                 string name = current[0];
 
-                Universe_Spawncards.CardDict.TryGetValue(name, out CharacterSpawnCard spawnCard);
-                int cost = spawnCard ? spawnCard.directorCreditCost : -1;
+                Universe_Spawncards.CardDict.TryGetValue(name, out CharacterSpawnCard origSpawnCard);
+                int cost = origSpawnCard ? origSpawnCard.directorCreditCost : -1;
                 int minStages = 0;
 
                 if (current.Length > 1)
@@ -232,7 +241,7 @@ namespace Risky_Artifacts.Artifacts
                                 if (int.TryParse(current[1], out int parsedCost))
                                 {
                                     cost = parsedCost;
-                                    if (spawnCard) spawnCard.directorCreditCost = parsedCost;
+                                    if (origSpawnCard) origSpawnCard.directorCreditCost = parsedCost;
                                 }
                                 break;
                             case 2:
@@ -247,94 +256,131 @@ namespace Risky_Artifacts.Artifacts
                     }
                 }
 
-                if (!spawnCard)
+                //Get Master
+                GameObject masterPrefab = null;
+                BodyIndex index = BodyIndex.None;
+                if (!origSpawnCard)
                 {
                     Debug.LogWarning("RiskyArtifacts: Universe: Could not find spawncard for " + name + ".");
-
-                    BodyIndex index = BodyCatalog.FindBodyIndex(name);
+                    index = BodyCatalog.FindBodyIndex(name);
                     if (index != BodyIndex.None)
                     {
-                        GameObject masterPrefab = MasterCatalog.GetMasterPrefab(MasterCatalog.FindAiMasterIndexForBody(index));
-                        if (!masterPrefab)
+                        masterPrefab = MasterCatalog.GetMasterPrefab(MasterCatalog.FindAiMasterIndexForBody(index));
+                    }
+                }
+                else
+                {
+                    masterPrefab = origSpawnCard.prefab;
+                }
+
+                //Get Body
+                if (!masterPrefab)
+                {
+                    Debug.LogError("RiskyArtifacts: Universe: Could not create spawncard for " + name + ", AI Master not found.");
+                    continue;
+                }
+                else
+                {
+                    if (index == BodyIndex.None)
+                    {
+                        CharacterMaster master = masterPrefab.GetComponent<CharacterMaster>();
+                        if (master && master.bodyPrefab)
                         {
-                            Debug.LogError("RiskyArtifacts: Universe: Could not create spawncard for " + name + ", AI Master not found.");
-                            continue;
-                        }
-
-                        spawnCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
-                        spawnCard.prefab = masterPrefab;
-                        spawnCard.directorCreditCost = cost;
-                        spawnCard.eliteRules = SpawnCard.EliteRules.Default;
-                        spawnCard.forbiddenAsBoss = false;
-                        spawnCard.hullSize = HullClassification.Human;
-                        spawnCard.noElites = false;
-                        spawnCard.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Ground;
-                        spawnCard.forbiddenFlags = RoR2.Navigation.NodeFlags.NoCharacterSpawn;
-                        spawnCard.occupyPosition = false;
-                        spawnCard.loadout = new SerializableLoadout();
-                        spawnCard.sendOverNetwork = true;
-                        spawnCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
-                        spawnCard.name = "cscUniverse" + index + name;
-                        (spawnCard as ScriptableObject).name = spawnCard.name;
-
-                        //Estimate Cost
-                        if (spawnCard.directorCreditCost < 0)
-                        {
-                            GameObject bodyPrefab = BodyCatalog.GetBodyPrefab(index);
-                            CharacterBody body = bodyPrefab ? bodyPrefab.GetComponent<CharacterBody>() : null;
-                            if (!body)
+                            CharacterBody masterBody = master.bodyPrefab.GetComponent<CharacterBody>();
+                            if (masterBody)
                             {
-                                Debug.LogError("RiskyArtifacts: Universe: Could not create spawncard for " + name + ", Body not found.");
-                                UnityEngine.Object.Destroy(spawnCard);
-                                continue;
-                            }
-
-                            switch (monsterCategory)
-                            {
-                                case MonsterCategory.Special:
-                                    spawnCard.directorCreditCost = 4000;
-                                    break;
-                                case MonsterCategory.Champions:
-                                    spawnCard.directorCreditCost = Mathf.RoundToInt(body.baseMaxHealth / 3.5f);
-                                    break;
-                                case MonsterCategory.Minibosses:
-                                    spawnCard.directorCreditCost = Mathf.RoundToInt(body.baseMaxHealth / (body.isFlying ? 3.5f : 7f));
-                                    break;
-                                case MonsterCategory.Basic_Monsters:
-                                default:
-                                    spawnCard.directorCreditCost = Mathf.RoundToInt(body.baseMaxHealth / (body.isFlying ? 3.5f : 7.5f));
-                                    break;
+                                index = masterBody.bodyIndex;
                             }
                         }
+                    }
+                }
+                GameObject bodyPrefab = BodyCatalog.GetBodyPrefab(index);
+                CharacterBody body = bodyPrefab ? bodyPrefab.GetComponent<CharacterBody>() : null;
+                if (!body)
+                {
+                    Debug.LogError("RiskyArtifacts: Universe: Could not create spawncard for " + name + ", Body not found.");
+                    continue;
+                }
 
-                        bool cardExists = Universe_Spawncards.CardDict.ContainsKey(name);
-                        if (cardExists)
-                        {
-                            Debug.LogWarning("RiskyArtifacts: Universe: Spawncard for " + name + " already exists. Overwriting.");
-                            Universe_Spawncards.CardDict[name] = spawnCard;
-                        }
-                        else
-                        {
-                            Universe_Spawncards.CardDict.Add(name, spawnCard);
-                        }
-                        Debug.Log("RiskyArtifacts: Universe: Created spawncard for " + name + " with cost " + spawnCard.directorCreditCost + ".");
+                //Build new card
+                CharacterSpawnCard newCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
+                newCard.prefab = masterPrefab;
+                newCard.directorCreditCost = cost;
+                if (origSpawnCard)
+                {
+                    newCard.eliteRules = origSpawnCard.eliteRules;
+                    newCard.forbiddenAsBoss = origSpawnCard.forbiddenAsBoss;
+                    newCard.hullSize = origSpawnCard.hullSize;
+                    newCard.noElites = origSpawnCard.noElites;
+                    newCard.nodeGraphType = origSpawnCard.nodeGraphType;
+                    newCard.forbiddenFlags = origSpawnCard.forbiddenFlags;
+                    newCard.occupyPosition = origSpawnCard.occupyPosition;
+                    newCard.loadout = origSpawnCard.loadout;
+                    newCard.requiredFlags = origSpawnCard.requiredFlags;
+                }
+                else
+                {
+                    newCard.eliteRules = SpawnCard.EliteRules.Default;
+                    newCard.forbiddenAsBoss = false;
+                    newCard.hullSize = body.hullClassification;
+                    newCard.noElites = false;
+                    newCard.nodeGraphType = body.isFlying ? RoR2.Navigation.MapNodeGroup.GraphType.Air : RoR2.Navigation.MapNodeGroup.GraphType.Ground;
+                    newCard.forbiddenFlags = RoR2.Navigation.NodeFlags.NoCharacterSpawn;
+                    newCard.occupyPosition = false;
+                    newCard.loadout = new SerializableLoadout();
+                    newCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
+                }
+                newCard.sendOverNetwork = true;
+                newCard.name = "cscUniverse" + name;
+                (newCard as ScriptableObject).name = newCard.name;
+
+                //Estimate Cost
+                if (newCard.directorCreditCost < 0)
+                {
+                    switch (monsterCategory)
+                    {
+                        case MonsterCategory.Special:
+                            newCard.directorCreditCost = 4000;
+                            break;
+                        case MonsterCategory.Champions:
+                            newCard.directorCreditCost = Mathf.RoundToInt(body.baseMaxHealth / 3.5f);
+                            break;
+                        case MonsterCategory.Minibosses:
+                            newCard.directorCreditCost = Mathf.RoundToInt(body.baseMaxHealth / (body.isFlying ? 3.5f : 7f));
+                            break;
+                        case MonsterCategory.Basic_Monsters:
+                        default:
+                            newCard.directorCreditCost = Mathf.RoundToInt(body.baseMaxHealth / (body.isFlying ? 3.5f : 7.5f));
+                            break;
                     }
                 }
 
+                bool cardExists = Universe_Spawncards.CardDict.ContainsKey(name);
+                if (cardExists)
+                {
+                    Debug.Log("RiskyArtifacts: Universe: Overwriting spawncard for " + name + ".");
+                    Universe_Spawncards.CardDict[name] = newCard;
+                }
+                else
+                {
+                    Universe_Spawncards.CardDict.Add(name, newCard);
+                }
+                Debug.Log("RiskyArtifacts: Universe: Created spawncard for " + name + " with cost " + newCard.directorCreditCost + ".");
+
                 if (monsterCategory == MonsterCategory.Special)
                 {
-                    if (spawnCard.itemsToGrant == null) spawnCard.itemsToGrant = new ItemCountPair[0];
-                    List<ItemCountPair> itemList = spawnCard.itemsToGrant.ToList();
+                    if (newCard.itemsToGrant == null) newCard.itemsToGrant = new ItemCountPair[0];
+                    List<ItemCountPair> itemList = newCard.itemsToGrant.ToList();
                     itemList.Add(new ItemCountPair() { count = 1,
                     itemDef = Universe.UniverseScriptedEncounterStatItem});
-                    spawnCard.itemsToGrant = itemList.ToArray();
+                    newCard.itemsToGrant = itemList.ToArray();
                 }
 
-                //Jellyfish thing is jank, but it's the only monster that actually uses this.
+                //Jellyfish thing is jank, but it's the only monster that actually uses this spawndistance.
                 DirectorCard dc = new DirectorCard()
                 {
                     selectionWeight = 1,
-                    spawnCard = spawnCard,
+                    spawnCard = newCard,
                     spawnDistance = name == "JellyfishBody" ? DirectorCore.MonsterSpawnDistance.Far : DirectorCore.MonsterSpawnDistance.Standard,
                     preventOverhead = false,
                     minimumStageCompletions = minStages,
