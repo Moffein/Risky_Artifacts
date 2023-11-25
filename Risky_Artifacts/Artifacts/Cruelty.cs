@@ -57,9 +57,7 @@ namespace Risky_Artifacts.Artifacts
 
         private void ScriptedCombatEncounter_BeginEncounter(On.RoR2.ScriptedCombatEncounter.orig_BeginEncounter orig, ScriptedCombatEncounter self)
         {
-            if (NetworkServer.active
-                && (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Cruelty.artifact))
-                && self.combatSquad && guaranteeSpecialBoss)
+            if (NetworkServer.active && self.combatSquad)
             {
                 self.combatSquad.onMemberAddedServer += CombatSquadCruelty;
             }
@@ -69,11 +67,14 @@ namespace Risky_Artifacts.Artifacts
 
         private void CombatSquadCruelty(CharacterMaster master)
         {
-            if (master && master.inventory && master.inventory.GetItemCount(RoR2Content.Items.HealthDecay) <= 0)
+            if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Cruelty.artifact) && guaranteeSpecialBoss)
             {
-                CharacterBody body = master.GetBody();
-                if (body)
-                    Cruelty.CreateCrueltyElite(body, master.inventory, Mathf.Infinity, 0, Cruelty.failureChance, true, Cruelty.runEndBossMinAffixes);
+                if (master && master.inventory && master.inventory.GetItemCount(RoR2Content.Items.HealthDecay) <= 0)
+                {
+                    CharacterBody body = master.GetBody();
+                    if (body)
+                        Cruelty.CreateCrueltyElite(body, master.inventory, Mathf.Infinity, 0, Cruelty.failureChance, true, Cruelty.runEndBossMinAffixes);
+                }
             }
         }
 

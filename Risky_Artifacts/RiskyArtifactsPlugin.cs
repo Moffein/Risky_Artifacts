@@ -16,7 +16,7 @@ namespace Risky_Artifacts
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.1.3")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.1.4")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -246,6 +246,7 @@ namespace Risky_Artifacts
                 new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost:MinStages")).Value;
             Universe.InputInfo.Special = base.Config.Bind<string>(new ConfigDefinition("Universe", "Spawnlist - Special"), "TitanGoldBody:4000, SuperRoboBallBossBody:4000, DireseekerBossBody:4000",
                new ConfigDescription("List of bodies to be added to this category. Bodies in this category will receive increased health and damage. To specify custom stats, do BodyName:Cost:MinStages")).Value;
+            
         }
 
         public static void FixScriptableObjectName(ArtifactDef ad)
