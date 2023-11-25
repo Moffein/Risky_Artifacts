@@ -1,5 +1,5 @@
 ## Risky Artifacts
-Adds 9 artifacts to ruin your run with.
+Adds 10 artifacts to ruin your run with.
 
 - **Artifact of Origination**
 	- Bosses invade the map every 10 minutes.
@@ -40,6 +40,10 @@ Adds 9 artifacts to ruin your run with.
 - **Artifact of the Hunted**
 	- Survivors can spawn as enemies.
 		- Enemy survivors have increased health and decreased damage.
+				
+- **Artifact of the Universe**
+	- All enemies can spawn on all stages.
+		- **TONS** of config options.
 	
 ## For Mod Devs
 If you are making a custom boss and want to add it to the Artifact of Origination spawn pool, add a softdependency to com.Moffein.RiskyArtifacts then do:

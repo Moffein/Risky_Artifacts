@@ -140,8 +140,8 @@ namespace Risky_Artifacts.Artifacts
             artifact.cachedName = "RiskyArtifactOfUniverse";
             artifact.nameToken = "RISKYARTIFACTS_UNIVERSE_NAME";
             artifact.descriptionToken = "RISKYARTIFACTS_UNIVERSE_DESC";
-            artifact.smallIconDeselectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texHuntedDisabled.png");//todo
-            artifact.smallIconSelectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texHuntedEnabled.png");//todo
+            artifact.smallIconDeselectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texUniverseDisabled.png");//todo
+            artifact.smallIconSelectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texUniverseEnabled.png");//todo
             RiskyArtifactsPlugin.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
@@ -333,11 +333,6 @@ namespace Risky_Artifacts.Artifacts
             voidlingCard.directorCreditCost = voidlingCost;
             voidlingCard.itemsToGrant = new ItemCountPair[]
             {
-                new ItemCountPair()
-                {
-                    itemDef = RoR2Content.Items.TeleportWhenOob,
-                    count = 1
-                },
                 new ItemCountPair()
                 {
                     itemDef = UniverseScriptedEncounterStatItem,

@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3874462761
+CRC: 155065544
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 051727abe7cf40989631725bbc3a40e2
+    Hash: 3d040e24d353b90deab81a7da18b7c36
   TypeTreeHash:
     serializedVersion: 2
     Hash: c90fc19e2679e5295d10bd00f33cb4c3
@@ -18,6 +18,7 @@ Assets:
 - Assets/Resources/texCrueltyEnabled.png
 - Assets/Resources/texArtifactWarEnabled.png
 - Assets/Resources/texOriginDisabled.png
+- Assets/Resources/texUniverseDisabled.png
 - Assets/Resources/texOriginEnabled.png
 - Assets/Resources/texArtifactWarDisabled.png
 - Assets/Resources/texConformityResizedDisabled.png
@@ -32,6 +33,7 @@ Assets:
 - Assets/Resources/texExpansionEnabled.png
 - Assets/Resources/texOriginEnabledClean.png
 - Assets/Resources/texPhantomEnabled.png
+- Assets/Resources/texUniverseEnabled.png
 - Assets/Resources/texCrueltyDisabled.png
 - Assets/Resources/texPrimacyDisabled.png
 Dependencies: []
