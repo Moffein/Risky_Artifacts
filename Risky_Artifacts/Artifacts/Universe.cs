@@ -137,10 +137,20 @@ namespace Risky_Artifacts.Artifacts
             }
         }
 
-        //todo
+        //Brother card isn't added to the 
         private void BuildCatMithrix()
         {
             CharacterSpawnCard itBrotherCard = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/GameModes/InfiniteTowerRun/InfiniteTowerAssets/cscBrotherIT.asset").WaitForCompletion();
+
+            Debug.Log("RiskyArtifacts: Dumping Mithrix Stats");
+            Debug.Log("Director Cost: " + itBrotherCard.directorCreditCost);
+            foreach (ItemCountPair pair in itBrotherCard.itemsToGrant)
+            {
+                Debug.Log(pair.itemDef + " - " + pair.count);
+            }
+            Debug.Log("Hull Size: " + itBrotherCard.hullSize);
+
+            CharacterSpawnCard brotherCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
         }
 
         private void ArtifactHooks()

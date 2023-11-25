@@ -184,7 +184,10 @@ namespace Risky_Artifacts.Artifacts
                 csc.hullSize = HullClassification.Human;
                 csc.noElites = false;
                 csc.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Ground;
-                csc.itemsToGrant = new ItemCountPair[] { new ItemCountPair() { itemDef = Hunted.HuntedStatItem, count = 1 }};
+                csc.itemsToGrant = new ItemCountPair[] {
+                    new ItemCountPair() { itemDef = Hunted.HuntedStatItem, count = 1 },
+                    new ItemCountPair() { itemDef = RoR2Content.Items.TeleportWhenOob, count = 1 },
+                };
                 csc.forbiddenFlags = RoR2.Navigation.NodeFlags.NoCharacterSpawn;
                 csc.occupyPosition = false;
                 csc.loadout = new SerializableLoadout();
@@ -253,8 +256,6 @@ namespace Risky_Artifacts.Artifacts
             RecalculateStatsAPI.GetStatCoefficients += SetHuntedHealth;
             if (Hunted.nerfPercentHeal)On.RoR2.HealthComponent.HealFraction += ReduceHuntedPercentHeal;
 
-            On.RoR2.MapZone.TryZoneStart += MapZone_TryZoneStart;
-
             CharacterBody.onBodyInventoryChangedGlobal += CharacterBody_onBodyInventoryChangedGlobal;
             IL.RoR2.Util.GetBestBodyName += (il) =>
             {
@@ -274,33 +275,6 @@ namespace Risky_Artifacts.Artifacts
                     return toReturn;
                 });
             };
-        }
-
-        private void MapZone_TryZoneStart(On.RoR2.MapZone.orig_TryZoneStart orig, MapZone self, Collider other)
-        {
-            if (other.gameObject)
-            {
-                CharacterBody body = other.GetComponent<CharacterBody>();
-                if (body)
-                {
-                    if (body.inventory && body.inventory.GetItemCount(Hunted.HuntedStatItem) > 0)
-                    {
-                        var teamComponent = body.teamComponent;
-                        if (teamComponent)
-                        {
-                            if (teamComponent.teamIndex != TeamIndex.Player)
-                            {
-                                TeamIndex origIndex = teamComponent.teamIndex;
-                                teamComponent.teamIndex = TeamIndex.Player;
-                                orig(self, other);
-                                teamComponent.teamIndex = origIndex;
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-            orig(self, other);
         }
 
         private void CharacterBody_onBodyInventoryChangedGlobal(CharacterBody body)
