@@ -16,7 +16,7 @@ namespace Risky_Artifacts
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.2.1")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.2.2")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -254,7 +254,7 @@ namespace Risky_Artifacts
             Universe.InputInfo.Basic_Monsters = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Basic Monsters"), "BeetleBody, WispBody, LemurianBody, JellyfishBody, HermitCrabBody, VoidBarnacleBody, ImpBody, VultureBody, RoboBallMiniBody, AcidLarvaBody, MinorConstructBody, FlyingVerminBody, VerminBody, MoffeinClayManBody:28",
                new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int)")).Value;
             Universe.InputInfo.Minibosses = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Minibosses"), "LunarExploderBody, LunarGolemBody, LunarWispBody, GupBody, ClayGrenadierBody, ClayBruiserBody, MiniMushroomBody, BisonBody, BellBody, ParentBody, GolemBody, GreaterWispBody, BeetleGuardBody, NullifierBody, VoidJailerBody, LemurianBruiserBody, MoffeinArchWisp:240",
-                new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cos(int)t:MinStages(int):SelectionWeight(int)")).Value;
+                new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int)")).Value;
             Universe.InputInfo.Champions = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Champions"), "VagrantBody, TitanBody, BeetleQueen2Body, ClayBossBody, MagmaWormBody, ImpBossBody, RoboBallBossBody, GravekeeperBody, MegaConstructBody, VoidMegaCrabBody, GrandparentBody, ScavBody, ElectricWormBody, MoffeinAncientWispBody:1000, MechorillaBody:600, RegigigasBody:1000",
                 new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int)")).Value;
             Universe.InputInfo.Special = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Special"), "TitanGoldBody:4000:5, SuperRoboBallBossBody:4000:5, DireseekerBossBody:4000:5",
