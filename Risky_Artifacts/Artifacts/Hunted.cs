@@ -190,7 +190,7 @@ namespace Risky_Artifacts.Artifacts
                 csc.loadout = new SerializableLoadout();
                 csc.sendOverNetwork = true;
                 csc.requiredFlags = RoR2.Navigation.NodeFlags.None;
-                csc.name = "cscHunted" + info.bodyIndex;
+                csc.name = "cscHunted" + info.bodyIndex + info.bodyName;
                 (csc as ScriptableObject).name = csc.name;
                 SpawnCards.Add(csc);
 
