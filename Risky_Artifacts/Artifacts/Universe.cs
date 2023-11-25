@@ -627,6 +627,8 @@ namespace Risky_Artifacts.Artifacts
                 //Estimate Cost
                 if (newCard.directorCreditCost < 0)
                 {
+                    float hp = (body.baseMaxHealth + body.maxBarrier) * (100f + body.armor) / 100f;
+
                     switch (monsterCategory)
                     {
                         case MonsterCategory.LunarScav:
@@ -636,14 +638,14 @@ namespace Risky_Artifacts.Artifacts
                             newCard.directorCreditCost = 4000;
                             break;
                         case MonsterCategory.Champions:
-                            newCard.directorCreditCost = Mathf.RoundToInt(body.baseMaxHealth / 3.5f);
+                            newCard.directorCreditCost = Mathf.RoundToInt(hp / 3.5f);
                             break;
                         case MonsterCategory.Minibosses:
-                            newCard.directorCreditCost = Mathf.RoundToInt(body.baseMaxHealth / (body.isFlying ? 3.5f : 7f));
+                            newCard.directorCreditCost = Mathf.RoundToInt(hp / (body.isFlying ? 3.5f : 7f));
                             break;
                         case MonsterCategory.Basic_Monsters:
                         default:
-                            newCard.directorCreditCost = Mathf.RoundToInt(body.baseMaxHealth / (body.isFlying ? 3.5f : 7.5f));
+                            newCard.directorCreditCost = Mathf.RoundToInt(hp / (body.isFlying ? 3.5f : 7.5f));
                             break;
                     }
                 }
