@@ -372,40 +372,8 @@ namespace Risky_Artifacts.Artifacts
 
         private void ArtifactHooks()
         {
-            IL.RoR2.ClassicStageInfo.OnArtifactEnabled += (il) =>
-            {
-                //Cursed hook. Ldarg 2 = ArtifactDef added. It wants to rebuild cards if Dissonance/Kin are enabled, so trick it into thinking they are.
-                ILCursor c = new ILCursor(il);
-                if (c.TryGotoNext(MoveType.After, x => x.MatchLdarg(2)))
-                {
-                    c.EmitDelegate<Func<ArtifactDef, ArtifactDef>>(artifact =>
-                    {
-                        if (artifact == Hunted.artifact) return RoR2Content.Artifacts.mixEnemyArtifactDef;
-                        return artifact;
-                    });
-                }
-                else
-                {
-                    Debug.Log("RiskyArtifacts: Hunted ClassicStageInfo.OnArtifactEnabled IL Hook failed.");
-                }
-            };
-            IL.RoR2.ClassicStageInfo.OnArtifactDisabled += (il) =>
-            {
-                //Cursed hook. Ldarg 2 = ArtifactDef added. It wants to rebuild cards if Dissonance/Kin are enabled, so trick it into thinking they are.
-                ILCursor c = new ILCursor(il);
-                if (c.TryGotoNext(MoveType.After, x => x.MatchLdarg(2)))
-                {
-                    c.EmitDelegate<Func<ArtifactDef, ArtifactDef>>(artifact =>
-                    {
-                        if (artifact == Hunted.artifact) return RoR2Content.Artifacts.mixEnemyArtifactDef;
-                        return artifact;
-                    });
-                }
-                else
-                {
-                    Debug.Log("RiskyArtifacts: Hunted ClassicStageInfo.OnArtifactDisabled IL Hook failed.");
-                }
-            };
+            On.RoR2.ClassicStageInfo.OnArtifactEnabled += ClassicStageInfo_OnArtifactEnabled;
+            On.RoR2.ClassicStageInfo.OnArtifactDisabled += ClassicStageInfo_OnArtifactDisabled;
 
             //Add Hunted Survivors to enemy spawning
             IL.RoR2.ClassicStageInfo.RebuildCards += (il) =>
@@ -426,6 +394,18 @@ namespace Risky_Artifacts.Artifacts
             };
 
             On.RoR2.ClassicStageInfo.HandleMixEnemyArtifact += ClassicStageInfo_HandleMixEnemyArtifact;
+        }
+
+        private void ClassicStageInfo_OnArtifactEnabled(On.RoR2.ClassicStageInfo.orig_OnArtifactEnabled orig, ClassicStageInfo self, RunArtifactManager runArtifactManager, ArtifactDef artifactDef)
+        {
+            orig(self, runArtifactManager, artifactDef);
+            if (artifactDef == Hunted.artifact) self.RebuildCards();
+        }
+
+        private void ClassicStageInfo_OnArtifactDisabled(On.RoR2.ClassicStageInfo.orig_OnArtifactDisabled orig, ClassicStageInfo self, RunArtifactManager runArtifactManager, ArtifactDef artifactDef)
+        {
+            orig(self, runArtifactManager, artifactDef);
+            if (artifactDef == Hunted.artifact) self.RebuildCards();
         }
 
         private void ClassicStageInfo_HandleMixEnemyArtifact(On.RoR2.ClassicStageInfo.orig_HandleMixEnemyArtifact orig, DirectorCardCategorySelection monsterCategories, Xoroshiro128Plus rng)

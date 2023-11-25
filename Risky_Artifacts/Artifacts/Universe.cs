@@ -15,7 +15,7 @@ namespace Risky_Artifacts.Artifacts
     {
         public static bool enabled = true;
         public static ArtifactDef artifact;
-        public static DirectorCardCategorySelection UniverseCardSelection;
+        public static DirectorCardCategorySelection MonsterCardSelection;
 
         public static class InputInfo
         {
@@ -71,7 +71,7 @@ namespace Risky_Artifacts.Artifacts
 
         public enum MonsterCategory
         {
-            Basic_Monsters, Minibosses, Champions, Special
+            Basic_Monsters, Minibosses, Champions, Special, LunarScav, Mithrix, Voidling, Drone
         }
 
         public Universe()
@@ -101,58 +101,66 @@ namespace Risky_Artifacts.Artifacts
             CatChampions.cards = ParseSpawnlist(Universe.InputInfo.Champions, MonsterCategory.Champions);
             CatSpecial.cards = ParseSpawnlist(Universe.InputInfo.Special, MonsterCategory.Special);
 
-            UniverseCardSelection = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
+            MonsterCardSelection = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
 
-            UniverseCardSelection.AddCategory("Basic Monsters", CatBasicMonsters.weight);
-            UniverseCardSelection.categories[UniverseCardSelection.categories.Length - 1].cards = CatBasicMonsters.cards.ToArray();
+            if (CatBasicMonsters.weight > 0f)
+            {
+                MonsterCardSelection.AddCategory("Basic Monsters", CatBasicMonsters.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatBasicMonsters.cards.ToArray();
+            }
 
-            UniverseCardSelection.AddCategory("Minibosses", CatBasicMonsters.weight);
-            UniverseCardSelection.categories[UniverseCardSelection.categories.Length - 1].cards = CatMinibosses.cards.ToArray();
+            if (CatMinibosses.weight > 0f)
+            {
+                MonsterCardSelection.AddCategory("Minibosses", CatMinibosses.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatMinibosses.cards.ToArray();
+            }
 
-            UniverseCardSelection.AddCategory("Champions", CatChampions.weight);
-            UniverseCardSelection.categories[UniverseCardSelection.categories.Length - 1].cards = CatChampions.cards.ToArray();
+            if (CatChampions.weight > 0f)
+            {
+                MonsterCardSelection.AddCategory("Champions", CatChampions.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatChampions.cards.ToArray();
+            }
 
-            UniverseCardSelection.AddCategory("Special", CatSpecial.weight);
-            UniverseCardSelection.categories[UniverseCardSelection.categories.Length - 1].cards = CatSpecial.cards.ToArray();
+            if (CatSpecial.weight > 0f)
+            {
+                MonsterCardSelection.AddCategory("Special", CatSpecial.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatSpecial.cards.ToArray();
+            }
         }
 
         private void ArtifactHooks()
         {
-            IL.RoR2.ClassicStageInfo.OnArtifactEnabled += (il) =>
-            {
-                //Cursed hook. Ldarg 2 = ArtifactDef added. It wants to rebuild cards if Dissonance/Kin are enabled, so trick it into thinking they are.
-                ILCursor c = new ILCursor(il);
-                if (c.TryGotoNext(MoveType.After, x => x.MatchLdarg(2)))
-                {
-                    c.EmitDelegate<Func<ArtifactDef, ArtifactDef>>(artifact =>
-                    {
-                        if (artifact == Universe.artifact) return RoR2Content.Artifacts.mixEnemyArtifactDef;
-                        return artifact;
-                    });
-                }
-                else
-                {
-                    Debug.Log("RiskyArtifacts: Universe ClassicStageInfo.OnArtifactEnabled IL Hook failed.");
-                }
-            };
-            IL.RoR2.ClassicStageInfo.OnArtifactDisabled += (il) =>
-            {
-                //Cursed hook. Ldarg 2 = ArtifactDef added. It wants to rebuild cards if Dissonance/Kin are enabled, so trick it into thinking they are.
-                ILCursor c = new ILCursor(il);
-                if (c.TryGotoNext(MoveType.After, x => x.MatchLdarg(2)))
-                {
-                    c.EmitDelegate<Func<ArtifactDef, ArtifactDef>>(artifact =>
-                    {
-                        if (artifact == Universe.artifact) return RoR2Content.Artifacts.mixEnemyArtifactDef;
-                        return artifact;
-                    });
-                }
-                else
-                {
-                    Debug.Log("RiskyArtifacts: Universe ClassicStageInfo.OnArtifactDisabled IL Hook failed.");
-                }
-            };
+            On.RoR2.ClassicStageInfo.OnArtifactEnabled += ClassicStageInfo_OnArtifactEnabled;
+            On.RoR2.ClassicStageInfo.OnArtifactDisabled += ClassicStageInfo_OnArtifactDisabled;
 
+            IL.RoR2.ClassicStageInfo.RebuildCards += (il) =>
+            {
+                ILCursor c = new ILCursor(il);
+                if (c.TryGotoNext(x => x.MatchStfld(typeof(ClassicStageInfo), "modifiableMonsterCategories")))
+                {
+                    c.EmitDelegate<Func<DirectorCardCategorySelection, DirectorCardCategorySelection>>(dccs =>
+                    {
+                        if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Universe.artifact)) return Universe.MonsterCardSelection;
+                        return dccs;
+                    });
+                }
+                else
+                {
+                    Debug.Log("RiskyArtifacts: Universe RebuildCards IL Hook failed.");
+                }
+            };
+        }
+
+        private void ClassicStageInfo_OnArtifactEnabled(On.RoR2.ClassicStageInfo.orig_OnArtifactEnabled orig, ClassicStageInfo self, RunArtifactManager runArtifactManager, ArtifactDef artifactDef)
+        {
+            orig(self, runArtifactManager, artifactDef);
+            if (artifactDef == Universe.artifact) self.RebuildCards();
+        }
+
+        private void ClassicStageInfo_OnArtifactDisabled(On.RoR2.ClassicStageInfo.orig_OnArtifactDisabled orig, ClassicStageInfo self, RunArtifactManager runArtifactManager, ArtifactDef artifactDef)
+        {
+            orig(self, runArtifactManager, artifactDef);
+            if (artifactDef == Universe.artifact) self.RebuildCards();
         }
 
         //Category is used for cost estimation
@@ -272,14 +280,14 @@ namespace Risky_Artifacts.Artifacts
                         bool cardExists = Universe_Spawncards.CardDict.ContainsKey(name);
                         if (cardExists)
                         {
-                            Debug.LogError("RiskyArtifacts: Universe: Spawncard for " + name + " already exists. Overwriting.");
+                            Debug.LogWarning("RiskyArtifacts: Universe: Spawncard for " + name + " already exists. Overwriting.");
                             Universe_Spawncards.CardDict[name] = spawnCard;
                         }
                         else
                         {
                             Universe_Spawncards.CardDict.Add(name, spawnCard);
                         }
-                        Debug.LogError("RiskyArtifacts: Universe: Created spawncard for " + name + " with cost " + spawnCard.directorCreditCost + ".");
+                        Debug.Log("RiskyArtifacts: Universe: Created spawncard for " + name + " with cost " + spawnCard.directorCreditCost + ".");
                     }
                 }
 
