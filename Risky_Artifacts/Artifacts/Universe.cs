@@ -21,6 +21,14 @@ namespace Risky_Artifacts.Artifacts
         public static DirectorCardCategorySelection MonsterCardSelection;
         public static ItemDef UniverseScriptedEncounterStatItem;
 
+        public static SpawnCard.EliteRules mithrixEliteRules = SpawnCard.EliteRules.ArtifactOnly;
+        public static int mithrixMinStages = 0;
+        public static int mithrixCost = 4000;
+
+        public static SpawnCard.EliteRules mithrixHurtEliteRules = SpawnCard.EliteRules.ArtifactOnly;
+        public static int mithrixHurtMinStages = 0;
+        public static int mithrixHurtCost = 9001;
+
         public static class InputInfo
         {
             public static string Basic_Monsters, Minibosses, Champions, Special;
@@ -56,6 +64,17 @@ namespace Risky_Artifacts.Artifacts
             category = MonsterCategory.LunarScav
         };
 
+        public static CategoryInfo CatMithrix = new CategoryInfo()
+        {
+            weight = 0f,
+            category = MonsterCategory.Mithrix
+        };
+
+        public static CategoryInfo CatMithrixHurt = new CategoryInfo()
+        {
+            weight = 0f,
+            category = MonsterCategory.MithrixHurt
+        };
 
         public static CategoryInfo CatVoidling = new CategoryInfo()
         {
@@ -107,8 +126,8 @@ namespace Risky_Artifacts.Artifacts
             CatMinibosses.cards = ParseSpawnlist(Universe.InputInfo.Minibosses, MonsterCategory.Minibosses);
             CatChampions.cards = ParseSpawnlist(Universe.InputInfo.Champions, MonsterCategory.Champions);
             CatSpecial.cards = ParseSpawnlist(Universe.InputInfo.Special, MonsterCategory.Special);
-
             BuildCatMithrix();
+            BuildCatMithrixHurt();
 
             MonsterCardSelection = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
 
@@ -135,22 +154,109 @@ namespace Risky_Artifacts.Artifacts
                 MonsterCardSelection.AddCategory("Special", CatSpecial.weight);
                 MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatSpecial.cards.ToArray();
             }
+
+            if (CatMithrix.weight > 0f)
+            {
+                MonsterCardSelection.AddCategory("Mithrix", CatMithrix.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = CatMithrix.cards.ToArray();
+            }
         }
 
-        //Brother card isn't added to the 
+        //Build Brother card separately so it doesn't get overwritten if he's added to normal monsters and such
         private void BuildCatMithrix()
         {
             CharacterSpawnCard itBrotherCard = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/GameModes/InfiniteTowerRun/InfiniteTowerAssets/cscBrotherIT.asset").WaitForCompletion();
 
-            Debug.Log("RiskyArtifacts: Dumping Mithrix Stats");
-            Debug.Log("Director Cost: " + itBrotherCard.directorCreditCost);
-            foreach (ItemCountPair pair in itBrotherCard.itemsToGrant)
-            {
-                Debug.Log(pair.itemDef + " - " + pair.count);
-            }
-            Debug.Log("Hull Size: " + itBrotherCard.hullSize);
-
             CharacterSpawnCard brotherCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
+            brotherCard.prefab = itBrotherCard.prefab;
+            brotherCard.directorCreditCost = mithrixCost;
+            brotherCard.itemsToGrant = new ItemCountPair[]
+            {
+                new ItemCountPair()
+                {
+                    itemDef = RoR2Content.Items.TeleportWhenOob,
+                    count = 1
+                },
+                new ItemCountPair()
+                {
+                    itemDef = UniverseScriptedEncounterStatItem,
+                    count = 1
+                },
+                new ItemCountPair()
+                {
+                    itemDef = RoR2Content.Items.AdaptiveArmor,
+                    count = 1
+                }
+            };
+            brotherCard.eliteRules = mithrixEliteRules;
+            brotherCard.noElites = false;
+            brotherCard.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Ground;
+            brotherCard.occupyPosition = false;
+            brotherCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
+            brotherCard.loadout = itBrotherCard.loadout;
+            brotherCard.sendOverNetwork = true;
+            brotherCard.name = "cscUniverseBrotherUnique";
+            (brotherCard as ScriptableObject).name = brotherCard.name;
+
+            DirectorCard dc = new DirectorCard()
+            {
+                selectionWeight = 1,
+                spawnCard = brotherCard,
+                spawnDistance = DirectorCore.MonsterSpawnDistance.Standard,
+                preventOverhead = false,
+                minimumStageCompletions = mithrixMinStages,
+                forbiddenUnlockableDef = null,
+                requiredUnlockableDef = null
+            };
+            CatMithrix.cards = new List<DirectorCard>() { dc };
+        }
+
+        private void BuildCatMithrixHurt()
+        {
+            CharacterSpawnCard itBrotherCard = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/GameModes/InfiniteTowerRun/InfiniteTowerAssets/cscBrotherIT.asset").WaitForCompletion();
+
+            CharacterSpawnCard brotherHurtCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
+            brotherHurtCard.prefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Brother/cscBrotherHurt.asset").WaitForCompletion();
+            brotherHurtCard.directorCreditCost = mithrixHurtCost;
+            brotherHurtCard.itemsToGrant = new ItemCountPair[]
+            {
+                new ItemCountPair()
+                {
+                    itemDef = RoR2Content.Items.TeleportWhenOob,
+                    count = 1
+                },
+                new ItemCountPair()
+                {
+                    itemDef = UniverseScriptedEncounterStatItem,
+                    count = 1
+                },
+                new ItemCountPair()
+                {
+                    itemDef = RoR2Content.Items.AdaptiveArmor,
+                    count = 1
+                }
+            };
+            brotherHurtCard.eliteRules = mithrixHurtEliteRules;
+            brotherHurtCard.noElites = false;
+            brotherHurtCard.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Ground;
+            brotherHurtCard.occupyPosition = false;
+            brotherHurtCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
+            brotherHurtCard.loadout = itBrotherCard.loadout;
+            brotherHurtCard.sendOverNetwork = true;
+            brotherHurtCard.name = "cscUniverseBrotherHurtUnique";
+            (brotherHurtCard as ScriptableObject).name = brotherHurtCard.name;
+
+            DirectorCard dc = new DirectorCard()
+            {
+                selectionWeight = 1,
+                spawnCard = brotherHurtCard,
+                spawnDistance = DirectorCore.MonsterSpawnDistance.Standard,
+                preventOverhead = false,
+                minimumStageCompletions = mithrixHurtMinStages,
+                forbiddenUnlockableDef = null,
+                requiredUnlockableDef = null
+            };
+            CatMithrixHurt.cards = new List<DirectorCard>() { dc };
         }
 
         private void ArtifactHooks()
@@ -240,6 +346,7 @@ namespace Risky_Artifacts.Artifacts
                 Universe_Spawncards.CardDict.TryGetValue(name, out CharacterSpawnCard origSpawnCard);
                 int cost = origSpawnCard ? origSpawnCard.directorCreditCost : -1;
                 int minStages = 0;
+                int directorCardWeight = 1;
 
                 if (current.Length > 1)
                 {
@@ -389,7 +496,7 @@ namespace Risky_Artifacts.Artifacts
                 //Jellyfish thing is jank, but it's the only monster that actually uses this spawndistance.
                 DirectorCard dc = new DirectorCard()
                 {
-                    selectionWeight = 1,
+                    selectionWeight = directorCardWeight,
                     spawnCard = newCard,
                     spawnDistance = name == "JellyfishBody" ? DirectorCore.MonsterSpawnDistance.Far : DirectorCore.MonsterSpawnDistance.Standard,
                     preventOverhead = false,
