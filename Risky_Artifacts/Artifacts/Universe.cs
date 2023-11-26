@@ -168,6 +168,8 @@ namespace Risky_Artifacts.Artifacts
             BuildCatNewt();
 
             MonsterCardSelection = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
+            MonsterCardSelection.name = "UniverseMonsterCardSelection";
+            (MonsterCardSelection as DirectorCardCategorySelection).name = MonsterCardSelection.name;
 
             if (Categories.CatBasicMonsters.weight > 0f)
             {
