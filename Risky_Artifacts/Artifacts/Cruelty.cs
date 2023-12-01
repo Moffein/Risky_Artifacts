@@ -91,11 +91,11 @@ namespace Risky_Artifacts.Artifacts
                 CharacterMaster master = targetGameObject.GetComponent<CharacterMaster>();
                 if (master && master.inventory && master.inventory.GetItemCount(RoR2Content.Items.HealthDecay) <= 0)
                 {
+                    if (Hunted.HuntedStatItem && master.inventory.GetItemCount(Hunted.HuntedStatItem) > 0 && (!Hunted.allowCruelty || !Hunted.allowElite)) return;
                     CharacterBody body = master.GetBody();
-                    if (body &&
-                    !body.isPlayerControlled
-                    && !body.bodyFlags.HasFlag(CharacterBody.BodyFlags.Masterless)
-                    && (body.isBoss || body.isChampion || Random.Range(1, 100) <= Cruelty.triggerChance))
+                    if (!body || body.isPlayerControlled || body.bodyFlags.HasFlag(CharacterBody.BodyFlags.Masterless)) return;
+
+                    if ((body.isBoss || body.isChampion || Random.Range(1, 100) <= Cruelty.triggerChance))
                         self.monsterCredit -= Cruelty.CreateCrueltyElite(body, master.inventory, monsterCredit, lastAttemptedMonsterCard.cost, Cruelty.failureChance, false);
                 }
             });

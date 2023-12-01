@@ -25,6 +25,8 @@ namespace Risky_Artifacts.Artifacts
         public static bool nerfPercentHeal = true;
         public static bool useOverlay = true;
         public static bool disableRegen = true;
+        public static bool allowElite = true;
+        public static bool allowCruelty = true;
 
         public static bool survivorsOnly = false;
         public static bool enabled = true;
@@ -34,7 +36,7 @@ namespace Risky_Artifacts.Artifacts
         public static float categoryWeight = 1f;
         public static float healthMult = 10f;
         public static float damageMult = 0.2f;
-        public static int directorCost = 125;
+        public static int directorCost = 200;
 
         public Hunted()
         {
@@ -182,7 +184,7 @@ namespace Risky_Artifacts.Artifacts
                 csc.eliteRules = SpawnCard.EliteRules.Default;
                 csc.forbiddenAsBoss = false;
                 csc.hullSize = HullClassification.Human;
-                csc.noElites = false;
+                csc.noElites = Hunted.allowElite;
                 csc.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Ground;
                 csc.itemsToGrant = new ItemCountPair[] {
                     new ItemCountPair() { itemDef = Hunted.HuntedStatItem, count = 1 },

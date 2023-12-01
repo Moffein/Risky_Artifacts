@@ -207,7 +207,7 @@ namespace Risky_Artifacts
                 new ConfigDescription("Allow all survivors to spawn, even if not listed in the Spawnlist.")).Value;
             Hunted.survivorsOnly = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Only Spawn Survivors"), false,
                 new ConfigDescription("Only spawn survivors when the artifact is active.")).Value;
-            Hunted.spawnInfoInput = base.Config.Bind<string>(new ConfigDefinition("Hunted", "Spawnlist"), "CommandoBody, Bandit2Body, ToolbotBody, MercBody, MageBody, LoaderBody, CrocoBody, RailgunnerBody, RocketSurvivorBody, CHEF, SniperClassicBody, MinerBody, HANDOverclockedBody, RobPaladinBody, SS2UChirrBody, SS2UCyborgBody, SS2UExecutionerBody, SS2UPyroBody, SS2UNemmandoBody, NemesisEnforcerBody, RobDriverBody, DeputyBody",
+            Hunted.spawnInfoInput = base.Config.Bind<string>(new ConfigDefinition("Hunted", "Spawnlist"), "CommandoBody, Bandit2Body, ToolbotBody, MercBody, MageBody, LoaderBody, CrocoBody, RailgunnerBody, RocketSurvivorBody, CHEF, SniperClassicBody, MinerBody, HANDOverclockedBody, RobPaladinBody, SS2UChirrBody, SS2UCyborgBody, SS2UExecutionerBody, SS2UPyroBody, SS2UNemmandoBody, RobDriverBody, DeputyBody",
                 new ConfigDescription("List of bodies to be added. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost:HPMult(float):DamageMult(float)")).Value;
             Hunted.nerfEngiTurrets = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Nerf Engi Turrets"), true,
                 new ConfigDescription("Engi Turrets receive no health boost.")).Value;
@@ -225,6 +225,10 @@ namespace Risky_Artifacts
                 new ConfigDescription("Default director cost for Hunted survivors.")).Value;
             Hunted.useOverlay = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Overlay Texture"), true,
                 new ConfigDescription("Hunted survivors use the Vengeance texture.")).Value;
+            Hunted.allowCruelty = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Allow Cruelty"), true,
+                new ConfigDescription("Hunted survivors can be affected by Cruelty.")).Value;
+            Hunted.allowElite = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Allow Elites"), true,
+                new ConfigDescription("Hunted survivors can be Elites. Disabling this preents them from being affected by Cruelty.")).Value;
 
             Universe.enabled = base.Config.Bind<bool>(new ConfigDefinition("Universe", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
