@@ -19,7 +19,7 @@ namespace Risky_Artifacts.Artifacts
         private static SpawnCard primordialTeleCard;
 
         public static bool isNaturalLunar = false;
-        private static bool first = true;   //Used for suppressing the chat message?
+        private static bool firstIdleToActive = true;   //Used for suppressing the chat message?
 
         public PrimordialTele()
         {
@@ -67,21 +67,21 @@ namespace Risky_Artifacts.Artifacts
 
             On.RoR2.Stage.Start += (orig, self) =>
             {
-                first = true;
+                firstIdleToActive = true;
                 orig(self);
             };
 
             //Suppresses the chat message?
             On.EntityStates.LunarTeleporter.IdleToActive.OnExit += (orig, self) =>
             {
-                if (!first || PrimordialTele.isNaturalLunar)
+                if (!firstIdleToActive || PrimordialTele.isNaturalLunar)
                 {
-                    first = false;
+                    firstIdleToActive = false;
                     orig(self);
                 }
                 else
                 {
-                    first = false;
+                    firstIdleToActive = false;
                 }
             };
         }
