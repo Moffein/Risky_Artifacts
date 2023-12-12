@@ -1,0 +1,65 @@
+{
+	"strings":
+	{
+	"RISKYARTIFACTS_WARFARE_NAME" : "Artéfact de la Guerre",
+	"RISKYARTIFACTS_WARFARE_DESC" : "Les monstres gagnent une vitesse de déplacement, une vitesse d'attaque et une vitesse de projectile considérablement augmentées.",
+	
+	"RISKYARTIFACTS_ARROGANCE_NAME" : "Artéfact de l'Arrogance",
+	"RISKYARTIFACTS_ARROGANCE_DESC" : "Les effets du Sanctuaire de la Montagne sont permanents.",
+	
+	"RISKYARTIFACTS_CONFORMITY_NAME" : "Artéfact de la Conformité",
+	"RISKYARTIFACTS_CONFORMITY_DESC" : 	"Les imprimantes 3D et les ferailleurs ne réapparaissent plus.",
+	"RISKYARTIFACTS_CONFORMITY_DESC_NOPRINTERS" : "Les imprimantes 3D ne réapparaissent plus.",
+	"RISKYARTIFACTS_CONFORMITY_DESC_NOSCRAPPERS" : "Les ferailleurs ne réapparaissent plus.",
+	
+	"RISKYARTIFACTS_ORIGIN_NAME" : 	"Artéfact de l'Origine'",
+	"RISKYARTIFACTS_ORIGIN_DESC" : 	"Des boss envahissent la carte toutes les 10 minutes.",
+	"RISKYARTIFACTS_ORIGIN_DESC_IMPONLY" :"Des Seigneurs démons envahissent la carte toutes les 10 minutes.",
+	"RISKYARTIFACTS_ORIGIN_SUBTITLENAMETOKEN" : "Récupérer",
+	"RISKYARTIFACTS_ORIGIN_MODIFIER" : " Avant-garde",
+	
+	"RISKYARTIFACTS_EXPANSION_NAME" : "Artéfact de l'Expansion",
+	"RISKYARTIFACTS_EXPANSION_DESC" : "La zone du Téléporteur couvre toute la carte, mais la vitesse de chargement est réduite et les prix sont augmentés.",
+	"RISKYARTIFACTS_EXPANSION_DESC_NOPRICEINCREASE" : "La zone du Téléporteur couvre toute la carte, mais la vitesse de chargement est réduite.",
+	
+	"RISKYARTIFACTS_PRIMORDIAL_NAME" : "Artéfact de la Primauté",
+	"RISKYARTIFACTS_PRIMORDIAL_DESC" : "Le Téléporteur Primordial apparaît à chaque étape après la boucle.",
+	
+	"RISKYARTIFACTS_BROTHERINVASION_NAME" : "Artéfact du Fantôme",
+	"RISKYARTIFACTS_BROTHERINVASION_DESC" : "Le Roi Fantôme du Néant vous traque si vous passez trop de temps sur une étape.",
+	"RISKYARTIFACTS_BROTHERINVASION_SUBTITLENAMETOKEN" : "Apparition",
+	"RISKYARTIFACTS_BROTHERINVASION_MODIFIER" : "Fantôme ",
+	
+	"RISKYARTIFACTS_CRUELTY_NAME" : "Artéfact de la Cruauté",
+	"RISKYARTIFACTS_CRUELTY_DESC" : "Les ennemis peuvent avoir plusieurs types d'élites.",
+	"RISKYARTIFACTS_CRUELTY_DESC_MULT" : "Les ennemis peuvent avoir plusieurs types d'élites qui s'accumulent de manière multiplicatrice.",
+	
+	"RISKYARTIFACTS_HUNTED_NAME" : "Artéfact des Traqués",
+	"RISKYARTIFACTS_HUNTED_DESC" : "Les survivants peuvent apparaître en tant qu'ennemis.",
+	
+	"RISKYARTIFACTS_UNIVERSE_NAME" : "Artéfact de l'Univers",
+	"RISKYARTIFACTS_UNIVERSE_DESC" : "Tous les monstres peuvent apparaître à toutes les étapes.",
+	
+	//Hidden Items, not visible in normal gameplay.
+	"RISKYARTIFACTS_ORIGINBONUSITEM_NAME" : "Bonus d'Origine",
+	"RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP" : "La fête commence ici.",
+	"RISKYARTIFACTS_ORIGINBONUSITEM_DESC" : "Augmente la <style=cIsUtility>vitesse de déplacement</style>, la <style=cIsDamage>vitesse d'attaque</style> et les <style=cIsDamage>dégâts</style>, et <style=cIsUtility>réduit les temps de recharge des compétences</style>.",
+	
+	
+	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_NAME" : "Bonus du Fantôme",
+	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_PICKUP" : "Tu as l'air d'avoir vu un fantôme.",
+	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_DESC" : "Prenez l'apparence d'un fantôme et devenez <style=cIsUtility>immunisé contre le brouillard du Néant</style>.",
+	
+	"RISKYARTIFACTS_HUNTEDSTATITEM_NAME" : "Modificateur de Statistiques Traquées",
+	"RISKYARTIFACTS_HUNTEDSTATITEM_PICKUP" : "Le chasseur devient la proie.",
+	"RISKYARTIFACTS_HUNTEDSTATITEM_DESC" : "<style=cIsHealing>Augmente la santé maximale</style>... <style=cIsHealth>MAIS réduit les dégâts</style>.",
+	
+	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_NAME" : "Modificateur de Statistiques pour Rencontre Scriptée de l'Univers",
+	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_PICKUP" : "Obtenez les bonus de statistiques que les Boss Scriptés utilisent.",
+	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_DESC" : "Obtenez les bonus de statistiques que les Boss Scriptés utilisent.",
+	
+	"RISKYARTIFACTS_UNIVERSEDRONESTATITEM_NAME" : "Modificateur de Statistiques pour Drone de l'Univers",
+	"RISKYARTIFACTS_UNIVERSEDRONESTATITEM_PICKUP" : "<style=cIsHealth>Diminue les dégâts</style>.",
+	"RISKYARTIFACTS_UNIVERSEDRONESTATITEM_DESC" : "<style=cIsHealth>Diminue les dégâts</style>."
+	}
+}
