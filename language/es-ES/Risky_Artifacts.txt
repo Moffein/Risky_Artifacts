@@ -49,7 +49,7 @@
 	
 	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_NAME" : "Bonificación fantasma",
 	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_PICKUP" : "Parece que hubieras visto un fantasma.",
-	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_DESC" : "Pareces un fantasma y te vuelves <style=cIsUtility>inmune a la niebla del vacio</style>."
+	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_DESC" : "Pareces un fantasma y te vuelves <style=cIsUtility>inmune a la niebla del vacio</style>.",
 	
 		"RISKYARTIFACTS_HUNTEDSTATITEM_NAME" : "Modificador de Estadística Cazado",
 	"RISKYARTIFACTS_HUNTEDSTATITEM_PICKUP" : "El cazador se convierte en la presa.",
