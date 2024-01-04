@@ -23,12 +23,23 @@
 	"RISKYARTIFACTS_EXPANSION_DESC_NOPRICEINCREASE" : "La zona del teletransportador cubre todo el mapa, pero la velocidad de carga se reduce.",
 	
 	"RISKYARTIFACTS_PRIMORDIAL_NAME" : "Artefacto de la Primacía",
-	"RISKYARTIFACTS_PRIMORDIAL_DESC" : "El Teletransportador Primordial aparece en todos los escenarios después de hacer un bucle..",
+	"RISKYARTIFACTS_PRIMORDIAL_DESC" : "El Teletransportador Primordial aparece en todos los escenarios después de hacer un bucle.",
 	
 	"RISKYARTIFACTS_BROTHERINVASION_NAME" : "Artefacto del Fantasma",
 	"RISKYARTIFACTS_BROTHERINVASION_DESC" : "El Fantasma del Rey de la Nada te persigue si pasas demasiado tiempo en un escenario.",
 	"RISKYARTIFACTS_BROTHERINVASION_SUBTITLENAMETOKEN" : "Aparición",
 	"RISKYARTIFACTS_BROTHERINVASION_MODIFIER" : "Fantasma ",
+	
+		"RISKYARTIFACTS_CRUELTY_NAME" : "Artefacto de crueldad",
+	"RISKYARTIFACTS_CRUELTY_DESC" : "Los enemigos pueden tener varios aspectos de élite.",
+	"RISKYARTIFACTS_CRUELTY_DESC_MULT" : "Los enemigos pueden tener varios tipos de élite que se acumulan multiplicativamente.",
+	
+	"RISKYARTIFACTS_HUNTED_NAME" : "Artefacto del Cazado",
+	"RISKYARTIFACTS_HUNTED_DESC" : "Supervivientes pueden aparecer como enemigos.",
+	
+	"RISKYARTIFACTS_UNIVERSE_NAME" : "Artefacto del Universo",
+	"RISKYARTIFACTS_UNIVERSE_DESC" : "Todos los monstruos pueden aparecer en todos los escenarios.",
+	
 	
 	//Hidden Items, not visible in normal gameplay.
 	"RISKYARTIFACTS_ORIGINBONUSITEM_NAME" : "Bonificación por origen",
@@ -39,5 +50,17 @@
 	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_NAME" : "Bonificación fantasma",
 	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_PICKUP" : "Parece que hubieras visto un fantasma.",
 	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_DESC" : "Pareces un fantasma y te vuelves <style=cIsUtility>inmune a la niebla del vacio</style>."
+	
+		"RISKYARTIFACTS_HUNTEDSTATITEM_NAME" : "Modificador de Estadística Cazado",
+	"RISKYARTIFACTS_HUNTEDSTATITEM_PICKUP" : "El cazador se convierte en la presa.",
+	"RISKYARTIFACTS_HUNTEDSTATITEM_DESC" : "<style=cIsHealing>Aumenta la salud máxima</style>... <style=cIsHealth>PERO reduce el daño</style>.",
+	
+	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_NAME" : "Modificador de estadísticas de encuentros con guión del universo",
+	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_PICKUP" : "Consigue los potenciadores de estadísticas que usan los jefes con script.",
+	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_DESC" : "Consigue los potenciadores de estadísticas que usan los jefes con script.",
+	
+	"RISKYARTIFACTS_UNIVERSEDRONESTATITEM_NAME" : "Modificador de estadísticas del dron Universo",
+	"RISKYARTIFACTS_UNIVERSEDRONESTATITEM_PICKUP" : "<style=cIsHealth>Reducción de daños</style>.",
+	"RISKYARTIFACTS_UNIVERSEDRONESTATITEM_DESC" : "<style=cIsHealth>Reducción de daños</style>.",
 	}
 }
