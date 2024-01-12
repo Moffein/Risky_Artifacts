@@ -16,7 +16,7 @@ namespace Risky_Artifacts
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.2.5")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.2.9")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -261,14 +261,14 @@ namespace Risky_Artifacts
                 new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int)")).Value;
             Universe.InputInfo.Champions = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Champions"), "VagrantBody, TitanBody, BeetleQueen2Body, ClayBossBody, MagmaWormBody, ImpBossBody, RoboBallBossBody, GravekeeperBody, MegaConstructBody, VoidMegaCrabBody, GrandparentBody, ScavBody, ElectricWormBody, MoffeinAncientWispBody:1000, MechorillaBody:600, RegigigasBody:1000",
                 new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int)")).Value;
-            Universe.InputInfo.Special = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Special"), "TitanGoldBody:4000:5, SuperRoboBallBossBody:4000:5, DireseekerBossBody:4000:5",
+            Universe.InputInfo.Special = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Special"), "TitanGoldBody:7000:5, SuperRoboBallBossBody:7000:5, DireseekerBossBody:7000:5",
                new ConfigDescription("List of bodies to be added to this category. Bodies in this category will receive increased health and damage. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int)")).Value;
-            Universe.InputInfo.LunarScav = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Lunar Scavenger"), "ScavLunar1Body:6000:5, ScavLunar2Body:6000: 5,ScavLunar3Body:6000:5, ScavLunar4Body:6000:5",
+            Universe.InputInfo.LunarScav = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Lunar Scavenger"), "ScavLunar1Body:8000:5, ScavLunar2Body:8000: 5,ScavLunar3Body:8000:5, ScavLunar4Body:8000:5",
                new ConfigDescription("List of bodies to be added to this category. Bodies in this category will receive increased health and damage. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int)")).Value;
             Universe.InputInfo.Drone = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Drone"), "Turret1Body, Drone1Body, Drone2Body, MissileDroneBody, FlameDroneBody, EmergencyDroneBody, MegaDroneBody",
                new ConfigDescription("List of bodies to be added to this category. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int)")).Value;
 
-            Universe.mithrixCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix", "Director Cost"), 4000,
+            Universe.mithrixCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix", "Director Cost"), 6000,
                 new ConfigDescription("Director cost of Mithrix.")).Value;
             Universe.mithrixMinStages = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix", "Min Stages"), 5,
                 new ConfigDescription("Min stages completed before Mithrix can spawn.")).Value;
@@ -277,7 +277,7 @@ namespace Risky_Artifacts
             Universe.mithrixAllowElite = base.Config.Bind<bool>(new ConfigDefinition("Universe - Mithrix", "Allow Elite"), true,
                 new ConfigDescription("Allow elites to spawn?.")).Value;
 
-            Universe.mithrixHurtCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix Phase 4", "Director Cost"), 12000,
+            Universe.mithrixHurtCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix Phase 4", "Director Cost"), 18000,
                 new ConfigDescription("Director cost of Mithrix Phase 4.")).Value;
             Universe.mithrixHurtMinStages = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix Phase 4", "Min Stages"), 5,
                 new ConfigDescription("Min stages completed before Mithrix Phase 4 can spawn.")).Value;
@@ -286,7 +286,7 @@ namespace Risky_Artifacts
             Universe.mithrixHurtAllowElite = base.Config.Bind<bool>(new ConfigDefinition("Universe - Mithrix Phase 4", "Allow Elite"), true,
                 new ConfigDescription("Allow elites to spawn?.")).Value;
 
-            Universe.voidlingCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Voidling", "Director Cost"), 8000,
+            Universe.voidlingCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Voidling", "Director Cost"), 12000,
                 new ConfigDescription("Director cost of Voidling.")).Value;
             Universe.voidlingMinStages = base.Config.Bind<int>(new ConfigDefinition("Universe - Voidling", "Min Stages"), 5,
                 new ConfigDescription("Min stages completed before Voidling can spawn.")).Value;
@@ -297,7 +297,7 @@ namespace Risky_Artifacts
             Universe.voidlingAllowElite = base.Config.Bind<bool>(new ConfigDefinition("Universe - Voidling", "Allow Elite"), true,
                 new ConfigDescription("Allow elites to spawn?.")).Value;
 
-            Universe.newtCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Newt", "Director Cost"), 12000,
+            Universe.newtCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Newt", "Director Cost"), 18000,
                 new ConfigDescription("Director cost of Newt.")).Value;
             Universe.newtMinStages = base.Config.Bind<int>(new ConfigDefinition("Universe - Newt", "Min Stages"), 5,
                 new ConfigDescription("Min stages completed before Newt can spawn.")).Value;

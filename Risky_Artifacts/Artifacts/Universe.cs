@@ -10,6 +10,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using UnityEngine.Timeline;
 using static Risky_Artifacts.Artifacts.Universe;
 
@@ -21,6 +22,7 @@ namespace Risky_Artifacts.Artifacts
         public static ArtifactDef artifact;
         public static DirectorCardCategorySelection MonsterCardSelection;
         public static ItemDef UniverseScriptedEncounterStatItem, UniverseDroneStatItem;
+        public static Dictionary<BodyIndex, int> DirectorCosts = new Dictionary<BodyIndex, int>();
 
         public static SpawnCard.EliteRules mithrixEliteRules = SpawnCard.EliteRules.ArtifactOnly;
         public static int mithrixMinStages = 5;
@@ -239,6 +241,7 @@ namespace Risky_Artifacts.Artifacts
             CharacterSpawnCard brotherCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
             brotherCard.prefab = itBrotherCard.prefab;
             brotherCard.directorCreditCost = mithrixCost;
+
             brotherCard.itemsToGrant = new ItemCountPair[]
             {
                 new ItemCountPair()
@@ -386,6 +389,10 @@ namespace Risky_Artifacts.Artifacts
             newtCard.name = "cscUniverseNewtUnique";
             (newtCard as ScriptableObject).name = newtCard.name;
 
+            BodyIndex newtIndex = BodyCatalog.FindBodyIndex("ShopkeeperBody");
+            if (DirectorCosts.ContainsKey(newtIndex)) DirectorCosts.Remove(newtIndex);
+            DirectorCosts.Add(newtIndex, newtCost);
+
             DirectorCard dc = new DirectorCard()
             {
                 selectionWeight = 1,
@@ -456,6 +463,41 @@ namespace Risky_Artifacts.Artifacts
 
             RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
             On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
+            CharacterBody.onBodyStartGlobal += CharacterBody_onBodyStartGlobal;
+        }
+
+        private void CharacterBody_onBodyStartGlobal(CharacterBody body)
+        {
+            if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Universe.artifact) && body.teamComponent && body.teamComponent.teamIndex != TeamIndex.Player)
+            {
+                Scene currentScene = SceneManager.GetActiveScene();
+                if (currentScene != null && currentScene.name == "bazaar") return;
+
+                DeathRewards dr = body.GetComponent<DeathRewards>();
+                if (!dr)
+                {
+                    dr = body.gameObject.AddComponent<DeathRewards>();
+                    dr.logUnlockableDef = null;
+
+                    int cost = 0;
+                    Universe.DirectorCosts.TryGetValue(body.bodyIndex, out cost);
+
+                    float diffMult = Run.instance ? Run.instance.difficultyCoefficient : 1f;
+                    float calcXP = cost * diffMult;
+                    float calcGold = cost * diffMult;
+
+                    CombatDirector firstActiveCombatDirector = CombatDirector.instancesList.FirstOrDefault(director => director.isActiveAndEnabled);
+                    if (firstActiveCombatDirector)
+                    {
+                        calcXP *= firstActiveCombatDirector.expRewardCoefficient;
+                        //calcGold *= firstActiveCombatDirector.goldRewardCoefficient;
+                    }
+                    calcGold *= 0.2f;   //Can't be arsed to figure out how to properly reduce the gold reward.
+
+                    dr.expReward = (uint)Mathf.Max(1, Mathf.FloorToInt(calcXP));
+                    dr.goldReward = (uint)Mathf.Max(1, Mathf.FloorToInt(calcGold));
+                }
+            }
         }
 
         private void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
@@ -596,6 +638,10 @@ namespace Risky_Artifacts.Artifacts
                 CharacterSpawnCard newCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
                 newCard.prefab = masterPrefab;
                 newCard.directorCreditCost = cost;
+
+                if (DirectorCosts.ContainsKey(index)) DirectorCosts.Remove(index);
+                DirectorCosts.Add(index, cost);
+
                 if (origSpawnCard)
                 {
                     newCard.eliteRules = origSpawnCard.eliteRules;

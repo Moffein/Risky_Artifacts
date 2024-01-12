@@ -17,6 +17,7 @@ namespace Risky_Artifacts.Artifacts
         public static List<CharacterSpawnCard> SpawnCards = new List<CharacterSpawnCard>();
         public static List<DirectorCard> DirectorCards = new List<DirectorCard>();
         public static Dictionary<BodyIndex, SpawnInfo> StatOverrideBodies = new Dictionary<BodyIndex, SpawnInfo>();
+        public static Dictionary<BodyIndex, int> DirectorCosts = new Dictionary<BodyIndex, int>();
 
         private List<SpawnInfo> SpawnInfoList = new List<SpawnInfo>();
         public static string spawnInfoInput;
@@ -85,14 +86,14 @@ namespace Risky_Artifacts.Artifacts
                                 }    
                                 break;
                             case 2:
-                                if (float.TryParse(current[1], NumberStyles.Any, CultureInfo.InvariantCulture, out float parsedHP))
+                                if (float.TryParse(current[2], NumberStyles.Any, CultureInfo.InvariantCulture, out float parsedHP))
                                 {
                                     shouldOverride = true;
                                     hpOverride = parsedHP;
                                 }
                                 break;
                             case 3:
-                                if (float.TryParse(current[1], NumberStyles.Any, CultureInfo.InvariantCulture, out float parsedDamage))
+                                if (float.TryParse(current[3], NumberStyles.Any, CultureInfo.InvariantCulture, out float parsedDamage))
                                 {
                                     shouldOverride = true;
                                     damageOverride = parsedDamage;
@@ -198,6 +199,12 @@ namespace Risky_Artifacts.Artifacts
                 csc.name = "cscHunted" + info.bodyIndex + info.bodyName;
                 (csc as ScriptableObject).name = csc.name;
                 SpawnCards.Add(csc);
+
+                if (DirectorCosts.ContainsKey(info.bodyIndex))
+                {
+                    DirectorCosts.Remove(info.bodyIndex);
+                }
+                DirectorCosts.Add(info.bodyIndex, info.directorCost);
 
                 DirectorCard dc = new DirectorCard()
                 {
@@ -423,6 +430,31 @@ namespace Risky_Artifacts.Artifacts
         {
             origImmuneToExecute = body && body.bodyFlags.HasFlag(CharacterBody.BodyFlags.ImmuneToExecutes);
             if (origImmuneToExecute) body.bodyFlags &= ~CharacterBody.BodyFlags.ImmuneToExecutes;
+
+            DeathRewards dr = body.GetComponent<DeathRewards>();
+            if (!dr && body.teamComponent && body.teamComponent.teamIndex != TeamIndex.Player)
+            {
+                dr = body.gameObject.AddComponent<DeathRewards>();
+                dr.logUnlockableDef = null;
+
+                int cost = 0;
+                Hunted.DirectorCosts.TryGetValue(body.bodyIndex, out cost);
+
+                float diffMult = Run.instance ? Run.instance.difficultyCoefficient : 1f;
+                float calcXP = cost * diffMult;
+                float calcGold = cost * diffMult;
+
+                CombatDirector firstActiveCombatDirector = CombatDirector.instancesList.FirstOrDefault(director => director.isActiveAndEnabled);
+                if (firstActiveCombatDirector)
+                {
+                    calcXP *= firstActiveCombatDirector.expRewardCoefficient;
+                    //calcGold *= firstActiveCombatDirector.goldRewardCoefficient;
+                }
+                calcGold *= 0.2f;   //Can't be arsed to figure out how to properly reduce the gold reward.
+
+                dr.expReward = (uint)Mathf.Max(1, Mathf.FloorToInt(calcXP));
+                dr.goldReward = (uint)Mathf.Max(1, Mathf.FloorToInt(calcGold));
+            }
         }
 
         private void OnDisable()
