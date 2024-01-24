@@ -47,6 +47,9 @@ namespace Risky_Artifacts.Artifacts
 
         public static float droneDamageMult = 0.1f;
 
+        public static bool enableOnMoon = false;
+        public static List<SceneDef> forbiddenScenes = new List<SceneDef>();
+
         public static class InputInfo
         {
             public static string Basic_Monsters, Minibosses, Champions, Special, LunarScav, Drone;
@@ -146,6 +149,12 @@ namespace Risky_Artifacts.Artifacts
             artifact.smallIconSelectedSprite = RiskyArtifactsPlugin.assetBundle.LoadAsset<Sprite>("texUniverseEnabled.png");//todo
             RiskyArtifactsPlugin.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
+
+            if (!enableOnMoon)
+            {
+                forbiddenScenes.Add(Addressables.LoadAssetAsync<SceneDef>("RoR2/Base/moon/moon.asset").WaitForCompletion());
+                forbiddenScenes.Add(Addressables.LoadAssetAsync<SceneDef>("RoR2/Base/moon2/moon2.asset").WaitForCompletion());
+            }
 
             BuildItem();
 
@@ -418,7 +427,8 @@ namespace Risky_Artifacts.Artifacts
                 {
                     c.EmitDelegate<Func<DirectorCardCategorySelection, DirectorCardCategorySelection>>(dccs =>
                     {
-                        if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Universe.artifact)) return Universe.MonsterCardSelection;
+                        if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Universe.artifact) && !forbiddenScenes.Contains(SceneCatalog.GetSceneDefForCurrentScene()))
+                            return Universe.MonsterCardSelection;
                         return dccs;
                     });
                 }
