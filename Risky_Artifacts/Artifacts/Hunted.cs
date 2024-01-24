@@ -440,6 +440,9 @@ namespace Risky_Artifacts.Artifacts
                 int cost = 0;
                 Hunted.DirectorCosts.TryGetValue(body.bodyIndex, out cost);
 
+                dr.spawnValue = cost;
+                if (body.isElite) cost = Mathf.RoundToInt(cost * 1.5f); //Just a lazy way of scaling cost.
+
                 float diffMult = Run.instance ? Run.instance.difficultyCoefficient : 1f;
                 float calcXP = cost * diffMult;
                 float calcGold = cost * diffMult;
@@ -454,6 +457,8 @@ namespace Risky_Artifacts.Artifacts
 
                 dr.expReward = (uint)Mathf.Max(1, Mathf.FloorToInt(calcXP));
                 dr.goldReward = (uint)Mathf.Max(1, Mathf.FloorToInt(calcGold));
+
+                dr.bossPickup = new SerializablePickupIndex { pickupName = "" };
             }
         }
 
