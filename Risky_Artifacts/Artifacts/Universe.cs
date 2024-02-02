@@ -571,6 +571,7 @@ namespace Risky_Artifacts.Artifacts
                 int cost = origSpawnCard ? origSpawnCard.directorCreditCost : -1;
                 int minStages = 0;
                 int directorCardWeight = 1;
+                string graphTypeString = string.Empty;
 
                 if (current.Length > 1)
                 {
@@ -596,6 +597,9 @@ namespace Risky_Artifacts.Artifacts
                                 {
                                     directorCardWeight = parsedWeight;
                                 }
+                                break;
+                            case 4:
+                                graphTypeString = current[4];
                                 break;
                             default:
                                 break;
@@ -649,6 +653,25 @@ namespace Risky_Artifacts.Artifacts
                     continue;
                 }
 
+                //Set body graphType
+                RoR2.Navigation.MapNodeGroup.GraphType nodeGraphType;
+                graphTypeString = graphTypeString.ToLower();
+                switch(graphTypeString)
+                {
+                    case "air":
+                        nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Air;
+                        break;
+                    case "ground":
+                        nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Ground;
+                        break;
+                    case "rail":
+                        nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Rail;
+                        break;
+                    default:
+                        nodeGraphType = body.isFlying ? RoR2.Navigation.MapNodeGroup.GraphType.Air : RoR2.Navigation.MapNodeGroup.GraphType.Ground;
+                        break;
+                }
+
                 //Build new card
                 CharacterSpawnCard newCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
                 newCard.prefab = masterPrefab;
@@ -676,7 +699,7 @@ namespace Risky_Artifacts.Artifacts
                     newCard.forbiddenAsBoss = false;
                     newCard.hullSize = body.hullClassification;
                     newCard.noElites = false;
-                    newCard.nodeGraphType = body.isFlying ? RoR2.Navigation.MapNodeGroup.GraphType.Air : RoR2.Navigation.MapNodeGroup.GraphType.Ground;
+                    newCard.nodeGraphType = nodeGraphType;
                     newCard.forbiddenFlags = RoR2.Navigation.NodeFlags.NoCharacterSpawn;
                     newCard.occupyPosition = false;
                     newCard.loadout = new SerializableLoadout();
