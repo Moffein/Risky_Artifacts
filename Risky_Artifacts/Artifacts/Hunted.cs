@@ -185,7 +185,7 @@ namespace Risky_Artifacts.Artifacts
                 csc.eliteRules = SpawnCard.EliteRules.Default;
                 csc.forbiddenAsBoss = false;
                 csc.hullSize = HullClassification.Human;
-                csc.noElites = Hunted.allowElite;
+                csc.noElites = !Hunted.allowElite;
                 csc.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Ground;
                 csc.itemsToGrant = new ItemCountPair[] {
                     new ItemCountPair() { itemDef = Hunted.HuntedStatItem, count = 1 },
