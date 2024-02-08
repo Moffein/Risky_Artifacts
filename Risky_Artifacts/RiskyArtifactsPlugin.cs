@@ -16,7 +16,7 @@ namespace Risky_Artifacts
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.2.13")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.2.14")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -234,6 +234,8 @@ namespace Risky_Artifacts
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
             Universe.enableOnMoon = base.Config.Bind<bool>(new ConfigDefinition("Universe", "Replace Moon Spawns"), false,
                 new ConfigDescription("Allow Universe to affect Commencement monster spawns.")).Value;
+            Universe.enableOnVoidLocus = base.Config.Bind<bool>(new ConfigDefinition("Universe", "Replace Void Locus Spawns"), false,
+                new ConfigDescription("Allow Universe to affect Void Locus monster spawns.")).Value;
 
             Universe.Categories.CatBasicMonsters.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Basic Monsters"), 4f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;

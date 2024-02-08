@@ -48,6 +48,7 @@ namespace Risky_Artifacts.Artifacts
         public static float droneDamageMult = 0.1f;
 
         public static bool enableOnMoon = false;
+        public static bool enableOnVoidLocus = false;
         public static List<SceneDef> forbiddenScenes = new List<SceneDef>();
 
         public static class InputInfo
@@ -154,6 +155,11 @@ namespace Risky_Artifacts.Artifacts
             {
                 forbiddenScenes.Add(Addressables.LoadAssetAsync<SceneDef>("RoR2/Base/moon/moon.asset").WaitForCompletion());
                 forbiddenScenes.Add(Addressables.LoadAssetAsync<SceneDef>("RoR2/Base/moon2/moon2.asset").WaitForCompletion());
+            }
+
+            if (!enableOnVoidLocus)
+            {
+                forbiddenScenes.Add(Addressables.LoadAssetAsync<SceneDef>("RoR2/DLC1/voidstage/voidstage.asset").WaitForCompletion());
             }
 
             BuildItem();
