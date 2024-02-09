@@ -184,10 +184,17 @@ namespace Risky_Artifacts
 
             Cruelty.enabled = base.Config.Bind<bool>(new ConfigDefinition("Cruelty", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
+
             Cruelty.guaranteeSpecialBoss = base.Config.Bind<bool>(new ConfigDefinition("Cruelty", "Guarantee Special Boss"), false,
                 new ConfigDescription("Always apply Cruelty to special bosses.")).Value;
-            Cruelty.runEndBossMinAffixes = base.Config.Bind<int>(new ConfigDefinition("Cruelty", "Guarantee Special Boss - Elite Types"), 4,
-                new ConfigDescription("Elite Types to add to special bosses if Guarantee Special Boss is enabled. Set to 0 or below for no limit.")).Value;
+
+            Cruelty.runEndBossGeneralAffixes = base.Config.Bind<int>(new ConfigDefinition("Cruelty", "Guarantee Special Boss - Non-T2 Affixes"), 3,
+                new ConfigDescription("Elite Types to add to special bosses if Guarantee Special Boss is enabled. Set to 0 to disable tier from being picked. Set to -1 for no limit.")).Value;
+
+            Cruelty.runEndBossT2Affixes = base.Config.Bind<int>(new ConfigDefinition("Cruelty", "Guarantee Special Boss - T2 Affixes"), 0,
+                new ConfigDescription("Elite Types to add to special bosses if Guarantee Special Boss is enabled. Set to 0 to disable tier from being picked. Set to -1 for no limit.")).Value;
+
+
             Cruelty.costScaling = base.Config.Bind<Cruelty.ScalingMode>(new ConfigDefinition("Cruelty", "Cost Scaling"), Cruelty.ScalingMode.Additive,
                 new ConfigDescription("How should director cost scale?")).Value;
             Cruelty.damageScaling = base.Config.Bind<Cruelty.ScalingMode>(new ConfigDefinition("Cruelty", "Damage Scaling"), Cruelty.ScalingMode.None,

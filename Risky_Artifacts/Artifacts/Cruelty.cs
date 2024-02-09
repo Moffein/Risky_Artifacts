@@ -9,13 +9,15 @@ using System.Linq;
 
 namespace Risky_Artifacts.Artifacts
 {
+    //This is so scuffed.
     public class Cruelty
     {
-        public static List<EliteDef> BlacklistedElites = new List<EliteDef>();
+        public static List<EquipmentDef> BlacklistedElites = new List<EquipmentDef>();
         public static ArtifactDef artifact;
         public static bool enabled = true;
         public static bool guaranteeSpecialBoss = true;
-        public static int runEndBossMinAffixes = 3;
+        public static int runEndBossGeneralAffixes = 3;
+        public static int runEndBossT2Affixes = 0;
         public static ScalingMode damageScaling;
         public static ScalingMode healthScaling;
         public static ScalingMode costScaling;
@@ -27,7 +29,7 @@ namespace Risky_Artifacts.Artifacts
         public static float triggerChance = 25f;
         public static float failureChance = 25f;
 
-        private static EliteDef MalachiteDef, CelestineDef;
+        private static EquipmentDef MalachiteDef, CelestineDef;
 
         public enum ScalingMode
         {
@@ -73,7 +75,7 @@ namespace Risky_Artifacts.Artifacts
                 {
                     CharacterBody body = master.GetBody();
                     if (body)
-                        Cruelty.CreateCrueltyElite(body, master.inventory, Mathf.Infinity, 0, Cruelty.failureChance, true, Cruelty.runEndBossMinAffixes);
+                        Cruelty.CreateCrueltyElite(body, master.inventory, Mathf.Infinity, 0, Cruelty.failureChance, true, -1, true);
                 }
             }
         }
@@ -107,21 +109,27 @@ namespace Risky_Artifacts.Artifacts
             if (blightIndex != EquipmentIndex.None)
             {
                 EquipmentDef ed = EquipmentCatalog.GetEquipmentDef(blightIndex);
-                if (ed && ed.passiveBuffDef && ed.passiveBuffDef.eliteDef) BlacklistedElites.Add(ed.passiveBuffDef.eliteDef);
+                if (ed && ed.passiveBuffDef && ed.passiveBuffDef.eliteDef)
+                {
+                    BlacklistedElites.Add(ed);
+                }
             }
 
             EquipmentIndex perfectedIndex = EquipmentCatalog.FindEquipmentIndex("EliteLunarEquipment");
             if (perfectedIndex != EquipmentIndex.None)
             {
                 EquipmentDef ed = EquipmentCatalog.GetEquipmentDef(perfectedIndex);
-                if (ed && ed.passiveBuffDef && ed.passiveBuffDef.eliteDef) BlacklistedElites.Add(ed.passiveBuffDef.eliteDef);
+                if (ed && ed.passiveBuffDef && ed.passiveBuffDef.eliteDef)
+                {
+                    BlacklistedElites.Add(ed);
+                }
             }
 
-            MalachiteDef = RoR2Content.Elites.Poison;
-            CelestineDef = RoR2Content.Elites.Haunted;
+            MalachiteDef = RoR2Content.Equipment.AffixPoison;
+            CelestineDef = RoR2Content.Equipment.AffixHaunted;
         }
 
-        public static float CreateCrueltyElite(CharacterBody characterBody, Inventory inventory, float currentDirectorCredits, int cardCost, float failureChance, bool ignoreAvailableCheck, int affixCount = -1)
+        public static float CreateCrueltyElite(CharacterBody characterBody, Inventory inventory, float currentDirectorCredits, int cardCost, float failureChance, bool ignoreAvailableCheck, int affixCount = -1, bool isSpecial = false)
         {
             if (!characterBody || !inventory) return 0f;
             float availableCredits = currentDirectorCredits;
@@ -160,26 +168,46 @@ namespace Risky_Artifacts.Artifacts
             float deathRewardsMultiplier = 1f;  //Only used for multiplicative DR scaling
             float deathRewardsAdd = 0f; //Used for additive DR scaling
 
+            int maxT2 = isSpecial ? Cruelty.runEndBossT2Affixes : Cruelty.maxT2Affixes;
+            int maxGeneral = isSpecial ? Cruelty.runEndBossGeneralAffixes : Cruelty.maxGeneralAffixes;
+
             //Iterate through all elites, starting from the most expensive
             //Seems very inefficient
             List<CombatDirector.EliteTierDef> eliteTiersList = EliteAPI.GetCombatDirectorEliteTiers().ToList();
             eliteTiersList.Sort(Utils.CompareEliteTierCost);
             foreach (CombatDirector.EliteTierDef etd in eliteTiersList)
             {
-                List <EliteDef> availableElitesInTier = (ignoreAvailableCheck ? etd.eliteTypes.ToList() : etd.availableDefs).Where(x => !selectedElites.Contains(x) && !BlacklistedElites.Contains(x)).ToList();
-                Utils.Shuffle(availableElitesInTier);
+                //Super scuffed. Checking for the Elite Type directly didn't work.
+                isT2 = false;
+                if (etd.eliteTypes != null)
+                {
+                    foreach (EliteDef ed in etd.eliteTypes)
+                    {
+                        if (ed != null && (ed.eliteEquipmentDef == MalachiteDef || ed.eliteEquipmentDef == CelestineDef))
+                        {
+                            isT2 = true;
+                            break;
+                        }
+                    }
+                }
 
-                isT2 = availableElitesInTier.Contains(Cruelty.MalachiteDef) || availableElitesInTier.Contains(Cruelty.CelestineDef);
+                List<EliteDef> availableElitesInTier = null;
+                availableElitesInTier = (ignoreAvailableCheck && etd.eliteTypes != null ? etd.eliteTypes.ToList() : etd.availableDefs);
+
+                if (availableElitesInTier == null) continue;
+                availableElitesInTier = availableElitesInTier.Where(x => !selectedElites.Contains(x) && x != null).ToList();
+                Utils.Shuffle(availableElitesInTier);
 
                 foreach (EliteDef ed in availableElitesInTier)
                 {
-                    bool reachedTierLimit = (isT2 && Cruelty.maxT2Affixes >= 0 && t2Count >= Cruelty.maxT2Affixes) || (!isT2 && Cruelty.maxGeneralAffixes >= 0 && generalCount >= Cruelty.maxGeneralAffixes);
+                    bool reachedTierLimit = (isT2 && maxT2 >= 0 && t2Count >= maxT2) || (!isT2 && maxGeneral >= 0 && generalCount >= maxGeneral);
                     if (reachedTierLimit) break;
 
                     //Check if EliteDef has an associated buff and the character doesn't already have the buff.
                     bool isBuffValid = ed && ed.eliteEquipmentDef
                         && ed.eliteEquipmentDef.passiveBuffDef
                         && ed.eliteEquipmentDef.passiveBuffDef.isElite
+                        && !BlacklistedElites.Contains(ed.eliteEquipmentDef)
                         && !currentEliteBuffs.Contains(ed.eliteEquipmentDef.passiveBuffDef.buffIndex);
                     if (!isBuffValid) continue;
 
@@ -283,7 +311,6 @@ namespace Risky_Artifacts.Artifacts
                         }
                     }
                 }
-
             }
 
             int boostDamagecount = Mathf.FloorToInt((desiredDamageMult - currentDamageMult) / 0.1f);
