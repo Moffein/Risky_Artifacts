@@ -6,6 +6,7 @@ using UnityEngine.AddressableAssets;
 using System.Security.Cryptography;
 using UnityEngine.Networking;
 using System.Linq;
+using Risky_Artifacts.Artifacts.MonoBehaviours;
 
 namespace Risky_Artifacts.Artifacts
 {
@@ -265,8 +266,9 @@ namespace Risky_Artifacts.Artifacts
                         }
 
                         //Apply Elite Bonus
-                        currentEliteBuffs.Add(ed.eliteEquipmentDef.passiveBuffDef.buffIndex);
-                        characterBody.AddBuff(ed.eliteEquipmentDef.passiveBuffDef.buffIndex);
+                        BuffIndex buff = ed.eliteEquipmentDef.passiveBuffDef.buffIndex;
+                        currentEliteBuffs.Add(buff);
+                        characterBody.AddBuff(buff);
                         addedAffixes++;
                         if (isT2)
                         {

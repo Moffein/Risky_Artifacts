@@ -16,7 +16,7 @@ namespace Risky_Artifacts
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.2.15")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.3.0")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -185,7 +185,7 @@ namespace Risky_Artifacts
             Cruelty.enabled = base.Config.Bind<bool>(new ConfigDefinition("Cruelty", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;
 
-            Cruelty.guaranteeSpecialBoss = base.Config.Bind<bool>(new ConfigDefinition("Cruelty", "Guarantee Special Boss"), false,
+            Cruelty.guaranteeSpecialBoss = base.Config.Bind<bool>(new ConfigDefinition("Cruelty", "Guarantee Special Boss"), true,
                 new ConfigDescription("Always apply Cruelty to special bosses.")).Value;
 
             Cruelty.runEndBossGeneralAffixes = base.Config.Bind<int>(new ConfigDefinition("Cruelty", "Guarantee Special Boss - Non-T2 Affixes"), 3,
