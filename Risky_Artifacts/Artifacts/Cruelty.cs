@@ -173,7 +173,7 @@ namespace Risky_Artifacts.Artifacts
 
                 foreach (EliteDef ed in availableElitesInTier)
                 {
-                    bool reachedTierLimit = (isT2 && Cruelty.maxT2Affixes > 0 && t2Count >= Cruelty.maxT2Affixes) || (!isT2 && Cruelty.maxGeneralAffixes > 0 && generalCount >= Cruelty.maxGeneralAffixes);
+                    bool reachedTierLimit = (isT2 && Cruelty.maxT2Affixes >= 0 && t2Count >= Cruelty.maxT2Affixes) || (!isT2 && Cruelty.maxGeneralAffixes >= 0 && generalCount >= Cruelty.maxGeneralAffixes);
                     if (reachedTierLimit) break;
 
                     //Check if EliteDef has an associated buff and the character doesn't already have the buff.
