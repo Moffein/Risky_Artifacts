@@ -284,6 +284,32 @@ namespace Risky_Artifacts.Artifacts
                     return toReturn;
                 });
             };
+
+            IL.EntityStates.SpawnTeleporterState.OnEnter += (il) =>
+            {
+                ILCursor c = new ILCursor(il);
+                c.GotoNext(MoveType.After,
+                         x => x.MatchCall(typeof(NetworkServer), "get_active")
+                        );
+                c.Emit(OpCodes.Ldarg_0);
+                c.EmitDelegate<Func<bool, EntityStates.SpawnTeleporterState, bool>>((netActive, self) =>
+                {
+                    return netActive && !(self.characterBody && self.characterBody.inventory && self.characterBody.inventory.GetItemCount(HuntedStatItem) > 0);
+                });
+            };
+
+            IL.EntityStates.SpawnTeleporterState.OnExit += (il) =>
+            {
+                ILCursor c = new ILCursor(il);
+                c.GotoNext(MoveType.After,
+                         x => x.MatchCall(typeof(NetworkServer), "get_active")
+                        );
+                c.Emit(OpCodes.Ldarg_0);
+                c.EmitDelegate<Func<bool, EntityStates.SpawnTeleporterState, bool>>((netActive, self) =>
+                {
+                    return netActive && !(self.characterBody && self.characterBody.inventory && self.characterBody.inventory.GetItemCount(HuntedStatItem) > 0);
+                });
+            };
         }
 
         private void CharacterBody_onBodyInventoryChangedGlobal(CharacterBody body)
