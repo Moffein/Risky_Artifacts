@@ -471,7 +471,7 @@ namespace Risky_Artifacts.Artifacts
 
                 float diffMult = Run.instance ? Run.instance.difficultyCoefficient : 1f;
                 float calcXP = cost * diffMult;
-                float calcGold = cost * diffMult;
+                float calcGold = 2f * cost * diffMult;  //Wiki says that this should be x2
 
                 CombatDirector firstActiveCombatDirector = CombatDirector.instancesList.FirstOrDefault(director => director.isActiveAndEnabled);
                 if (firstActiveCombatDirector)
