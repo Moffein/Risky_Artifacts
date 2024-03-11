@@ -90,7 +90,7 @@ namespace Risky_Artifacts.Artifacts
         {
             orig(self);
 
-            if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex))
+            if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex) && !InfiniteTowerRun.instance)
             {
                 SceneDef sd = SceneCatalog.GetSceneDefForCurrentScene();
                 if (sd && sd.sceneType == SceneType.Stage && !blacklistedScenes.Contains(sd))

@@ -16,7 +16,7 @@ namespace Risky_Artifacts
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.3.3")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.3.4")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -125,7 +125,7 @@ namespace Risky_Artifacts
                 new ConfigDescription("Invasion spawns aren't forced to be elite if Honor is active.")).Value;
             Origin.impOnly = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Imps Only"), false,
                 new ConfigDescription("Only Imp Overlords spawn during invasions.")).Value;
-            Origin.disableParticles = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Disable Particles"), false,
+            Origin.disableParticles = base.Config.Bind<bool>(new ConfigDefinition("Origin", "Disable Particles"), true,
                 new ConfigDescription("Disables the Origin Boss particle effect.")).Value;
 
 
@@ -215,7 +215,7 @@ namespace Risky_Artifacts
                 new ConfigDescription("Allow all survivors to spawn, even if not listed in the Spawnlist.")).Value;
             Hunted.survivorsOnly = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Only Spawn Survivors"), false,
                 new ConfigDescription("Only spawn survivors when the artifact is active.")).Value;
-            Hunted.spawnInfoInput = base.Config.Bind<string>(new ConfigDefinition("Hunted", "Spawnlist"), "CommandoBody, Bandit2Body, ToolbotBody, MercBody, MageBody, LoaderBody, CrocoBody, RailgunnerBody, RocketSurvivorBody, CHEF, SniperClassicBody, MinerBody, HANDOverclockedBody, RobPaladinBody, SS2UChirrBody, SS2UCyborgBody, SS2UExecutionerBody, SS2UPyroBody, SS2UNemmandoBody, RobDriverBody, DeputyBody, MoffeinPilotBody",
+            Hunted.spawnInfoInput = base.Config.Bind<string>(new ConfigDefinition("Hunted", "Spawnlist"), "CommandoBody, Bandit2Body, ToolbotBody, MercBody, MageBody, LoaderBody, CrocoBody, RailgunnerBody, RocketSurvivorBody, CHEF, SniperClassicBody, MinerBody, HANDOverclockedBody, RobPaladinBody, SS2UChirrBody, SS2UCyborgBody, SS2UExecutionerBody, SS2UPyroBody, SS2UNemmandoBody, SS2UNucleatorBody, RobDriverBody, DeputyBody, MoffeinPilotBody",
                 new ConfigDescription("List of bodies to be added. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost:HPMult(float):DamageMult(float)")).Value;
             Hunted.nerfEngiTurrets = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Nerf Engi Turrets"), true,
                 new ConfigDescription("Engi Turrets receive no health boost.")).Value;
@@ -231,7 +231,7 @@ namespace Risky_Artifacts
                 new ConfigDescription("Disable health regeneration for Hunted Survivors.")).Value;
             Hunted.directorCost = base.Config.Bind<int>(new ConfigDefinition("Hunted", "Director Cost"), 200,
                 new ConfigDescription("Default director cost for Hunted survivors.")).Value;
-            Hunted.useOverlay = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Overlay Texture"), true,
+            Hunted.useOverlay = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Overlay Texture"), false,
                 new ConfigDescription("Hunted survivors use the Vengeance texture.")).Value;
             Hunted.allowCruelty = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Allow Cruelty"), true,
                 new ConfigDescription("Hunted survivors can be affected by Cruelty.")).Value;
