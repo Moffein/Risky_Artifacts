@@ -492,7 +492,7 @@ namespace Risky_Artifacts.Artifacts
                 dr.bossPickup = new SerializablePickupIndex { pickupName = "" };
 
                 //Exclude player team as a jank way of letting Chirr minion loadouts persist. Probably need to change this on Chirr's end as well to save loadout.
-                if ((Hunted.randomizeLoadout || Hunted.randomizeSkin)
+                if (NetworkServer.active && (Hunted.randomizeLoadout || Hunted.randomizeSkin)
                     && !body.isPlayerControlled && isNotPlayerTeam && body.master && !body.master.GetComponent<MasterRandomizedLoadoutMarker>())
                 {
                     body.master.gameObject.AddComponent<MasterRandomizedLoadoutMarker>();
@@ -512,6 +512,7 @@ namespace Risky_Artifacts.Artifacts
                         }
                     }
 
+                    body.master.SetLoadoutServer(body.master.loadout);
                     body.master.Respawn(body.footPosition, body.transform.rotation);
                 }
             }
