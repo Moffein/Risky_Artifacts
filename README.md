@@ -7,9 +7,10 @@ Adds 10 artifacts to ruin your run with.
 	- Invaders drop items when killed, with a chance to drop their respective boss item.
 	- Boss spawn count scales based on playercount and loop count.
 	- Config allows for Classic Origin, where only Imp Overlords spawn.
+	- **Spoiler:** <details>Beads of Fealty increases invader count.</details>
 
 - **Artifact of Arrogance**
-	- Mountain Shrines are permanent.
+	- Mountain Shrines are permanent. A Mountain Shrine is guaranteed to spawn on each stage.
 	
 - **Artifact of Expansion**
 	- Teleporter radius is mapwide, but takes longer to charge.
@@ -27,7 +28,6 @@ Adds 10 artifacts to ruin your run with.
 - **Artifact of the Phantom**
 	- The Phantom King of Nothing hunts you down if you spend too long on a stage.
 		- Spawns after spending 4.5min-6min on a stage.
-		- 12000 HP, 200% damage
 		- Immune to Void Fog and fall damage.
 		- Can die to Void Reaver bubbles.
 		- Drops an Irradiant Pearl and 5 Lunar Coins when killed.

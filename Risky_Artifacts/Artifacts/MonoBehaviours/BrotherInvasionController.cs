@@ -22,6 +22,12 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
         private float stopwatch;
         private float invasionTime;
 
+        public static bool useAdaptiveArmor = false;
+        public static bool useStatOverride = false;
+        public static float minHpMult = 4f;
+        public static float hpMultOverride = 12f;
+        public static float damageMultOverride = 3f;
+
         private bool artifactIsEnabled
         {
             get
@@ -105,19 +111,30 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                             resultMaster.inventory.RemoveItem(RoR2Content.Items.InvadingDoppelganger);
                             resultMaster.inventory.GiveItem(RoR2Content.Items.TeleportWhenOob);
                             resultMaster.inventory.GiveItem(BrotherInvasion.BrotherInvasionBonusItem);
-                            resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
-                            if (resultMaster.inventory.GetItemCount(RoR2Content.Items.UseAmbientLevel) <= 0)
-                            {
-                                resultMaster.inventory.GiveItem(RoR2Content.Items.UseAmbientLevel);
-                            }
+                            if (useAdaptiveArmor) resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
+                            if (resultMaster.inventory.GetItemCount(RoR2Content.Items.UseAmbientLevel) <= 0) resultMaster.inventory.GiveItem(RoR2Content.Items.UseAmbientLevel);
 
                             if (RunArtifactManager.instance.IsArtifactEnabled(RoR2Content.Artifacts.MonsterTeamGainsItems) && directorSpawnRequest.teamIndexOverride != TeamIndex.Monster)
                             {
                                 resultMaster.inventory.AddItemsFrom(RoR2.Artifacts.MonsterTeamGainsItemsArtifactManager.monsterTeamInventory);
                             }
 
-                            float hpMult = 12f; //12f for OL Worm HP
-                            float damageMult = 3f;
+                            float hpMult = 1f;
+                            float damageMult = 1f;
+
+                            if (useStatOverride)
+                            {
+                                hpMult = hpMultOverride;
+                                damageMult = damageMultOverride;
+                            }
+                            else
+                            {
+                                hpMult += Run.instance.difficultyCoefficient / 2.5f;
+                                damageMult += Run.instance.difficultyCoefficient / 30f;
+                                int playerFactor = Mathf.Max(1, Run.instance.livingPlayerCount);
+                                hpMult *= Mathf.Pow((float)playerFactor, 0.5f);
+                                hpMult = Mathf.Max(minHpMult, hpMult);
+                            }
 
                             EliteDef selectedElite = null;
                             bool honorEnabled = CombatDirector.IsEliteOnlyArtifactActive();
