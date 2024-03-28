@@ -76,6 +76,10 @@ Icons for Conformity, Arrogance, Expansion, Origin - KoobyKarasu
 
 Icon for The Hunted - Thingw
 
+Cruelty - RyanPallesen's FloodWarning Artifacts
+
+## Translation Credits
+
 Chinese Translation - JunJun_w
 
 Ukrainian Translation - Damglador
@@ -84,4 +88,4 @@ Spanish Translation - Juhnter
 
 Portuguese Translation - Kauzok
 
-Cruelty - RyanPallesen's FloodWarning Artifacts
+Russian Translation - Lecarde

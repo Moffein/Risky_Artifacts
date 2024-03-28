@@ -16,7 +16,7 @@ namespace Risky_Artifacts
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.3.4")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.3.5")]
     [R2API.Utils.R2APISubmoduleDependency( nameof(RecalculateStatsAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(ItemAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
@@ -194,6 +194,10 @@ namespace Risky_Artifacts
             Cruelty.runEndBossT2Affixes = base.Config.Bind<int>(new ConfigDefinition("Cruelty", "Guarantee Special Boss - T2 Affixes"), 0,
                 new ConfigDescription("Elite Types to add to special bosses if Guarantee Special Boss is enabled. Set to 0 to disable tier from being picked. Set to -1 for no limit.")).Value;
 
+            Cruelty.triggerChance = base.Config.Bind<float>(new ConfigDefinition("Cruelty", "Trigger Chance"), 25f,
+                new ConfigDescription("Chance for Cruelty to be applied to an enemy. Set to 100 to make it always apply.")).Value;
+            Cruelty.failureChance = base.Config.Bind<float>(new ConfigDefinition("Cruelty", "Failure Chance"), 25f,
+                new ConfigDescription("Chance for Cruelty to stop after each new affix. Set to 0 to make it always attempt to add as many affixes as possible.")).Value;
 
             Cruelty.costScaling = base.Config.Bind<Cruelty.ScalingMode>(new ConfigDefinition("Cruelty", "Cost Scaling"), Cruelty.ScalingMode.Additive,
                 new ConfigDescription("How should director cost scale?")).Value;
