@@ -242,14 +242,20 @@ namespace Risky_Artifacts
                 new ConfigDescription("Default damage multiplier for Hunted survivors. Vengeance is 0.1")).Value;
             Hunted.disableRegen = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Stats - Disable Regen"), true,
                 new ConfigDescription("Disable health regeneration for Hunted Survivors.")).Value;
-            Hunted.directorCost = base.Config.Bind<int>(new ConfigDefinition("Hunted", "Director Cost"), 100,
+            Hunted.directorCost = base.Config.Bind<int>(new ConfigDefinition("Hunted", "Director Cost"), 160,
                 new ConfigDescription("Default director cost for Hunted survivors.")).Value;
             Hunted.useOverlay = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Overlay Texture"), false,
                 new ConfigDescription("Hunted survivors use the Vengeance texture.")).Value;
             Hunted.allowCruelty = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Allow Cruelty"), true,
                 new ConfigDescription("Hunted survivors can be affected by Cruelty.")).Value;
             Hunted.allowElite = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Allow Elites"), true,
-                new ConfigDescription("Hunted survivors can be Elites. Disabling this preents them from being affected by Cruelty.")).Value;
+                new ConfigDescription("Hunted survivors can be Elites. Disabling this prevents them from being affected by Cruelty.")).Value;
+
+            Hunted.randomizeSkin = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Randomize Skin"), true,
+                new ConfigDescription("Hunted survivors use a random skin.")).Value;
+
+            Hunted.randomizeLoadout = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Randomize Loadout"), true,
+                new ConfigDescription("Hunted survivors use a random loadout.")).Value;
 
             Universe.enabled = base.Config.Bind<bool>(new ConfigDefinition("Universe", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;

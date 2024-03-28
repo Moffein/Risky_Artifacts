@@ -312,11 +312,6 @@ namespace Risky_Artifacts.Artifacts
                 {
                     itemDef = UniverseScriptedEncounterStatItem,
                     count = 1
-                },
-                new ItemCountPair()
-                {
-                    itemDef = RoR2Content.Items.AdaptiveArmor,
-                    count = 1
                 }
             };
             brotherHurtCard.eliteRules = mithrixHurtEliteRules;

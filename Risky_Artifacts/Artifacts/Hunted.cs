@@ -1,4 +1,5 @@
-﻿using Mono.Cecil.Cil;
+﻿using IL.RoR2.Skills;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
 using RoR2;
@@ -33,6 +34,9 @@ namespace Risky_Artifacts.Artifacts
         public static bool enabled = true;
         public static ArtifactDef artifact;
         public static ItemDef HuntedStatItem;
+
+        public static bool randomizeLoadout = true;
+        public static bool randomizeSkin = true;
 
         public static float categoryWeight = 1f;
         public static float healthMult = 4f;
@@ -457,8 +461,9 @@ namespace Risky_Artifacts.Artifacts
             origImmuneToExecute = body && body.bodyFlags.HasFlag(CharacterBody.BodyFlags.ImmuneToExecutes);
             if (origImmuneToExecute) body.bodyFlags &= ~CharacterBody.BodyFlags.ImmuneToExecutes;
 
+            bool isNotPlayerTeam = body.teamComponent && body.teamComponent.teamIndex != TeamIndex.Player;
             DeathRewards dr = body.GetComponent<DeathRewards>();
-            if (!dr && body.teamComponent && body.teamComponent.teamIndex != TeamIndex.Player)
+            if (!dr && isNotPlayerTeam)
             {
                 dr = body.gameObject.AddComponent<DeathRewards>();
                 dr.logUnlockableDef = null;
@@ -485,6 +490,30 @@ namespace Risky_Artifacts.Artifacts
                 dr.goldReward = (uint)Mathf.Max(1, Mathf.FloorToInt(calcGold));
 
                 dr.bossPickup = new SerializablePickupIndex { pickupName = "" };
+
+                //Exclude player team as a jank way of letting Chirr minion loadouts persist. Probably need to change this on Chirr's end as well to save loadout.
+                if ((Hunted.randomizeLoadout || Hunted.randomizeSkin)
+                    && !body.isPlayerControlled && isNotPlayerTeam && body.master && !body.master.GetComponent<MasterRandomizedLoadoutMarker>())
+                {
+                    body.master.gameObject.AddComponent<MasterRandomizedLoadoutMarker>();
+
+                    if (Hunted.randomizeSkin)
+                    {
+                        body.master.loadout.bodyLoadoutManager.SetSkinIndex(body.bodyIndex, (uint)UnityEngine.Random.Range(0, SkinCatalog.GetBodySkinCount(body.bodyIndex)));
+                    }
+
+                    if (Hunted.randomizeLoadout)
+                    {
+                        int skillSlotCountForBody = Loadout.BodyLoadoutManager.GetSkillSlotCountForBody(body.bodyIndex);
+                        for (int i = 0; i < skillSlotCountForBody; i++)
+                        {
+                            int variantCount = Loadout.BodyLoadoutManager.allBodyInfos[(int)body.bodyIndex].prefabSkillSlots[i].skillFamily.variants.Length;
+                            body.master.loadout.bodyLoadoutManager.SetSkillVariant(body.bodyIndex, i, (uint)UnityEngine.Random.Range(0, variantCount));
+                        }
+                    }
+
+                    body.master.Respawn(body.footPosition, body.transform.rotation);
+                }
             }
         }
 
@@ -493,4 +522,7 @@ namespace Risky_Artifacts.Artifacts
             if (origImmuneToExecute && body) body.bodyFlags |= CharacterBody.BodyFlags.ImmuneToExecutes;
         }
     }
+
+    //Jank. When Hunted item is added, randomize master loadout if they don't have this.
+    public class MasterRandomizedLoadoutMarker : MonoBehaviour {}
 }
