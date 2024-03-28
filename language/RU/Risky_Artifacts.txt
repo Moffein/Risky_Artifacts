@@ -1,0 +1,65 @@
+{
+	strings:
+	{
+	"RISKYARTIFACTS_WARFARE_NAME" : "Артефакт марша",
+	"RISKYARTIFACTS_WARFARE_DESC" : "Монстры получают значтельную прибавку к скорости передвижения, скорости атаки и скорости исходящих снарядов.",
+	
+	"RISKYARTIFACTS_ARROGANCE_NAME" : "Артефакт высокомерия",
+	"RISKYARTIFACTS_ARROGANCE_DESC" : "Эффекты Святилищ Горы не исчезают при переходе на следующий уровень.",
+	
+	"RISKYARTIFACTS_CONFORMITY_NAME" : "Артефакт годности",
+	"RISKYARTIFACTS_CONFORMITY_DESC" : "3D-принтеры и Переработчики не будут появляться.",
+	"RISKYARTIFACTS_CONFORMITY_DESC_NOPRINTERS" : "3D-принтеры не будут появляться.",
+	"RISKYARTIFACTS_CONFORMITY_DESC_NOSCRAPPERS" : "Переработчики не будут появляться.",
+	
+	"RISKYARTIFACTS_ORIGIN_NAME" : "Артефакт порождения",
+	"RISKYARTIFACTS_ORIGIN_DESC" : "Боссы осаждают карту каждые 10 минут.",
+	"RISKYARTIFACTS_ORIGIN_DESC_IMPONLY" : "Владыки бесов осаждают карту каждые 10 минут.",
+	"RISKYARTIFACTS_ORIGIN_SUBTITLENAMETOKEN" : "Вернувшийся",
+	"RISKYARTIFACTS_ORIGIN_MODIFIER" : " Страж",
+	
+	"RISKYARTIFACTS_EXPANSION_NAME" : "Артефакт захвата",
+	"RISKYARTIFACTS_EXPANSION_DESC" : "Зона Телепорта покрывает всю карту, но скорость его зарядки уменьшена, а цены на всё - увеличены.",
+	"RISKYARTIFACTS_EXPANSION_DESC_NOPRICEINCREASE" : "Зона Телепорта покрывает всю карту, но скорость его зарядки уменьшена.",
+	
+	"RISKYARTIFACTS_PRIMORDIAL_NAME" : "Артефакт первородства",
+	"RISKYARTIFACTS_PRIMORDIAL_DESC" : "Древний телепорт появляется на каждом уровне цикла.",
+	
+	"RISKYARTIFACTS_BROTHERINVASION_NAME" : "Артефакт призрака",
+	"RISKYARTIFACTS_BROTHERINVASION_DESC" : "Призрачный Король без королевства начинает преследовать вас, если вы задерживаетесь на уровне.",
+	"RISKYARTIFACTS_BROTHERINVASION_SUBTITLENAMETOKEN" : "Наваждение",
+	"RISKYARTIFACTS_BROTHERINVASION_MODIFIER" : "Призрачный ",
+	
+	"RISKYARTIFACTS_CRUELTY_NAME" : "Артефакт жестокости",
+	"RISKYARTIFACTS_CRUELTY_DESC" : "Враги могут иметь несколько элитных признаков одновременно.",
+	"RISKYARTIFACTS_CRUELTY_DESC_MULT" : "Враги могут иметь несколько элитных признаков, экспоненциально усиливающих друг друга, одновременно.",
+	
+	"RISKYARTIFACTS_HUNTED_NAME" : "Артефакт преследования",
+	"RISKYARTIFACTS_HUNTED_DESC" : "Выжившие могут появиться в качестве врагов.",
+	
+	"RISKYARTIFACTS_UNIVERSE_NAME" : "Артефакт вселенной",
+	"RISKYARTIFACTS_UNIVERSE_DESC" : "Любые монстры могут появиться на любом уровне.",
+	
+	//Hidden Items, not visible in normal gameplay.
+	"RISKYARTIFACTS_ORIGINBONUSITEM_NAME" : "Право по рождению",
+	"RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP" : "Здесь начал свой путь ваш отряд.",
+	"RISKYARTIFACTS_ORIGINBONUSITEM_DESC" : "Увеличивает <style=cIsUtility>скорость передвижения</style>, <style=cIsDamage>скорость атаки</style> и <style=cIsDamage>наносимый урон</style>, а также <style=cIsUtility>ускоряет перезарядку навыков</style>.",
+	
+	
+	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_NAME" : "Призрачный бонус",
+	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_PICKUP" : "Вы будто увидели живого мертвеца.",
+	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_DESC" : "Вы похожи на призрака. Вам  <style=cIsUtility>больше не страшен туман пустоты</style>.",
+	
+	"RISKYARTIFACTS_HUNTEDSTATITEM_NAME" : "Модификатор преследования",
+	"RISKYARTIFACTS_HUNTEDSTATITEM_PICKUP" : "Охотник становится жертвой.",
+	"RISKYARTIFACTS_HUNTEDSTATITEM_DESC" : "<style=cIsHealing>Увеличивает максимальный запас здоровья</style>... <style=cIsHealth>Но уменьшает наносимый урон</style>.",
+	
+	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_NAME" : "Модификатор заскриптованной сцены",
+	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_PICKUP" : "Получите прибавки к характеристикам, которыми обладают заскриптованные боссы.",
+	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_DESC" : "Получите прибавки к характеристикам, которыми обладают заскриптованные боссы.",
+	
+	"RISKYARTIFACTS_UNIVERSEDRONESTATITEM_NAME" : "Модификатор вселенского дрона",
+	"RISKYARTIFACTS_UNIVERSEDRONESTATITEM_PICKUP" : "<style=cIsHealth>Уменьшает наносимый урон</style>.",
+	"RISKYARTIFACTS_UNIVERSEDRONESTATITEM_DESC" : "<style=cIsHealth>Уменьшает наносимый урон</style>.",
+	}
+}
