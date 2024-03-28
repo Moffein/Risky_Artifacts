@@ -227,13 +227,13 @@ namespace Risky_Artifacts
                 new ConfigDescription("Percent heal effects are unaffected by the increased HP multiplier.")).Value;
             Hunted.categoryWeight = base.Config.Bind<float>(new ConfigDefinition("Hunted", "Stats - Director Category Weight"), 1f,
                 new ConfigDescription("Weight of the Hunted survivor director category. Usually it's 2 for Bosses and Minibosses, 3-4 for Common enemies.")).Value;
-            Hunted.healthMult = base.Config.Bind<float>(new ConfigDefinition("Hunted", "Stats - Health Multiplier"), 10f,
+            Hunted.healthMult = base.Config.Bind<float>(new ConfigDefinition("Hunted", "Stats - Health Multiplier"), 4f,
                 new ConfigDescription("Default health multiplier for Hunted survivors. Vengeance is 10")).Value;
             Hunted.damageMult = base.Config.Bind<float>(new ConfigDefinition("Hunted", "Stats - Damage Multiplier"), 0.2f,
                 new ConfigDescription("Default damage multiplier for Hunted survivors. Vengeance is 0.1")).Value;
             Hunted.disableRegen = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Stats - Disable Regen"), true,
                 new ConfigDescription("Disable health regeneration for Hunted Survivors.")).Value;
-            Hunted.directorCost = base.Config.Bind<int>(new ConfigDefinition("Hunted", "Director Cost"), 200,
+            Hunted.directorCost = base.Config.Bind<int>(new ConfigDefinition("Hunted", "Director Cost"), 100,
                 new ConfigDescription("Default director cost for Hunted survivors.")).Value;
             Hunted.useOverlay = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Overlay Texture"), false,
                 new ConfigDescription("Hunted survivors use the Vengeance texture.")).Value;

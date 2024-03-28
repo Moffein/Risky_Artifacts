@@ -35,9 +35,9 @@ namespace Risky_Artifacts.Artifacts
         public static ItemDef HuntedStatItem;
 
         public static float categoryWeight = 1f;
-        public static float healthMult = 10f;
+        public static float healthMult = 4f;
         public static float damageMult = 0.2f;
-        public static int directorCost = 200;
+        public static int directorCost = 100;
 
         public Hunted()
         {
