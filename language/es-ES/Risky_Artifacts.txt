@@ -41,7 +41,6 @@
 	"RISKYARTIFACTS_UNIVERSE_DESC" : "Todos los monstruos pueden aparecer en todos los escenarios.",
 	
 	
-	//Hidden Items, not visible in normal gameplay.
 	"RISKYARTIFACTS_ORIGINBONUSITEM_NAME" : "Bonificación por origen",
 	"RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP" : "La fiesta empieza aquí.",
 	"RISKYARTIFACTS_ORIGINBONUSITEM_DESC" : "Aumenta <style=cIsUtility>velocidad de movimiento</style>, <style=cIsDamage>velocidad de daño</style> y <style=cIsDamage>daño</style>, y <style=cIsUtility>reduce el enfriamiento de las habilidades</style>.",

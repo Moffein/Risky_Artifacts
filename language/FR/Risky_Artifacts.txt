@@ -40,11 +40,9 @@
 	"RISKYARTIFACTS_UNIVERSE_NAME" : "Artéfact de l'Univers",
 	"RISKYARTIFACTS_UNIVERSE_DESC" : "Tous les monstres peuvent apparaître à toutes les étapes.",
 	
-	//Hidden Items, not visible in normal gameplay.
 	"RISKYARTIFACTS_ORIGINBONUSITEM_NAME" : "Bonus d'Origine",
 	"RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP" : "La fête commence ici.",
 	"RISKYARTIFACTS_ORIGINBONUSITEM_DESC" : "Augmente la <style=cIsUtility>vitesse de déplacement</style>, la <style=cIsDamage>vitesse d'attaque</style> et les <style=cIsDamage>dégâts</style>, et <style=cIsUtility>réduit les temps de recharge des compétences</style>.",
-	
 	
 	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_NAME" : "Bonus du Fantôme",
 	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_PICKUP" : "Tu as l'air d'avoir vu un fantôme.",

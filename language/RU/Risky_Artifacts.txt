@@ -40,11 +40,9 @@
 	"RISKYARTIFACTS_UNIVERSE_NAME" : "Артефакт вселенной",
 	"RISKYARTIFACTS_UNIVERSE_DESC" : "Любые монстры могут появиться на любом уровне.",
 	
-	//Hidden Items, not visible in normal gameplay.
 	"RISKYARTIFACTS_ORIGINBONUSITEM_NAME" : "Право по рождению",
 	"RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP" : "Здесь начал свой путь ваш отряд.",
 	"RISKYARTIFACTS_ORIGINBONUSITEM_DESC" : "Увеличивает <style=cIsUtility>скорость передвижения</style>, <style=cIsDamage>скорость атаки</style> и <style=cIsDamage>наносимый урон</style>, а также <style=cIsUtility>ускоряет перезарядку навыков</style>.",
-	
 	
 	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_NAME" : "Призрачный бонус",
 	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_PICKUP" : "Вы будто увидели живого мертвеца.",

@@ -34,11 +34,9 @@
 	"RISKYARTIFACTS_CRUELTY_DESC" : "Inimigos podem ter múltiplos tipos de elite.",
 	"RISKYARTIFACTS_CRUELTY_DESC_MULT" : "Inimigos podem ter múltiplos tipos de elite que se acumulam multiplicativamente.",
 	
-	//Hidden Items, not visible in normal gameplay.
 	"RISKYARTIFACTS_ORIGINBONUSITEM_NAME" : "Bônus de Origem",
 	"RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP" : "O grupo começa aqui.",
 	"RISKYARTIFACTS_ORIGINBONUSITEM_DESC" : "Aumenta a <style=cIsUtility>velocidade de movimento</style>, <style=cIsDamage>velocidade de ataque</style> e <style=cIsDamage>dano</style>, e <style=cIsUtility>reduz o tempo de recarga das habilidades</style>.",
-	
 	
 	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_NAME" : "Traço Espectral",
 	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_PICKUP" : "Você parece que viu um fantasma.",
