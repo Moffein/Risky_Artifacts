@@ -429,7 +429,12 @@ namespace Risky_Artifacts.Artifacts
                     c.EmitDelegate<Func<DirectorCardCategorySelection, DirectorCardCategorySelection>>(dccs =>
                     {
                         if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Universe.artifact) && !forbiddenScenes.Contains(SceneCatalog.GetSceneDefForCurrentScene()))
-                            return Universe.MonsterCardSelection;
+                        {
+                            //Make a copy so that the original list doesn't get modified.
+                            DirectorCardCategorySelection newDCCS = ScriptableObject.CreateInstance<DirectorCardCategorySelection>();
+                            newDCCS.CopyFrom(Universe.MonsterCardSelection);
+                            return newDCCS;
+                        }
                         return dccs;
                     });
                 }

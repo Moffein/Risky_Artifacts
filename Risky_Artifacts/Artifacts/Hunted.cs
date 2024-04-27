@@ -424,18 +424,40 @@ namespace Risky_Artifacts.Artifacts
         private void ClassicStageInfo_HandleMixEnemyArtifact(On.RoR2.ClassicStageInfo.orig_HandleMixEnemyArtifact orig, DirectorCardCategorySelection monsterCategories, Xoroshiro128Plus rng)
         {
             orig(monsterCategories, rng);
-            if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Hunted.artifact)) CreateHuntedCategory(monsterCategories);
+            CreateHuntedCategory(monsterCategories);
         }
 
         private static void CreateHuntedCategory(DirectorCardCategorySelection selection)
         {
             if (!selection) return;
+
             if (survivorsOnly)
             {
                 selection.categories = new DirectorCardCategorySelection.Category[0];
             }
-            selection.AddCategory("RiskyArtifactsHunted", Hunted.categoryWeight);
-            selection.categories[selection.categories.Length - 1].cards = DirectorCards.ToArray();
+            if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(Hunted.artifact))
+            {
+                bool categoryExists = false;
+                foreach (var cat in selection.categories)
+                {
+                    if (cat.name == "RiskyArtifactsHunted")
+                    {
+                        categoryExists = true;
+                        break;
+                    }
+                }
+
+                if (!categoryExists)
+                {
+                    selection.AddCategory("RiskyArtifactsHunted", Hunted.categoryWeight);
+                    selection.categories[selection.categories.Length - 1].cards = DirectorCards.ToArray();
+                }
+            }
+            else
+            {
+                //Make sure that Hunted Category is removed when artifact is disabled, just in case.
+                selection.categories = selection.categories.Where(cat => cat.name != "RiskyArtifactsHunted").ToArray();
+            }
         }
 
         //Used to construct spawncards when reading from config
