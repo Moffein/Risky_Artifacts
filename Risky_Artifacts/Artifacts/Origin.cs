@@ -510,13 +510,23 @@ namespace Risky_Artifacts.Artifacts
                     }
                     if (!alreadyHasPickup) options[0].pickupIndex = originalIndex;
 
-                    PickupDropletController.CreatePickupDroplet(new GenericPickupController.CreatePickupInfo
+                    GenericPickupController genericPickup = GenericPickupController.CreatePickup(new GenericPickupController.CreatePickupInfo
                     {
                         pickupIndex = PickupCatalog.FindPickupIndex(tier),
                         pickerOptions = options,
                         rotation = Quaternion.identity,
-                        prefabOverride = RiskyArtifactsPlugin.potentialPrefab
-                    }, position, Vector3.up * 20f);
+                        prefabOverride = RiskyArtifactsPlugin.potentialPrefab,
+                        position = position,
+                        
+                    });
+
+                    Rigidbody rigidBody = genericPickup.gameObject.GetComponent<Rigidbody>();
+                    if (rigidBody)
+                    {
+                        rigidBody.velocity = Vector3.up * 20f;
+                        rigidBody.AddTorque(UnityEngine.Random.Range(150f, 120f) * UnityEngine.Random.onUnitSphere);
+                    }
+
                 }
                 else
                 {
