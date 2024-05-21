@@ -146,7 +146,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
 
                         CharacterMaster characterMaster = CharacterMaster.readOnlyInstancesList[i];
                         CharacterBody cb = characterMaster.bodyInstanceObject.GetComponent<CharacterBody>();
-                        if (characterMaster.teamIndex == TeamIndex.Player
+                        if (cb && characterMaster.teamIndex == TeamIndex.Player
                             && characterMaster.playerCharacterMasterController
                             && cb && cb.healthComponent && cb.healthComponent.alive)
                         {
@@ -202,24 +202,27 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                 {
                                     combatSquad = UnityEngine.Object.Instantiate<GameObject>(LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/Encounters/ShadowCloneEncounter")).GetComponent<CombatSquad>();
                                 }*/
-                                combatSquad.AddMember(result.spawnedInstance.GetComponent<CharacterMaster>());
                                 CharacterMaster resultMaster = result.spawnedInstance.GetComponent<CharacterMaster>();
-                                if (resultMaster && resultMaster.inventory)
+                                if (resultMaster)
                                 {
-                                    resultMaster.inventory.GiveItem(Origin.OriginBonusItem);
-                                    resultMaster.inventory.RemoveItem(RoR2Content.Items.InvadingDoppelganger);
-                                    if (Origin.useAdaptiveArmor && run.stageClearCount >= 5)
+                                    combatSquad.AddMember(resultMaster);
+                                    if (resultMaster.inventory)
                                     {
-                                        resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
-                                    }
-                                    if (resultMaster.inventory.GetItemCount(RoR2Content.Items.UseAmbientLevel) <= 0)
-                                    {
-                                        resultMaster.inventory.GiveItem(RoR2Content.Items.UseAmbientLevel);
-                                    }
+                                        resultMaster.inventory.GiveItem(Origin.OriginBonusItem);
+                                        resultMaster.inventory.RemoveItem(RoR2Content.Items.InvadingDoppelganger);
+                                        if (Origin.useAdaptiveArmor && run.stageClearCount >= 5)
+                                        {
+                                            resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
+                                        }
+                                        if (resultMaster.inventory.GetItemCount(RoR2Content.Items.UseAmbientLevel) <= 0)
+                                        {
+                                            resultMaster.inventory.GiveItem(RoR2Content.Items.UseAmbientLevel);
+                                        }
 
-                                    if (RunArtifactManager.instance.IsArtifactEnabled(RoR2Content.Artifacts.MonsterTeamGainsItems) && directorSpawnRequest.teamIndexOverride != TeamIndex.Monster)
-                                    {
-                                        resultMaster.inventory.AddItemsFrom(RoR2.Artifacts.MonsterTeamGainsItemsArtifactManager.monsterTeamInventory);
+                                        if (RunArtifactManager.instance.IsArtifactEnabled(RoR2Content.Artifacts.MonsterTeamGainsItems) && directorSpawnRequest.teamIndexOverride != TeamIndex.Monster)
+                                        {
+                                            resultMaster.inventory.AddItemsFrom(RoR2.Artifacts.MonsterTeamGainsItemsArtifactManager.monsterTeamInventory);
+                                        }
                                     }
 
                                     OriginExtraDrops oed = resultMaster.GetComponent<OriginExtraDrops>();
