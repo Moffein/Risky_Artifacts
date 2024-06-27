@@ -1,0 +1,64 @@
+{
+	strings:
+	{
+	"RISKYARTIFACTS_WARFARE_NAME" : "전쟁의 유물",
+	"RISKYARTIFACTS_WARFARE_DESC" : "몬스터의 이동 속도, 공격 속도, 투사체 속도가 크게 증가합니다.",
+	
+	"RISKYARTIFACTS_ARROGANCE_NAME" : "오만의 유물",
+	"RISKYARTIFACTS_ARROGANCE_DESC" : "산의 신전 효과는 영구적입니다.",
+	
+	"RISKYARTIFACTS_CONFORMITY_NAME" : "적합성의 유물",
+	"RISKYARTIFACTS_CONFORMITY_DESC" : "3D 프린터와 스크래퍼가 더 이상 생성되지 않습니다..",
+	"RISKYARTIFACTS_CONFORMITY_DESC_NOPRINTERS" : "3D 프린터가 더 이상 스폰되지 않습니다.",
+	"RISKYARTIFACTS_CONFORMITY_DESC_NOSCRAPPERS" : "스크래퍼가 더 이상 생성되지 않습니다.",
+	
+	"RISKYARTIFACTS_ORIGIN_NAME" : "기원의 유물",
+	"RISKYARTIFACTS_ORIGIN_DESC" : "10분마다 보스 몬스터가 지도에 침입합니다.",
+	"RISKYARTIFACTS_ORIGIN_DESC_IMPONLY" : "임프 오버로드가 10분마다 지도에 침입합니다.",
+	"RISKYARTIFACTS_ORIGIN_SUBTITLENAMETOKEN" : "리클레이머",
+	"RISKYARTIFACTS_ORIGIN_MODIFIER" : " 선발대",
+	
+	"RISKYARTIFACTS_EXPANSION_NAME" : "확장의 유물",
+	"RISKYARTIFACTS_EXPANSION_DESC" : "텔레포터 구역은 지도 전체를 커버하지만 충전 속도가 감소하고 가격이 상승합니다.",
+	"RISKYARTIFACTS_EXPANSION_DESC_NOPRICEINCREASE" : "텔레포터 구역은 지도 전체를 커버하지만 충전 속도는 감소합니다.",
+	
+	"RISKYARTIFACTS_PRIMORDIAL_NAME" : "우선권의 유물",
+	"RISKYARTIFACTS_PRIMORDIAL_DESC" : "태초의 순간이동기는 루프 후 모든 스테이지에서 생성됩니다.",
+	
+	"RISKYARTIFACTS_BROTHERINVASION_NAME" : "유령의 유물",
+	"RISKYARTIFACTS_BROTHERINVASION_DESC" : "무의 유령 왕은 무대에서 너무 오래 머무르면 플레이어를 사냥합니다.",
+	"RISKYARTIFACTS_BROTHERINVASION_SUBTITLENAMETOKEN" : "유령",
+	"RISKYARTIFACTS_BROTHERINVASION_MODIFIER" : "팬텀",
+	
+	"RISKYARTIFACTS_CRUELTY_NAME" : "잔인함의 유물",
+	"RISKYARTIFACTS_CRUELTY_DESC" : "적은 여러 유형의 정예를 보유할 수 있습니다.",
+	"RISKYARTIFACTS_CRUELTY_DESC_MULT" : "적에게는 여러 정예 유형이 중첩되어 여러 번 중첩될 수 있습니다.",
+	
+	"RISKYARTIFACTS_HUNTED_NAME" : "사냥꾼의 유물",
+	"RISKYARTIFACTS_HUNTED_DESC" : "생존자는 적으로 스폰될 수 있습니다.",
+	
+	"RISKYARTIFACTS_UNIVERSE_NAME" : "우주의 유물",
+	"RISKYARTIFACTS_UNIVERSE_DESC" : "모든 스테이지에서 모든 몬스터가 생성됩니다.",
+	
+	"RISKYARTIFACTS_ORIGINBONUSITEM_NAME" : "원산지 보너스",
+	"RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP" : "여기서 파티가 시작됩니다.",
+	"RISKYARTIFACTS_ORIGINBONUSITEM_DESC" : "<style=cIsUtility>이동 속도 증가</style>, <style=cIsDamage>공격 속도</style> 및 <style=cIsDamage>데미지</style>, 및 <style=cIsUtility>스킬 재사용 대기시간 감소</style>.",
+	
+	
+	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_NAME" : "팬텀 보너스",
+	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_PICKUP" : "귀신을 본 것 같은 표정입니다.",
+	"RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_DESC" : "유령처럼 보이고 공허 안개에 면역이 되는 <style=cIsUtility>가 됩니다.</style>.",
+	
+	"RISKYARTIFACTS_HUNTEDSTATITEM_NAME" : "사냥 스탯 수정자",
+	"RISKYARTIFACTS_HUNTEDSTATITEM_PICKUP" : "사냥꾼이 사냥감이 되기도 합니다.",
+	"RISKYARTIFACTS_HUNTEDSTATITEM_DESC" : "<style=cIsHealing>최대 체력 증가</style>... <style=cIsHealth>하지만 피해를 줄입니다.</style>.",
+	
+	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_NAME" : "유니버스 스크립트 조우 스탯 수정자",
+	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_PICKUP" : "스크립트 보스가 사용하는 스탯 부스트를 획득하세요.",
+	"RISKYARTIFACTS_UNIVERSESCRIPTEDENCOUNTERSTATITEM_DESC" : "스크립트 보스가 사용하는 스탯 부스트를 획득하세요.",
+	
+	"RISKYARTIFACTS_UNIVERSEDRONESTATITEM_NAME" : "우주 드론 스탯 수정자",
+	"RISKYARTIFACTS_UNIVERSEDRONESTATITEM_PICKUP" : "<style=cIsHealth>피해 감소</style>.",
+	"RISKYARTIFACTS_UNIVERSEDRONESTATITEM_DESC" : "<style=cIsHealth>피해 감소</style>.",
+	}
+}
