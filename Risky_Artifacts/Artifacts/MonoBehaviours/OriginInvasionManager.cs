@@ -145,7 +145,10 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                         if (!(spawnCredits > 0f && run.livingPlayerCount > 0)) break;
 
                         CharacterMaster characterMaster = CharacterMaster.readOnlyInstancesList[i];
-                        CharacterBody cb = characterMaster.bodyInstanceObject.GetComponent<CharacterBody>();
+                        GameObject bodyInstanceObject = characterMaster.bodyInstanceObject;
+
+                        if (!bodyInstanceObject) continue;
+                        CharacterBody cb = bodyInstanceObject.GetComponent<CharacterBody>();
                         if (cb && characterMaster.teamIndex == TeamIndex.Player
                             && characterMaster.playerCharacterMasterController
                             && cb && cb.healthComponent && cb.healthComponent.alive)
@@ -202,53 +205,56 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                 {
                                     combatSquad = UnityEngine.Object.Instantiate<GameObject>(LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/Encounters/ShadowCloneEncounter")).GetComponent<CombatSquad>();
                                 }*/
-                                CharacterMaster resultMaster = result.spawnedInstance.GetComponent<CharacterMaster>();
-                                if (resultMaster)
+                                if (result.spawnedInstance)
                                 {
-                                    combatSquad.AddMember(resultMaster);
-                                    if (resultMaster.inventory)
+                                    CharacterMaster resultMaster = result.spawnedInstance.GetComponent<CharacterMaster>();
+                                    if (resultMaster)
                                     {
-                                        resultMaster.inventory.GiveItem(Origin.OriginBonusItem);
-                                        resultMaster.inventory.RemoveItem(RoR2Content.Items.InvadingDoppelganger);
-                                        if (Origin.useAdaptiveArmor && run.stageClearCount >= 5)
+                                        combatSquad.AddMember(resultMaster);
+                                        if (resultMaster.inventory)
                                         {
-                                            resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
-                                        }
-                                        if (resultMaster.inventory.GetItemCount(RoR2Content.Items.UseAmbientLevel) <= 0)
-                                        {
-                                            resultMaster.inventory.GiveItem(RoR2Content.Items.UseAmbientLevel);
-                                        }
-
-                                        if (RunArtifactManager.instance.IsArtifactEnabled(RoR2Content.Artifacts.MonsterTeamGainsItems) && directorSpawnRequest.teamIndexOverride != TeamIndex.Monster)
-                                        {
-                                            resultMaster.inventory.AddItemsFrom(RoR2.Artifacts.MonsterTeamGainsItemsArtifactManager.monsterTeamInventory);
-                                        }
-                                    }
-
-                                    OriginExtraDrops oed = resultMaster.GetComponent<OriginExtraDrops>();
-                                    if (!oed)
-                                    {
-                                        oed = resultMaster.gameObject.AddComponent<OriginExtraDrops>();
-                                        if (resultMaster.bodyPrefab)
-                                        {
-                                            DeathRewards dr = resultMaster.bodyPrefab.GetComponent<DeathRewards>();
-                                            if (dr)
+                                            resultMaster.inventory.GiveItem(Origin.OriginBonusItem);
+                                            resultMaster.inventory.RemoveItem(RoR2Content.Items.InvadingDoppelganger);
+                                            if (Origin.useAdaptiveArmor && run.stageClearCount >= 5)
                                             {
-                                                oed.bossDrop = (PickupIndex)dr.bossPickup;
+                                                resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
+                                            }
+                                            if (resultMaster.inventory.GetItemCount(RoR2Content.Items.UseAmbientLevel) <= 0)
+                                            {
+                                                resultMaster.inventory.GiveItem(RoR2Content.Items.UseAmbientLevel);
+                                            }
+
+                                            if (RunArtifactManager.instance.IsArtifactEnabled(RoR2Content.Artifacts.MonsterTeamGainsItems) && directorSpawnRequest.teamIndexOverride != TeamIndex.Monster)
+                                            {
+                                                resultMaster.inventory.AddItemsFrom(RoR2.Artifacts.MonsterTeamGainsItemsArtifactManager.monsterTeamInventory);
                                             }
                                         }
-                                        oed.cost = cost;
-                                        if (spawnCard == Origin.wormCard)
-                                        {
-                                            oed.teleportItem = true;
-                                        }
-                                    }
 
-                                    if (selectedEliteTier != null && selectedElite != null)
-                                    {
-                                        resultMaster.inventory.GiveEquipmentString(selectedElite.eliteEquipmentDef.name);
-                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, (int)((selectedElite.healthBoostCoefficient - 1f) * 10f));
-                                        resultMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, (int)((selectedElite.damageBoostCoefficient - 1f) * 10f));
+                                        OriginExtraDrops oed = resultMaster.GetComponent<OriginExtraDrops>();
+                                        if (!oed)
+                                        {
+                                            oed = resultMaster.gameObject.AddComponent<OriginExtraDrops>();
+                                            if (resultMaster.bodyPrefab)
+                                            {
+                                                DeathRewards dr = resultMaster.bodyPrefab.GetComponent<DeathRewards>();
+                                                if (dr)
+                                                {
+                                                    oed.bossDrop = (PickupIndex)dr.bossPickup;
+                                                }
+                                            }
+                                            oed.cost = cost;
+                                            if (spawnCard == Origin.wormCard)
+                                            {
+                                                oed.teleportItem = true;
+                                            }
+                                        }
+
+                                        if (selectedEliteTier != null && selectedElite != null)
+                                        {
+                                            resultMaster.inventory.GiveEquipmentString(selectedElite.eliteEquipmentDef.name);
+                                            resultMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, (int)((selectedElite.healthBoostCoefficient - 1f) * 10f));
+                                            resultMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, (int)((selectedElite.damageBoostCoefficient - 1f) * 10f));
+                                        }
                                     }
                                 }
                             }));
