@@ -68,7 +68,7 @@ namespace Risky_Artifacts.Artifacts
             On.RoR2.Stage.Start += (orig, self) =>
             {
                 firstIdleToActive = true;
-                orig(self);
+                return orig(self);
             };
 
             //Suppresses the chat message?

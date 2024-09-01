@@ -264,7 +264,7 @@ namespace Risky_Artifacts.Artifacts
                 };
             }
 
-            On.RoR2.HealthComponent.TakeDamage += BlockFallDamageAndVoidDamage;
+            On.RoR2.HealthComponent.TakeDamageProcess += BlockFallDamageAndVoidDamage;
             On.RoR2.CharacterBody.RecalculateStats += ReduceHuntedDamage;
             RecalculateStatsAPI.GetStatCoefficients += SetHuntedHealth;
             if (Hunted.nerfPercentHeal)On.RoR2.HealthComponent.HealFraction += ReduceHuntedPercentHeal;
@@ -321,7 +321,7 @@ namespace Risky_Artifacts.Artifacts
             body.AddItemBehavior<HuntedItemBehavior>(body.inventory.GetItemCount(Hunted.HuntedStatItem));
         }
 
-        private void BlockFallDamageAndVoidDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        private void BlockFallDamageAndVoidDamage(On.RoR2.HealthComponent.orig_TakeDamageProcess orig, HealthComponent self, DamageInfo damageInfo)
         {
             if (NetworkServer.active)
             {
@@ -331,7 +331,7 @@ namespace Risky_Artifacts.Artifacts
                     bool isVoidDamage = !damageInfo.attacker && !damageInfo.inflictor
                         && damageInfo.damageColorIndex == DamageColorIndex.Void
                         && damageInfo.damageType == (DamageType.BypassArmor | DamageType.BypassBlock);
-                    if (damageInfo.damageType.HasFlag(DamageType.FallDamage) || isVoidDamage)
+                    if (damageInfo.damageType.damageType.HasFlag(DamageType.FallDamage) || isVoidDamage)
                     {
                         damageInfo.damage = 0f;
                         damageInfo.rejected = true;

@@ -24,6 +24,11 @@ namespace Risky_Artifacts.Artifacts
         public static ItemDef UniverseScriptedEncounterStatItem, UniverseDroneStatItem;
         public static Dictionary<BodyIndex, int> DirectorCosts = new Dictionary<BodyIndex, int>();
 
+        public static SpawnCard.EliteRules fsEliteRules = SpawnCard.EliteRules.ArtifactOnly;
+        public static int fsMinStages = 5;
+        public static int fsCost = 6000;
+        public static bool fsAllowElite = true;
+
         public static SpawnCard.EliteRules mithrixEliteRules = SpawnCard.EliteRules.ArtifactOnly;
         public static int mithrixMinStages = 5;
         public static int mithrixCost = 4000;
@@ -88,6 +93,12 @@ namespace Risky_Artifacts.Artifacts
                 category = MonsterCategory.LunarScav
             };
 
+            public static CategoryInfo CatFalseSonBoss = new CategoryInfo()
+            {
+                weight = 0f,
+                category = MonsterCategory.FalseSonBoss
+            };
+
             public static CategoryInfo CatMithrix = new CategoryInfo()
             {
                 weight = 0f,
@@ -136,7 +147,7 @@ namespace Risky_Artifacts.Artifacts
 
         public enum MonsterCategory
         {
-            Basic_Monsters, Minibosses, Champions, Special, LunarScav, Mithrix, MithrixHurt, Voidling, Drone, Newt
+            Basic_Monsters, Minibosses, Champions, Special, LunarScav, Mithrix, MithrixHurt, Voidling, Drone, Newt, FalseSonBoss
         }
 
         public Universe()
@@ -179,6 +190,7 @@ namespace Risky_Artifacts.Artifacts
             Categories.CatDrone.cards = ParseSpawnlist(Universe.InputInfo.Drone, Categories.CatDrone.category);
 
             //Special cards are separate so they don't get overwritten
+            BuildCatFalseSonBoss();
             BuildCatMithrix();
             BuildCatMithrixHurt();
             BuildCatVoidling();
@@ -249,6 +261,54 @@ namespace Risky_Artifacts.Artifacts
             }
         }
 
+        private void BuildCatFalseSonBoss()
+        {
+            CharacterSpawnCard fsCardOrig = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC2/FalseSonBoss/cscFalseSonBoss.asset").WaitForCompletion();
+
+            CharacterSpawnCard fsCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
+            fsCard.prefab = fsCardOrig.prefab;
+            fsCard.directorCreditCost = fsCost;
+            fsCard.itemsToGrant = new ItemCountPair[]
+            {
+                new ItemCountPair()
+                {
+                    itemDef = RoR2Content.Items.TeleportWhenOob,
+                    count = 1
+                },
+                new ItemCountPair()
+                {
+                    itemDef = UniverseScriptedEncounterStatItem,
+                    count = 1
+                },
+                new ItemCountPair()
+                {
+                    itemDef = RoR2Content.Items.AdaptiveArmor,
+                    count = 1
+                }
+            };
+            fsCard.eliteRules = mithrixEliteRules;
+            fsCard.noElites = !mithrixAllowElite;
+            fsCard.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Ground;
+            fsCard.occupyPosition = false;
+            fsCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
+            fsCard.loadout = fsCardOrig.loadout;
+            fsCard.sendOverNetwork = true;
+            fsCard.hullSize = HullClassification.Golem;
+            fsCard.name = "cscUniverseFalseSonBossUnique";
+            (fsCard as ScriptableObject).name = fsCard.name;
+
+            DirectorCard dc = new DirectorCard()
+            {
+                selectionWeight = 1,
+                spawnCard = fsCard,
+                spawnDistance = DirectorCore.MonsterSpawnDistance.Standard,
+                preventOverhead = false,
+                minimumStageCompletions = fsMinStages,
+                forbiddenUnlockableDef = null,
+                requiredUnlockableDef = null
+            };
+            Categories.CatFalseSonBoss.cards = new List<DirectorCard>() { dc };
+        }
         private void BuildCatMithrix()
         {
             CharacterSpawnCard itBrotherCard = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/GameModes/InfiniteTowerRun/InfiniteTowerAssets/cscBrotherIT.asset").WaitForCompletion();

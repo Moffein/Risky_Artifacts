@@ -514,10 +514,9 @@ namespace Risky_Artifacts.Artifacts
                     {
                         pickerOptions = options,
                         prefabOverride = RiskyArtifactsPlugin.potentialPrefab,
-                        position = position,
                         rotation = Quaternion.identity,
                         pickupIndex = PickupCatalog.FindPickupIndex(tier)
-                    }, Vector3.up * 20f);
+                    }, position, Vector3.up * 20f);
                 }
                 else
                 {

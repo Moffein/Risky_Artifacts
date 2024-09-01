@@ -35,6 +35,7 @@ namespace Risky_Artifacts.Artifacts
             AddDictEntry("HermitCrabBody", LoadCSC("RoR2/Base/HermitCrab/cscHermitCrab.asset"));
             AddDictEntry("LemurianBody", LoadCSC("RoR2/Base/Lemurian/cscLemurian.asset"));
             AddDictEntry("VoidBarnacleBody", LoadCSC("RoR2/DLC1/VoidBarnacle/cscVoidBarnacle.asset"));
+            AddDictEntry("ChildBody", LoadCSC("RoR2/DLC2/Child/cscChild.asset"));
 
             //Miniboss
             AddDictEntry("LunarExploderBody", LoadCSC("RoR2/Base/LunarExploder/cscLunarExploder.asset"));
@@ -54,6 +55,7 @@ namespace Risky_Artifacts.Artifacts
             AddDictEntry("NullifierBody", LoadCSC("RoR2/Base/Nullifier/cscNullifier.asset"));
             AddDictEntry("VoidJailerBody", LoadCSC("RoR2/DLC1/VoidJailer/cscVoidJailer.asset"));
             AddDictEntry("LemurianBruiserBody", LoadCSC("RoR2/Base/LemurianBruiser/cscLemurianBruiser.asset"));
+            AddDictEntry("ScorchlingBody", LoadCSC("RoR2/DLC2/Scorchling/cscScorchling.asset"));
 
             //Champions
             AddDictEntry("TitanBody", LoadCSC("RoR2/Base/Titan/cscTitanGolemPlains.asset"));

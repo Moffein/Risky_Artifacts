@@ -105,7 +105,7 @@ namespace Risky_Artifacts.Artifacts
                 return orig(self);
             };
 
-            On.RoR2.HealthComponent.TakeDamage += (orig, self, damageInfo) =>
+            On.RoR2.HealthComponent.TakeDamageProcess += (orig, self, damageInfo) =>
             {
                 if (NetworkServer.active)
                 {

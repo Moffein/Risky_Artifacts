@@ -66,7 +66,8 @@ namespace Risky_Artifacts.Artifacts
             {
                 runMountainCount += stageMountainCount;
                 stageMountainCount = 0;
-                orig(self);
+
+                var ret = orig(self);
 
                 if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex))
                 {
@@ -78,6 +79,8 @@ namespace Risky_Artifacts.Artifacts
                         }
                     }
                 }
+
+                return orig(self);
             };
 
             if (Arrogance.guaranteeMountainShrine)
