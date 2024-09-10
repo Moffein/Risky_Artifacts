@@ -20,7 +20,7 @@ namespace Risky_Artifacts
     [BepInDependency(R2API.ContentManagement.R2APIContentManager.PluginGUID)]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.4.10")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.4.11")]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
     {
@@ -231,7 +231,7 @@ namespace Risky_Artifacts
                 new ConfigDescription("Allow all survivors to spawn, even if not listed in the Spawnlist.")).Value;
             Hunted.survivorsOnly = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Only Spawn Survivors"), false,
                 new ConfigDescription("Only spawn survivors when the artifact is active.")).Value;
-            Hunted.spawnInfoInput = base.Config.Bind<string>(new ConfigDefinition("Hunted", "Spawnlist"), "CommandoBody, Bandit2Body, ToolbotBody, MercBody, MageBody, LoaderBody, CrocoBody, RailgunnerBody, RocketSurvivorBody, CHEF, SniperClassicBody, MinerBody, HANDOverclockedBody, RobPaladinBody, SS2UChirrBody, SS2UCyborgBody, SS2UExecutionerBody, SS2UPyroBody, SS2UNemmandoBody, SS2UNucleatorBody, RobDriverBody, DeputyBody, MoffeinPilotBody, FalseSonBody, ChefBody, SeekerBody",
+            Hunted.spawnInfoInput = base.Config.Bind<string>(new ConfigDefinition("Hunted", "Spawnlist"), "CommandoBody, Bandit2Body, ToolbotBody, MercBody, MageBody, LoaderBody, CrocoBody, RailgunnerBody, SeekerBody, ChefBody, FalseSonBody, RocketSurvivorBody, GnomeChefBody, SniperClassicBody, MinerBody, HANDOverclockedBody, RobPaladinBody, SS2UChirrBody, SS2UCyborgBody, SS2UExecutionerBody, SS2UPyroBody, SS2UNemmandoBody, SS2UNucleatorBody, RobDriverBody, DeputyBody, MoffeinPilotBody, FalseSonBody, ChefBody, SeekerBody",
                 new ConfigDescription("List of bodies to be added. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost:HPMult(float):DamageMult(float)")).Value;
             Hunted.nerfEngiTurrets = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Nerf Engi Turrets"), true,
                 new ConfigDescription("Engi Turrets receive no health boost.")).Value;
