@@ -20,7 +20,7 @@ namespace Risky_Artifacts
     [BepInDependency(R2API.ContentManagement.R2APIContentManager.PluginGUID)]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.4.11")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.4.12")]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
     {
@@ -287,6 +287,9 @@ namespace Risky_Artifacts
             Universe.Categories.CatLunarScav.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Lunar Scavenger"), 0f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
             Universe.Categories.CatDrone.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Drone"), 0f,
+                new ConfigDescription("Chance of this monster category being selected.")).Value;
+
+            Universe.Categories.CatFalseSonBoss.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - False Son"), 0.25f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
 
             Universe.InputInfo.Basic_Monsters = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Basic Monsters"), "ChildBody, LunarExploderBody, BeetleBody, WispBody, LemurianBody, JellyfishBody, HermitCrabBody, VoidBarnacleBody, ImpBody, VultureBody, RoboBallMiniBody, AcidLarvaBody, MinorConstructBody, FlyingVerminBody, VerminBody, MoffeinClayManBody:28",

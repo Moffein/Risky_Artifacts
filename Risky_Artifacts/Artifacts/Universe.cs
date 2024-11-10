@@ -259,6 +259,12 @@ namespace Risky_Artifacts.Artifacts
                 MonsterCardSelection.AddCategory("Drone", Categories.CatDrone.weight);
                 MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = Categories.CatDrone.cards.ToArray();
             }
+
+            if (Categories.CatFalseSonBoss.weight > 0f)
+            {
+                MonsterCardSelection.AddCategory("FalseSonBoss", Categories.CatFalseSonBoss.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = Categories.CatFalseSonBoss.cards.ToArray();
+            }
         }
 
         private void BuildCatFalseSonBoss()
