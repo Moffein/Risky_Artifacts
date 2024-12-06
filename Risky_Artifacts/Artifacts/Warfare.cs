@@ -25,32 +25,33 @@ namespace Risky_Artifacts.Artifacts
             RiskyArtifactsPlugin.FixScriptableObjectName(artifact);
             ContentAddition.AddArtifactDef(artifact);
 
-            On.RoR2.CharacterBody.RecalculateStats += (orig, self) =>
-            {
-                orig(self);
+            RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
+            On.RoR2.Projectile.ProjectileSimple.Start += ProjectileSimple_Start;
+        }
 
-                if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && self.teamComponent.teamIndex != TeamIndex.Player)
-                {
-                    if (!disableOnMithrix || self.baseNameToken != "BROTHER_BODY_NAME")
-                    {
-                        self.moveSpeed *= moveSpeed;
-                    }
-                    self.attackSpeed *= atkSpeed;
-                }
-            };
-
-            On.RoR2.Projectile.ProjectileSimple.Start += (orig, self) =>
+        private void ProjectileSimple_Start(On.RoR2.Projectile.ProjectileSimple.orig_Start orig, RoR2.Projectile.ProjectileSimple self)
+        {
+            if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && self.rigidbody && !self.rigidbody.useGravity)
             {
-                if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && self.rigidbody && !self.rigidbody.useGravity)
+                TeamFilter tf = self.gameObject.GetComponent<TeamFilter>();
+                if (tf && tf.teamIndex != TeamIndex.Player)
                 {
-                    TeamFilter tf = self.gameObject.GetComponent<TeamFilter>();
-                    if (tf && tf.teamIndex != TeamIndex.Player)
-                    {
-                        self.desiredForwardSpeed *= projSpeed;
-                    }
+                    self.desiredForwardSpeed *= projSpeed;
                 }
-                orig(self);
-            };
+            }
+            orig(self);
+        }
+
+        private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
+        {
+            if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && sender.teamComponent && sender.teamComponent.teamIndex != TeamIndex.Player)
+            {
+                if (!disableOnMithrix || sender.baseNameToken != "BROTHER_BODY_NAME")
+                {
+                    args.moveSpeedMultAdd += moveSpeed - 1f;
+                }
+                args.attackSpeedMultAdd += atkSpeed - 1f;
+            }
         }
     }
 }
