@@ -243,7 +243,7 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                                 }
                                                 else
                                                 {
-                                                    oed.bossDrop = PickupIndex.nonel
+                                                    oed.bossDrop = PickupIndex.none;
                                                 }
                                             }
                                             oed.cost = cost;
