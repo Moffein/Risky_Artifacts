@@ -492,6 +492,7 @@ namespace Risky_Artifacts.Artifacts
                         pdt = RiskyArtifactsPlugin.tier2Drops;
                         break;
                     default:
+                        tier = ItemTier.Tier1;  //This is needed to prevent a nullref.
                         pdt = RiskyArtifactsPlugin.tier1Drops;
                         break;
                 }
