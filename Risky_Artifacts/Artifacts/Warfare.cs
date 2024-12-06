@@ -29,7 +29,7 @@ namespace Risky_Artifacts.Artifacts
             {
                 orig(self);
 
-                if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && self.teamComponent.teamIndex == TeamIndex.Monster)
+                if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && self.teamComponent.teamIndex != TeamIndex.Player)
                 {
                     if (!disableOnMithrix || self.baseNameToken != "BROTHER_BODY_NAME")
                     {

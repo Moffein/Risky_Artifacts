@@ -20,7 +20,7 @@ namespace Risky_Artifacts
     [BepInDependency(R2API.ContentManagement.R2APIContentManager.PluginGUID)]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.4.12")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.4.13")]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
     {
@@ -94,7 +94,7 @@ namespace Risky_Artifacts
                 new ConfigDescription("Multiplier for enemy attack speed.")).Value;
             Warfare.projSpeed = base.Config.Bind<float>(new ConfigDefinition("Warfare", "Projectile Speed Multiplier"), 1.5f,
                 new ConfigDescription("Multiplier for enemy projectile speed.")).Value;
-            Warfare.disableOnMithrix = base.Config.Bind<bool>(new ConfigDefinition("Warfare", "Disable move speed boost for Michael"), true,
+            Warfare.disableOnMithrix = base.Config.Bind<bool>(new ConfigDefinition("Warfare", "Disable move speed boost for Michael"), false,
                 new ConfigDescription("Makes Michael unaffected by the move speed boost of this artifact because it causes him to always miss his melee.")).Value;
 
             Expansion.enabled = base.Config.Bind<bool>(new ConfigDefinition("Expansion", "Enable Artifact"), true,
