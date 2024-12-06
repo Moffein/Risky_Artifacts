@@ -237,9 +237,13 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                             if (resultMaster.bodyPrefab)
                                             {
                                                 DeathRewards dr = resultMaster.bodyPrefab.GetComponent<DeathRewards>();
-                                                if (dr)
+                                                if (dr && dr.bossPickup.pickupName != null)
                                                 {
                                                     oed.bossDrop = (PickupIndex)dr.bossPickup;
+                                                }
+                                                else
+                                                {
+                                                    oed.bossDrop = PickupIndex.nonel
                                                 }
                                             }
                                             oed.cost = cost;
