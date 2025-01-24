@@ -45,15 +45,7 @@ namespace Risky_Artifacts.Artifacts
                 HandleSave();
             }
 
-
-            On.RoR2.ShrineBossBehavior.AddShrineStack += (orig, self, interactor) =>
-            {
-                if (NetworkServer.active)
-                {
-                    stageMountainCount++;
-                }
-                orig(self, interactor);
-            };
+            On.RoR2.TeleporterInteraction.AddShrineStack += TeleporterInteraction_AddShrineStack;
 
             On.RoR2.Run.Start += (orig, self) =>
             {
@@ -87,6 +79,15 @@ namespace Risky_Artifacts.Artifacts
             {
                 On.RoR2.SceneDirector.PopulateScene += GuaranteeMountainShrine;
             }
+        }
+
+        private void TeleporterInteraction_AddShrineStack(On.RoR2.TeleporterInteraction.orig_AddShrineStack orig, TeleporterInteraction self)
+        {
+            if (NetworkServer.active)
+            {
+                stageMountainCount++;
+            }
+            orig(self);
         }
 
         private void GuaranteeMountainShrine(On.RoR2.SceneDirector.orig_PopulateScene orig, SceneDirector self)
