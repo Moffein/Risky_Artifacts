@@ -29,6 +29,8 @@ namespace Risky_Artifacts.Artifacts
         public static int runMountainCount = 0;
         public static int stageMountainCount = 0;
 
+        private static bool shouldAdd = false;
+
         public Arrogance()
         {
             if (!enabled) return;
@@ -61,6 +63,7 @@ namespace Risky_Artifacts.Artifacts
 
                 var ret = orig(self);
 
+                shouldAdd = false;
                 if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(artifact.artifactIndex))
                 {
                     if (TeleporterInteraction.instance)
@@ -71,6 +74,7 @@ namespace Risky_Artifacts.Artifacts
                         }
                     }
                 }
+                shouldAdd = true;
 
                 return orig(self);
             };
@@ -83,7 +87,7 @@ namespace Risky_Artifacts.Artifacts
 
         private void TeleporterInteraction_AddShrineStack(On.RoR2.TeleporterInteraction.orig_AddShrineStack orig, TeleporterInteraction self)
         {
-            if (NetworkServer.active)
+            if (NetworkServer.active && shouldAdd)
             {
                 stageMountainCount++;
             }
