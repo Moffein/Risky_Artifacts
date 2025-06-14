@@ -51,7 +51,7 @@ namespace Risky_Artifacts.Artifacts
             AddDictEntry("ParentBody", LoadCSC("RoR2/Base/Parent/cscParent.asset"));
             AddDictEntry("GolemBody", LoadCSC("RoR2/Base/Golem/cscGolem.asset"));
             AddDictEntry("GreaterWispBody", LoadCSC("RoR2/Base/GreaterWisp/cscGreaterWisp.asset"));
-            AddDictEntry("BeetleGuardBody", LoadCSC("RoR2/Base/Beetle/cscBeetleGuard.asset"));
+            AddDictEntry("BeetleGuardBody", LoadCSC("RoR2/Base/BeetleGuard/cscBeetleGuard.asset"));
             AddDictEntry("NullifierBody", LoadCSC("RoR2/Base/Nullifier/cscNullifier.asset"));
             AddDictEntry("VoidJailerBody", LoadCSC("RoR2/DLC1/VoidJailer/cscVoidJailer.asset"));
             AddDictEntry("LemurianBruiserBody", LoadCSC("RoR2/Base/LemurianBruiser/cscLemurianBruiser.asset"));
@@ -60,7 +60,7 @@ namespace Risky_Artifacts.Artifacts
             //Champions
             AddDictEntry("TitanBody", LoadCSC("RoR2/Base/Titan/cscTitanGolemPlains.asset"));
             AddDictEntry("ClayBossBody", LoadCSC("RoR2/Base/ClayBoss/cscClayBoss.asset"));
-            AddDictEntry("BeetleQueen2Body", LoadCSC("RoR2/Base/Beetle/cscBeetleQueen.asset"));
+            AddDictEntry("BeetleQueen2Body", LoadCSC("RoR2/Base/BeetleQueen/cscBeetleQueen.asset"));
             AddDictEntry("VagrantBody", LoadCSC("RoR2/Base/Vagrant/cscVagrant.asset"));
 
             AddDictEntry("MagmaWormBody", LoadCSC("RoR2/Base/MagmaWorm/cscMagmaWorm.asset"));
