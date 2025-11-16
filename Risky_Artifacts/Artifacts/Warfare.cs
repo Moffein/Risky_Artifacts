@@ -31,7 +31,7 @@ namespace Risky_Artifacts.Artifacts
 
         private void ProjectileSimple_Start(On.RoR2.Projectile.ProjectileSimple.orig_Start orig, RoR2.Projectile.ProjectileSimple self)
         {
-            if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && self.rigidbody && !self.rigidbody.useGravity)
+            if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(artifact) && self.rigidbody && !self.rigidbody.useGravity)
             {
                 TeamFilter tf = self.gameObject.GetComponent<TeamFilter>();
                 if (tf && tf.teamIndex != TeamIndex.Player)
@@ -44,7 +44,7 @@ namespace Risky_Artifacts.Artifacts
 
         private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
         {
-            if (RunArtifactManager.instance.IsArtifactEnabled(artifact) && sender.teamComponent && sender.teamComponent.teamIndex != TeamIndex.Player)
+            if (RunArtifactManager.instance && RunArtifactManager.instance.IsArtifactEnabled(artifact) && sender.teamComponent && sender.teamComponent.teamIndex != TeamIndex.Player)
             {
                 if (!disableOnMithrix || sender.baseNameToken != "BROTHER_BODY_NAME")
                 {
