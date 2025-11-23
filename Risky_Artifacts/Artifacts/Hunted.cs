@@ -21,7 +21,9 @@ namespace Risky_Artifacts.Artifacts
         public static Dictionary<BodyIndex, int> DirectorCosts = new Dictionary<BodyIndex, int>();
 
         private List<SpawnInfo> SpawnInfoList = new List<SpawnInfo>();
-        public static string spawnInfoInput;
+
+        public static bool generateConfig = false;
+        public static string spawnInfoInput = "DrifterBody, CommandoBody, Bandit2Body, ToolbotBody, MercBody, MageBody, LoaderBody, CrocoBody, RailgunnerBody, SeekerBody, ChefBody, FalseSonBody, RocketSurvivorBody, SniperClassicBody, MinerBody, HANDOverclockedBody, RobPaladinBody, SS2UChirrBody, SS2UCyborgBody, SS2UExecutionerBody, SS2UPyroBody, SS2UNemmandoBody, SS2UNucleatorBody, RobDriverBody, DeputyBody, MoffeinPilotBody, FalseSonBody, ChefBody, SeekerBody, Executioner2Body, Cyborg2Body, SeamstressBody, CadetBody, SpyBody";
         public static bool allSurvivors = false;
         public static bool nerfEngiTurrets = true;
         public static bool nerfPercentHeal = true;
@@ -522,6 +524,7 @@ namespace Risky_Artifacts.Artifacts
                     if (Hunted.randomizeSkin)
                     {
                         body.master.loadout.bodyLoadoutManager.SetSkinIndex(body.bodyIndex, (uint)UnityEngine.Random.Range(0, SkinCatalog.GetBodySkinCount(body.bodyIndex)));
+
                     }
 
                     if (Hunted.randomizeLoadout)

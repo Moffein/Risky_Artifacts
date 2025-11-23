@@ -97,11 +97,13 @@ namespace Risky_Artifacts.Artifacts
             OriginBonusItem.nameToken = "RISKYARTIFACTS_ORIGINBONUSITEM_NAME";
             OriginBonusItem.pickupToken = "RISKYARTIFACTS_ORIGINBONUSITEM_PICKUP";
             OriginBonusItem.descriptionToken = "RISKYARTIFACTS_ORIGINBONUSITEM_DESC";
+            OriginBonusItem.canRemove = false;
             OriginBonusItem.tags = new[]
             {
                 ItemTag.WorldUnique,
                 ItemTag.BrotherBlacklist,
-                ItemTag.CannotSteal
+                ItemTag.CannotSteal,
+                ItemTag.ExtractorUnitBlacklist
             };
             ItemDisplayRule[] idr = new ItemDisplayRule[0];
             //ContentAddition.AddItemDef(OriginBonusItem);

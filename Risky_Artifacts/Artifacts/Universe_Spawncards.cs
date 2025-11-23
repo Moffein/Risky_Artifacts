@@ -36,6 +36,9 @@ namespace Risky_Artifacts.Artifacts
             AddDictEntry("LemurianBody", LoadCSC("RoR2/Base/Lemurian/cscLemurian.asset"));
             AddDictEntry("VoidBarnacleBody", LoadCSC("RoR2/DLC1/VoidBarnacle/cscVoidBarnacle.asset"));
             AddDictEntry("ChildBody", LoadCSC("RoR2/DLC2/Child/cscChild.asset"));
+            AddDictEntry("TankerBody", LoadCSC("RoR2/DLC3/Tanker/cscTanker.asset"));
+            AddDictEntry("ExtractorUnitBody", LoadCSC("RoR2/DLC3/ExtractorUnit/cscExtractorUnit.asset"));
+            AddDictEntry("WorkerUnitBody", LoadCSC("RoR2/DLC3/WorkerUnit/cscWorkerUnit.asset"));
 
             //Miniboss
             AddDictEntry("LunarExploderBody", LoadCSC("RoR2/Base/LunarExploder/cscLunarExploder.asset"));
@@ -56,6 +59,9 @@ namespace Risky_Artifacts.Artifacts
             AddDictEntry("VoidJailerBody", LoadCSC("RoR2/DLC1/VoidJailer/cscVoidJailer.asset"));
             AddDictEntry("LemurianBruiserBody", LoadCSC("RoR2/Base/LemurianBruiser/cscLemurianBruiser.asset"));
             AddDictEntry("ScorchlingBody", LoadCSC("RoR2/DLC2/Scorchling/cscScorchling.asset"));
+            AddDictEntry("DefectiveUnitBody", LoadCSC("RoR2/DLC3/DefectiveUnit/cscDefectiveUnit.asset"));
+            AddDictEntry("IronHaulerBody", LoadCSC("RoR2/DLC3/IronHauler/cscIronHauler.asset"));
+            AddDictEntry("MinePodBody", LoadCSC("RoR2/DLC3/MinePod/cscMinePod.asset"));
 
             //Champions
             AddDictEntry("TitanBody", LoadCSC("RoR2/Base/Titan/cscTitanGolemPlains.asset"));
@@ -69,6 +75,7 @@ namespace Risky_Artifacts.Artifacts
             AddDictEntry("RoboBallBossBody", LoadCSC("RoR2/Base/RoboBallBoss/cscRoboBallBoss.asset"));
             AddDictEntry("MegaConstructBody", LoadCSC("RoR2/DLC1/MajorAndMinorConstruct/cscMegaConstruct.asset"));
             AddDictEntry("VoidMegaCrabBody", LoadCSC("RoR2/DLC1/VoidMegaCrab/cscVoidMegaCrab.asset"));
+            AddDictEntry("SolusAmalgamatorBody", LoadCSC("RoR2/DLC3/SolusAmalgamator/cscSolusAmalgamator.asset"));
 
             AddDictEntry("GrandparentBody", LoadCSC("RoR2/Base/Grandparent/cscGrandparent.asset"));
             AddDictEntry("ScavBody", LoadCSC("RoR2/Base/Scav/cscScav.asset"));
@@ -76,6 +83,7 @@ namespace Risky_Artifacts.Artifacts
 
             AddDictEntry("TitanGoldBody", LoadCSC("RoR2/Base/Titan/cscTitanGold.asset"));
             AddDictEntry("SuperRoboBallBossBody", LoadCSC("RoR2/Base/RoboBallBoss/cscSuperRoboBallBoss.asset"));
+            AddDictEntry("VultureHunterBody", LoadCSC("RoR2/DLC3/VultureHunter/cscVultureHunter.asset"));
         }
 
         public static void AddDictEntry(string bodyname, CharacterSpawnCard spawnCard)

@@ -20,7 +20,7 @@ namespace Risky_Artifacts
     [BepInDependency(R2API.ContentManagement.R2APIContentManager.PluginGUID)]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.4.22")]
+    [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.5.0")]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class RiskyArtifactsPlugin : BaseUnityPlugin
     {
@@ -72,8 +72,8 @@ namespace Risky_Artifacts
 
         public void ReadConfig()
         {
-            Arrogance.enabled = base.Config.Bind<bool>(new ConfigDefinition("Arrogance", "Enable Artifact"), true,
-                new ConfigDescription("Allows this artifact to be selected.")).Value;
+            Arrogance.enabled = base.Config.Bind<bool>(new ConfigDefinition("Arrogance", "Enable Artifact"), false,
+                new ConfigDescription("Replaced by Prestige in Vanilla. Allows this artifact to be selected.")).Value;
             Arrogance.guaranteeMountainShrine = base.Config.Bind<bool>(new ConfigDefinition("Arrogance", "Guarantee Mountain Shrine"), true,
                 new ConfigDescription("Guarantees that at least 1 mountain shrine will spawn when this artifact is enabled.")).Value;
 
@@ -231,8 +231,15 @@ namespace Risky_Artifacts
                 new ConfigDescription("Allow all survivors to spawn, even if not listed in the Spawnlist.")).Value;
             Hunted.survivorsOnly = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Only Spawn Survivors"), false,
                 new ConfigDescription("Only spawn survivors when the artifact is active.")).Value;
-            Hunted.spawnInfoInput = base.Config.Bind<string>(new ConfigDefinition("Hunted", "Spawnlist"), "CommandoBody, Bandit2Body, ToolbotBody, MercBody, MageBody, LoaderBody, CrocoBody, RailgunnerBody, SeekerBody, ChefBody, FalseSonBody, RocketSurvivorBody, SniperClassicBody, MinerBody, HANDOverclockedBody, RobPaladinBody, SS2UChirrBody, SS2UCyborgBody, SS2UExecutionerBody, SS2UPyroBody, SS2UNemmandoBody, SS2UNucleatorBody, RobDriverBody, DeputyBody, MoffeinPilotBody, FalseSonBody, ChefBody, SeekerBody",
-                new ConfigDescription("List of bodies to be added. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost:HPMult(float):DamageMult(float)")).Value;
+
+            Hunted.generateConfig = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Generate Spawnlist Config"), false,
+                new ConfigDescription("Generate Spawnlist Config")).Value;
+            if (Hunted.generateConfig)
+            {
+                Hunted.spawnInfoInput = base.Config.Bind<string>(new ConfigDefinition("Hunted", "Spawnlist"), Hunted.spawnInfoInput,
+                    new ConfigDescription("List of bodies to be added. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost:HPMult(float):DamageMult(float)")).Value;
+            }
+
             Hunted.nerfEngiTurrets = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Nerf Engi Turrets"), true,
                 new ConfigDescription("Engi Turrets receive no health boost.")).Value;
             Hunted.nerfPercentHeal = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Nerf Percent Heal"), true,
@@ -292,19 +299,23 @@ namespace Risky_Artifacts
             Universe.Categories.CatFalseSonBoss.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - False Son"), 0.25f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
             
-            Universe.InputInfo.Basic_Monsters = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Basic Monsters"), "ChildBody, LunarExploderBody, BeetleBody, WispBody, LemurianBody, JellyfishBody, HermitCrabBody, VoidBarnacleBody, ImpBody, VultureBody, RoboBallMiniBody, AcidLarvaBody, MinorConstructBody, FlyingVerminBody, VerminBody, MoffeinClayManBody:28, LynxArcherBody:28, LynxHunterBody:28, LynxScoutBody:28, MechanicalSpiderBody:28, ArcherBugBody:28:0:1:Air",
-               new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int):NodeGraphType(Default, Air, Ground)")).Value;
-            Universe.InputInfo.Minibosses = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Minibosses"), "ScorchlingBody, LunarGolemBody, LunarWispBody, GupBody, ClayGrenadierBody, ClayBruiserBody, MiniMushroomBody, BisonBody, BellBody, ParentBody, GolemBody, GreaterWispBody, BeetleGuardBody, NullifierBody, VoidJailerBody, LemurianBruiserBody, MoffeinArchWisp:240, LynxShamanBody:40, SpitterBody:30",
-                new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int):NodeGraphType(Default, Air, Ground)")).Value;
-            Universe.InputInfo.Champions = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Champions"), "VagrantBody, TitanBody, BeetleQueen2Body, ClayBossBody, MagmaWormBody, ImpBossBody, RoboBallBossBody, GravekeeperBody, MegaConstructBody, VoidMegaCrabBody, GrandparentBody, ScavBody, ElectricWormBody, MoffeinAncientWispBody:1000, MechorillaBody:600, RegigigasBody:1000, LampBossBody:600, LynxTotemBody:600, IfritBody:800, ColossusBody:1150",
-                new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int):NodeGraphType(Default, Air, Ground)")).Value;
-            Universe.InputInfo.Special = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Special"), "TitanGoldBody:6000:5, SuperRoboBallBossBody:6000:5, DireseekerBossBody:6000:5",
-               new ConfigDescription("List of bodies to be added to this category. Bodies in this category will receive increased health and damage. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int):NodeGraphType(Default, Air, Ground)")).Value;
-            Universe.InputInfo.LunarScav = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Lunar Scavenger"), "ScavLunar1Body:8000:5, ScavLunar2Body:8000: 5,ScavLunar3Body:8000:5, ScavLunar4Body:8000:5",
-               new ConfigDescription("List of bodies to be added to this category. Bodies in this category will receive increased health and damage. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int):NodeGraphType(Default, Air, Ground)")).Value;
-            Universe.InputInfo.Drone = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Drone"), "Turret1Body, Drone1Body, Drone2Body, MissileDroneBody, FlameDroneBody, EmergencyDroneBody, MegaDroneBody",
-               new ConfigDescription("List of bodies to be added to this category. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int):NodeGraphType(Default, Air, Ground)")).Value;
-
+            Universe.generateConfig = base.Config.Bind<bool>(new ConfigDefinition("Universe - Spawnlists", "Generate Spawnlist Config"), false,
+                new ConfigDescription("Generate Spawnlist Config")).Value;
+            if (Universe.generateConfig)
+            {
+                Universe.InputInfo.Basic_Monsters = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Basic Monsters"), Universe.InputInfo.Basic_Monsters,
+                   new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int):NodeGraphType(Default, Air, Ground)")).Value;
+                Universe.InputInfo.Minibosses = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Minibosses"), Universe.InputInfo.Minibosses,
+                    new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int):NodeGraphType(Default, Air, Ground)")).Value;
+                Universe.InputInfo.Champions = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Champions"), Universe.InputInfo.Champions,
+                    new ConfigDescription("List of bodies to be added to this category. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int):NodeGraphType(Default, Air, Ground)")).Value;
+                Universe.InputInfo.Special = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Special"), "TitanGoldBody:6000:5, SuperRoboBallBossBody:6000:5, DireseekerBossBody:6000:5",
+                   new ConfigDescription("List of bodies to be added to this category. Bodies in this category will receive increased health and damage. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int):NodeGraphType(Default, Air, Ground)")).Value;
+                Universe.InputInfo.LunarScav = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Lunar Scavenger"), Universe.InputInfo.LunarScav,
+                   new ConfigDescription("List of bodies to be added to this category. Bodies in this category will receive increased health and damage. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int):NodeGraphType(Default, Air, Ground)")).Value;
+                Universe.InputInfo.Drone = base.Config.Bind<string>(new ConfigDefinition("Universe - Spawnlists", "Spawnlist - Drone"), Universe.InputInfo.Drone,
+                   new ConfigDescription("List of bodies to be added to this category. To specify custom stats, do BodyName:Cost(int):MinStages(int):SelectionWeight(int):NodeGraphType(Default, Air, Ground)")).Value;
+            }
             Universe.mithrixCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix", "Director Cost"), 8000,
                 new ConfigDescription("Director cost of Mithrix.")).Value;
             Universe.mithrixMinStages = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix", "Min Stages"), 5,

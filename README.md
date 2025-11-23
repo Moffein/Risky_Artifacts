@@ -9,7 +9,8 @@ Adds 10 artifacts to ruin your run with.
 	- Config allows for Classic Origin, where only Imp Overlords spawn.
 	- **Spoiler:** <details>Beads of Fealty increases invader count.</details>
 
-- **Artifact of Arrogance**
+- **Artifact of Arrogance** *(Disabled by default, replaced by Prestige in Vanilla)*
+	- **Remember that before it was a thing in Returns, you saw it here first!**
 	- Mountain Shrines are permanent. A Mountain Shrine is guaranteed to spawn on each stage.
 	
 - **Artifact of Expansion**
@@ -23,7 +24,7 @@ Adds 10 artifacts to ruin your run with.
 	- Boosts monster movement speed, attack speed, and projectile speed by 50%.
 	
 - **Artifact of Primacy**
-	- The Primordial Teleporter spawns on every stage after looping. 
+	- The Primordial Teleporter spawns on every stage after looping.
 	
 - **Artifact of the Phantom**
 	- The Phantom King of Nothing hunts you down if you spend too long on a stage.
@@ -40,6 +41,7 @@ Adds 10 artifacts to ruin your run with.
 - **Artifact of the Hunted**
 	- Survivors can spawn as enemies.
 		- Enemy survivors have increased health and decreased damage.
+	- Config can be tweaked to make only survivors spawn.
 				
 - **Artifact of the Universe**
 	- All enemies can spawn on all stages.
@@ -89,3 +91,5 @@ Spanish Translation - Juhnter
 Portuguese Translation - Kauzok
 
 Russian Translation - Lecarde
+
+Korean Translation - drclear9901

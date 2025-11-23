@@ -50,11 +50,13 @@ namespace Risky_Artifacts.Artifacts
             BrotherInvasionBonusItem.nameToken = "RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_NAME";
             BrotherInvasionBonusItem.pickupToken = "RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_PICKUP";
             BrotherInvasionBonusItem.descriptionToken = "RISKYARTIFACTS_BROTHERINVASIONBONUSITEM_DESC";
+            BrotherInvasionBonusItem.canRemove = false;
             BrotherInvasionBonusItem.tags = new[]
             {
                 ItemTag.WorldUnique,
                 ItemTag.BrotherBlacklist,
-                ItemTag.CannotSteal
+                ItemTag.CannotSteal,
+                ItemTag.ExtractorUnitBlacklist
             };
             ItemDisplayRule[] idr = new ItemDisplayRule[0];
             //ContentAddition.AddItemDef(BrotherInvasionBonusItem);

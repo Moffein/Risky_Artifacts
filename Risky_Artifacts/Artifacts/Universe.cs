@@ -56,9 +56,16 @@ namespace Risky_Artifacts.Artifacts
         public static bool enableOnVoidLocus = false;
         public static List<SceneDef> forbiddenScenes = new List<SceneDef>();
 
+        public static bool generateConfig;
+
         public static class InputInfo
         {
-            public static string Basic_Monsters, Minibosses, Champions, Special, LunarScav, Drone;
+            public static string Basic_Monsters = "ClayMongerBody, RunshroomBody, LampBody, ExtractorUnitBody, WorkerUnitBody, TankerBody, ChildBody, LunarExploderBody, BeetleBody, WispBody, LemurianBody, JellyfishBody, HermitCrabBody, VoidBarnacleBody, ImpBody, VultureBody, RoboBallMiniBody, AcidLarvaBody, MinorConstructBody, FlyingVerminBody, VerminBody, MoffeinClayManBody:28, LynxArcherBody:28, LynxHunterBody:28, LynxScoutBody:28, MechanicalSpiderBody:28, ArcherBugBody:28:0:1:Air, SwiftBody:28:0:1:Air";
+            public static string Minibosses = "MinePodBody, DefectiveUnitBody, IronHaulerBody, ScorchlingBody, LunarGolemBody, LunarWispBody, GupBody, ClayGrenadierBody, ClayBruiserBody, MiniMushroomBody, BisonBody, BellBody, ParentBody, GolemBody, GreaterWispBody, BeetleGuardBody, NullifierBody, VoidJailerBody, LemurianBruiserBody, MoffeinArchWisp:240, LynxShamanBody:40, SpitterBody:30";
+            public static string Champions = "VagrantBody, TitanBody, BeetleQueen2Body, ClayBossBody, MagmaWormBody, ImpBossBody, RoboBallBossBody, GravekeeperBody, MegaConstructBody, VoidMegaCrabBody, GrandparentBody, ScavBody, ElectricWormBody, MoffeinAncientWispBody:1000, MechorillaBody:600, RegigigasBody:1000, LampBossBody:600, LynxTotemBody:600, IfritBody:800, ColossusBody:1150, SolusAmalgamatorBody";
+            public static string Special = "TitanGoldBody:6000:5, SuperRoboBallBossBody:6000:5, DireseekerBossBody:6000:5, VultureHunterBody:7700:5";
+            public static string LunarScav = "ScavLunar1Body:8000:5, ScavLunar2Body:8000: 5,ScavLunar3Body:8000:5, ScavLunar4Body:8000:5";
+            public static string Drone = "Turret1Body, Drone1Body, Drone2Body, MissileDroneBody, FlameDroneBody, EmergencyDroneBody, MegaDroneBody, BackupDroneBody, HaulerDroneBody, BombardmentDroneBody, CopycatDroneBody, JailerDroneBody";
         }
 
         public static class Categories
@@ -363,6 +370,33 @@ namespace Risky_Artifacts.Artifacts
                 requiredUnlockableDef = null
             };
             Categories.CatMithrix.cards = new List<DirectorCard>() { dc };
+        }
+
+        public static bool BodyIsFlying(GameObject bodyObject)
+        {
+            CharacterBody body = bodyObject ? bodyObject.GetComponent<CharacterBody>() : null;
+            if (!body) return false;
+            return BodyIsFlying(body);
+        }
+
+        //This will miss things that don't use FlyState to fly
+        public static bool BodyIsFlying(CharacterBody body)
+        {
+            if (body)
+            {
+                NetworkStateMachine nsm = body.GetComponent<NetworkStateMachine>();
+                if (nsm && nsm.stateMachines != null)
+                {
+                    foreach (var sm in nsm.stateMachines)
+                    {
+                        if (sm.initialStateType.stateType.IsAssignableFrom(typeof(EntityStates.FlyState)))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         private void BuildCatMithrixHurt()
@@ -740,7 +774,7 @@ namespace Risky_Artifacts.Artifacts
                         nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Rail;
                         break;
                     default:
-                        nodeGraphType = body.isFlying ? RoR2.Navigation.MapNodeGroup.GraphType.Air : RoR2.Navigation.MapNodeGroup.GraphType.Ground;
+                        nodeGraphType = BodyIsFlying(body) ? RoR2.Navigation.MapNodeGroup.GraphType.Air : RoR2.Navigation.MapNodeGroup.GraphType.Ground;
                         break;
                 }
 
@@ -786,7 +820,7 @@ namespace Risky_Artifacts.Artifacts
                 if (newCard.directorCreditCost < 0)
                 {
                     float hp = (body.baseMaxHealth + body.maxBarrier) * (100f + body.armor) / 100f;
-
+                    bool isFlying = BodyIsFlying(body);
                     switch (monsterCategory)
                     {
                         case MonsterCategory.LunarScav:
@@ -799,11 +833,11 @@ namespace Risky_Artifacts.Artifacts
                             newCard.directorCreditCost = Mathf.RoundToInt(hp / 3.5f);
                             break;
                         case MonsterCategory.Minibosses:
-                            newCard.directorCreditCost = Mathf.RoundToInt(hp / (body.isFlying ? 3.5f : 7f));
+                            newCard.directorCreditCost = Mathf.RoundToInt(hp / (isFlying ? 3.5f : 7f));
                             break;
                         case MonsterCategory.Basic_Monsters:
                         default:
-                            newCard.directorCreditCost = Mathf.RoundToInt(hp / (body.isFlying ? 3.5f : 7.5f));
+                            newCard.directorCreditCost = Mathf.RoundToInt(hp / (isFlying ? 3.5f : 7.5f));
                             break;
                     }
                 }
