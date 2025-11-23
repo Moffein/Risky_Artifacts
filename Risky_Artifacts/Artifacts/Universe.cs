@@ -324,7 +324,7 @@ namespace Risky_Artifacts.Artifacts
         }
         private void BuildCatMithrix()
         {
-            CharacterSpawnCard itBrotherCard = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/GameModes/InfiniteTowerRun/InfiniteTowerAssets/cscBrotherIT.asset").WaitForCompletion();
+            CharacterSpawnCard itBrotherCard = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/GameModes/InfiniteTowerRun/ITAssets/cscBrotherIT.asset").WaitForCompletion();
 
             CharacterSpawnCard brotherCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
             brotherCard.prefab = itBrotherCard.prefab;

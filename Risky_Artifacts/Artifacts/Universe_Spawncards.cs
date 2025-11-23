@@ -84,6 +84,24 @@ namespace Risky_Artifacts.Artifacts
             AddDictEntry("TitanGoldBody", LoadCSC("RoR2/Base/Titan/cscTitanGold.asset"));
             AddDictEntry("SuperRoboBallBossBody", LoadCSC("RoR2/Base/RoboBallBoss/cscSuperRoboBallBoss.asset"));
             AddDictEntry("VultureHunterBody", LoadCSC("RoR2/DLC3/VultureHunter/cscVultureHunter.asset"));
+
+            List<string> nullKeys = new List<string>();
+            foreach (var key in CardDict.Keys)
+            {
+                if (CardDict.GetValueOrDefault(key) == null)
+                {
+                    nullKeys.Add(key);
+                }
+            }
+
+            if (nullKeys.Count > 0)
+            {
+                Debug.LogError("RiskyArtifacts: Null Keys were found in the Universe vanilla spawncard dictionary.");
+                foreach (var key in nullKeys)
+                {
+                    Debug.LogError(key);
+                }
+            }
         }
 
         public static void AddDictEntry(string bodyname, CharacterSpawnCard spawnCard)
