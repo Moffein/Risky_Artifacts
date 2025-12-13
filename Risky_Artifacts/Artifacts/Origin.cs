@@ -374,7 +374,7 @@ namespace Risky_Artifacts.Artifacts
                 if (enableImp) t2BossCards.Add(impCard);
 
                 if (enableXi_DLC1) t2BossCards_DLC1.Add(Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/MajorAndMinorConstruct/cscMegaConstruct.asset").WaitForCompletion());
-                if (enableXi_DLC1) t2BossCards_DLC1.Add(Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/VoidMegaCrab/cscVoidMegaCrab.asset").WaitForCompletion());
+                if (enableVoidCrab_DLC1) t2BossCards_DLC1.Add(Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/VoidMegaCrab/cscVoidMegaCrab.asset").WaitForCompletion());
 
                 if (enableGrandparent) t3BossCards.Add(LoadSpawncard("titan/cscGrandparent"));
 
