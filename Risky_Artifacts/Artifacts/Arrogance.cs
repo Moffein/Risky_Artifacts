@@ -124,7 +124,7 @@ namespace Risky_Artifacts.Artifacts
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private void HandleSave()
         {
-            ProperSave.SaveFile.OnGatgherSaveData += Save;
+            ProperSave.SaveFile.OnGatherSaveData += Save;
             ProperSave.Loading.OnLoadingEnded += Load;
         }
 
