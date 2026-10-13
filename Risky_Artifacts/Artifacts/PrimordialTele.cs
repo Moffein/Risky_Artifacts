@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using MonoMod.Cil;
 using System;
 using UnityEngine.Networking;
+using System.Runtime.CompilerServices;
 
 namespace Risky_Artifacts.Artifacts
 {
@@ -20,6 +21,24 @@ namespace Risky_Artifacts.Artifacts
 
         public static bool isNaturalLunar = false;
         private static bool firstIdleToActive = true;   //Used for suppressing the chat message?
+
+        public static void RiskyTweaksCompat()
+        {
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.Moffein.RiskyTweaks"))
+            {
+                RiskyTweaksCompatInternal();
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static void RiskyTweaksCompatInternal()
+        {
+            if (RiskyTweaks.Tweaks.Interactables.PrimordialTeleLoop.Instance.Enabled.Value)
+            {
+                enabled = false;
+                forceEnable = false;
+            }
+        }
 
         public PrimordialTele()
         {

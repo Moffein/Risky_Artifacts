@@ -19,6 +19,7 @@ namespace Risky_Artifacts
     [BepInDependency(R2API.ItemAPI.PluginGUID)]
     [BepInDependency(R2API.ContentManagement.R2APIContentManager.PluginGUID)]
     [BepInDependency("com.KingEnderBrine.ProperSave", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.Moffein.RiskyTweaks", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zombieseatflesh7.ArtifactOfPotential", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin("com.Moffein.RiskyArtifacts", "Risky Artifacts", "2.5.3")]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
@@ -169,6 +170,9 @@ namespace Risky_Artifacts
                 new ConfigDescription("Primordial teleporters will spawn on the first loop.")).Value;
             PrimordialTele.forceEnable = base.Config.Bind<bool>(new ConfigDefinition("Primacy", "Force Enable"), false,
                 new ConfigDescription("The artifact will always be enabled even in game modes that don't have artifacts.")).Value;
+
+            //Check compat for PrimordialTele
+            PrimordialTele.RiskyTweaksCompat();
 
             BrotherInvasion.enabled = base.Config.Bind<bool>(new ConfigDefinition("The Phantom", "Enable Artifact"), true,
                 new ConfigDescription("Allows this artifact to be selected.")).Value;

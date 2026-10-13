@@ -121,6 +121,9 @@
     <Reference Include="Rewired_CSharp">
       <HintPath>libs\Rewired_CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="RiskyTweaks">
+      <HintPath>libs\SoftDependencies\RiskyTweaks.dll</HintPath>
+    </Reference>
     <Reference Include="RoR2">
       <HintPath>libs\RoR2.dll</HintPath>
     </Reference>
