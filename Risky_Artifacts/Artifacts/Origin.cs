@@ -50,11 +50,13 @@ namespace Risky_Artifacts.Artifacts
         public static bool enableVagrant = true;
         public static bool enableDunestrider = true;
         public static bool enableBeetle = false;
+        public static bool enableLotem = true;
 
         public static bool enableImp = true;
         public static bool enableRoboBall = true;
         public static bool enableGrovetender = true;
         public static bool enableWorm = false;
+        public static bool enableShruum = true;
 
         public static bool enableXi_DLC1 = true;
         public static bool enableVoidCrab_DLC1 = true;
@@ -367,11 +369,13 @@ namespace Risky_Artifacts.Artifacts
                 if (enableVagrant) t1BossCards.Add(LoadSpawncard("cscVagrant"));
                 if (enableTitan) t1BossCards.Add(LoadSpawncard("titan/cscTitanGooLake"));
                 if (enableDunestrider) t1BossCards.Add(LoadSpawncard("cscClayBoss"));
+                if (enableLotem) t2BossCards.Add(Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC4/Totem/cscTotem.asset").WaitForCompletion());
 
                 if (enableGrovetender) t2BossCards.Add(LoadSpawncard("cscGravekeeper"));
                 if (enableRoboBall) t2BossCards.Add(LoadSpawncard("cscRoboBallBoss"));
                 if (enableWorm) t2BossCards.Add(wormCard);
                 if (enableImp) t2BossCards.Add(impCard);
+                if (enableShruum) t2BossCards.Add(Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC4/BigMush/cscBigMush.asset").WaitForCompletion());
 
                 if (enableXi_DLC1) t2BossCards_DLC1.Add(Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/MajorAndMinorConstruct/cscMegaConstruct.asset").WaitForCompletion());
                 if (enableVoidCrab_DLC1) t2BossCards_DLC1.Add(Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/DLC1/VoidMegaCrab/cscVoidMegaCrab.asset").WaitForCompletion());

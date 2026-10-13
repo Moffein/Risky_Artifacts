@@ -141,6 +141,8 @@ namespace Risky_Artifacts
                 new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
             Origin.enableBeetle = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Beetle Queen"), false,
                 new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
+            Origin.enableLotem = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Lynx Totem"), false,
+                new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
 
             Origin.enableImp = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Imp Overlord"), true,
                 new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
@@ -150,12 +152,14 @@ namespace Risky_Artifacts
                 new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
             Origin.enableWorm = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Magma Worm"), true,
                 new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
-            Origin.allowEliteWorms = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Magma Worm - Allow Elites"), false,
+            Origin.allowEliteWorms = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Magma Worm - Allow Elites"), true,
                 new ConfigDescription("Allow this boss to spawn as an elite.")).Value;
 
-            Origin.enableRoboBall = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Xi Construct"), true,
+            Origin.enableXi_DLC1 = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Xi Construct"), true,
                 new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
-            Origin.enableWorm = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Void Devastator"), true,
+            Origin.enableVoidCrab_DLC1 = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Void Devastator"), true,
+                new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
+            Origin.enableShruum = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Shruum"), true,
                 new ConfigDescription("Allow this boss to spawn during invasions.")).Value;
 
             Origin.enableGrandparent = base.Config.Bind<bool>(new ConfigDefinition("Origin Bosses", "Grandparent"), false,
@@ -170,8 +174,6 @@ namespace Risky_Artifacts
                 new ConfigDescription("Primordial teleporters will spawn on the first loop.")).Value;
             PrimordialTele.forceEnable = base.Config.Bind<bool>(new ConfigDefinition("Primacy", "Force Enable"), false,
                 new ConfigDescription("The artifact will always be enabled even in game modes that don't have artifacts.")).Value;
-
-            //Check compat for PrimordialTele
             PrimordialTele.RiskyTweaksCompat();
 
             BrotherInvasion.enabled = base.Config.Bind<bool>(new ConfigDefinition("The Phantom", "Enable Artifact"), true,
