@@ -33,6 +33,7 @@ namespace Risky_Artifacts.Artifacts
         public static bool allowCruelty = true;
 
         public static bool survivorsOnly = false;
+        public static bool fixFalseSonGrowth = true;
         public static bool enabled = true;
         public static ArtifactDef artifact;
         public static ItemDef HuntedStatItem;
@@ -62,6 +63,23 @@ namespace Risky_Artifacts.Artifacts
             RoR2.RoR2Application.onLoad += OnLoad;
 
             ArtifactHooks();
+
+            if (fixFalseSonGrowth)
+            {
+                On.RoR2.FalseSonController.GetBonusHealth += FalseSonController_GetBonusHealth;
+            }
+        }
+
+        private float FalseSonController_GetBonusHealth(On.RoR2.FalseSonController.orig_GetBonusHealth orig, FalseSonController self)
+        {
+            if (self.characterBody && self.characterBody.inventory && self.characterBody.inventory.GetItemCountEffective(HuntedStatItem) > 0)
+            {
+                return self.characterBody.maxBonusHealth - healthMult * (self.characterBody.baseMaxHealth + self.characterBody.levelMaxHealth * (self.characterBody.level - 1f));
+            }
+            else
+            {
+                return (orig(self));
+            }
         }
 
         private void ParseSpawnlist()

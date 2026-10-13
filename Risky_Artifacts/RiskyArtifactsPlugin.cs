@@ -246,6 +246,8 @@ namespace Risky_Artifacts
                     new ConfigDescription("List of bodies to be added. Format is BodyName separated by comma. To specify custom stats, do BodyName:Cost:HPMult(float):DamageMult(float)")).Value;
             }
 
+            Hunted.fixFalseSonGrowth = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Fix False Son Growth"), true,
+                new ConfigDescription("Fixes False Son getting Growth benefits from Hunted stat modifiers.")).Value;
             Hunted.nerfEngiTurrets = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Nerf Engi Turrets"), true,
                 new ConfigDescription("Engi Turrets receive no health boost.")).Value;
             Hunted.nerfPercentHeal = base.Config.Bind<bool>(new ConfigDefinition("Hunted", "Nerf Percent Heal"), true,
