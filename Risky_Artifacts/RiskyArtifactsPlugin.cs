@@ -306,7 +306,12 @@ namespace Risky_Artifacts
 
             Universe.Categories.CatFalseSonBoss.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - False Son"), 0.25f,
                 new ConfigDescription("Chance of this monster category being selected.")).Value;
-            
+
+            Universe.Categories.CatProv.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Echo of Providence"), 0.25f,
+                new ConfigDescription("Chance of this monster category being selected.")).Value;
+            Universe.Categories.CatProvFinal.weight = base.Config.Bind<float>(new ConfigDefinition("Universe - Categories", "Category Weight - Echo of Providence Phase 4"), 0f,
+                new ConfigDescription("Chance of this monster category being selected.")).Value;
+
             Universe.generateConfig = base.Config.Bind<bool>(new ConfigDefinition("Universe - Spawnlists", "Generate Spawnlist Config"), false,
                 new ConfigDescription("Generate Spawnlist Config")).Value;
             if (Universe.generateConfig)
@@ -340,6 +345,24 @@ namespace Risky_Artifacts
             Universe.fsEliteRules = base.Config.Bind<SpawnCard.EliteRules>(new ConfigDefinition("Universe - False Son", "Elite Rules"), SpawnCard.EliteRules.ArtifactOnly,
                 new ConfigDescription("Affects elite type.")).Value;
             Universe.fsAllowElite = base.Config.Bind<bool>(new ConfigDefinition("Universe - False Son", "Allow Elite"), true,
+                new ConfigDescription("Allow elites to spawn?.")).Value;
+
+            Universe.provCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Echo of Providence", "Director Cost"), 12000,
+    new ConfigDescription("Director cost of Echo of Providence.")).Value;
+            Universe.provMinStages = base.Config.Bind<int>(new ConfigDefinition("Universe - Echo of Providence", "Min Stages"), 5,
+                new ConfigDescription("Min stages completed before Echo of Providence can spawn.")).Value;
+            Universe.provEliteRules = base.Config.Bind<SpawnCard.EliteRules>(new ConfigDefinition("Universe - Echo of Providence", "Elite Rules"), SpawnCard.EliteRules.ArtifactOnly,
+                new ConfigDescription("Affects elite type.")).Value;
+            Universe.provAllowElite = base.Config.Bind<bool>(new ConfigDefinition("Universe - Echo of Providence", "Allow Elite"), true,
+                new ConfigDescription("Allow elites to spawn?.")).Value;
+
+            Universe.provFinalCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Echo of Providence Phase 4", "Director Cost"), 12000,
+new ConfigDescription("Director cost of Echo of Providence Phase 4.")).Value;
+            Universe.provFinalMinStages = base.Config.Bind<int>(new ConfigDefinition("Universe - Echo of Providence Phase 4", "Min Stages"), 5,
+                new ConfigDescription("Min stages completed before Echo of Providence Phase 4 can spawn.")).Value;
+            Universe.provFinalEliteRules = base.Config.Bind<SpawnCard.EliteRules>(new ConfigDefinition("Universe - Echo of Providence Phase 4", "Elite Rules"), SpawnCard.EliteRules.ArtifactOnly,
+                new ConfigDescription("Affects elite type.")).Value;
+            Universe.provFinalAllowElite = base.Config.Bind<bool>(new ConfigDefinition("Universe - Echo of Providence Phase 4", "Allow Elite"), true,
                 new ConfigDescription("Allow elites to spawn?.")).Value;
 
             Universe.mithrixHurtCost = base.Config.Bind<int>(new ConfigDefinition("Universe - Mithrix Phase 4", "Director Cost"), 24000,

@@ -39,6 +39,9 @@ namespace Risky_Artifacts.Artifacts
             AddDictEntry("TankerBody", LoadCSC("RoR2/DLC3/Tanker/cscTanker.asset"));
             AddDictEntry("ExtractorUnitBody", LoadCSC("RoR2/DLC3/ExtractorUnit/cscExtractorUnit.asset"));
             AddDictEntry("WorkerUnitBody", LoadCSC("RoR2/DLC3/WorkerUnit/cscWorkerUnit.asset"));
+            AddDictEntry("Lynx2Body", LoadCSC("2e5afbd7154b1484a9392c4fc275fb3d"));
+            AddDictEntry("LynxArcherBody", LoadCSC("d3edb9d6c1be7184eab7e741b833ea79"));
+            AddDictEntry("LynxAmbusherBody", LoadCSC("b7ab49dae5128a0408b16e8fd38a8d7e"));
 
             //Miniboss
             AddDictEntry("LunarExploderBody", LoadCSC("RoR2/Base/LunarExploder/cscLunarExploder.asset"));
@@ -68,6 +71,7 @@ namespace Risky_Artifacts.Artifacts
             AddDictEntry("ClayBossBody", LoadCSC("RoR2/Base/ClayBoss/cscClayBoss.asset"));
             AddDictEntry("BeetleQueen2Body", LoadCSC("RoR2/Base/BeetleQueen/cscBeetleQueen.asset"));
             AddDictEntry("VagrantBody", LoadCSC("RoR2/Base/Vagrant/cscVagrant.asset"));
+            AddDictEntry("TotemBody", LoadCSC("d636078decaae444fbb9b298bd10fe8e"));
 
             AddDictEntry("MagmaWormBody", LoadCSC("RoR2/Base/MagmaWorm/cscMagmaWorm.asset"));
             AddDictEntry("ImpBossBody", LoadCSC("RoR2/Base/ImpBoss/cscImpBoss.asset"));
@@ -76,6 +80,7 @@ namespace Risky_Artifacts.Artifacts
             AddDictEntry("MegaConstructBody", LoadCSC("RoR2/DLC1/MajorAndMinorConstruct/cscMegaConstruct.asset"));
             AddDictEntry("VoidMegaCrabBody", LoadCSC("RoR2/DLC1/VoidMegaCrab/cscVoidMegaCrab.asset"));
             AddDictEntry("SolusAmalgamatorBody", LoadCSC("RoR2/DLC3/SolusAmalgamator/cscSolusAmalgamator.asset"));
+            AddDictEntry("BigMushBody", LoadCSC("0e14a7ed2e4647a4b8d21a47b5680590"));
 
             AddDictEntry("GrandparentBody", LoadCSC("RoR2/Base/Grandparent/cscGrandparent.asset"));
             AddDictEntry("ScavBody", LoadCSC("RoR2/Base/Scav/cscScav.asset"));

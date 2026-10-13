@@ -45,6 +45,16 @@ namespace Risky_Artifacts.Artifacts
         public static bool voidlingPhase2 = true;
         public static bool voidlingAllowElite = true;
 
+        public static SpawnCard.EliteRules provEliteRules = SpawnCard.EliteRules.ArtifactOnly;
+        public static int provMinStages = 5;
+        public static int provCost = 4000;
+        public static bool provAllowElite = true;
+
+        public static SpawnCard.EliteRules provFinalEliteRules = SpawnCard.EliteRules.ArtifactOnly;
+        public static int provFinalMinStages = 5;
+        public static int provFinalCost = 8000;
+        public static bool provFinalAllowElite = true;
+
         public static SpawnCard.EliteRules newtEliteRules = SpawnCard.EliteRules.Lunar;
         public static bool newtAllowElite = false;
         public static int newtMinStages = 5;
@@ -60,9 +70,9 @@ namespace Risky_Artifacts.Artifacts
 
         public static class InputInfo
         {
-            public static string Basic_Monsters = "ClayMongerBody, RunshroomBody, LampBody, ExtractorUnitBody, WorkerUnitBody, TankerBody, ChildBody, LunarExploderBody, BeetleBody, WispBody, LemurianBody, JellyfishBody, HermitCrabBody, VoidBarnacleBody, ImpBody, VultureBody, RoboBallMiniBody, AcidLarvaBody, MinorConstructBody, FlyingVerminBody, VerminBody, MoffeinClayManBody:28, LynxArcherBody:28, LynxHunterBody:28, LynxScoutBody:28, MechanicalSpiderBody:28, ArcherBugBody:28:0:1:Air, SwiftBody:28:0:1:Air";
-            public static string Minibosses = "MinePodBody, DefectiveUnitBody, IronHaulerBody, ScorchlingBody, LunarGolemBody, LunarWispBody, GupBody, ClayGrenadierBody, ClayBruiserBody, MiniMushroomBody, BisonBody, BellBody, ParentBody, GolemBody, GreaterWispBody, BeetleGuardBody, NullifierBody, VoidJailerBody, LemurianBruiserBody, MoffeinArchWisp:240, LynxShamanBody:40, SpitterBody:30";
-            public static string Champions = "VagrantBody, TitanBody, BeetleQueen2Body, ClayBossBody, MagmaWormBody, ImpBossBody, RoboBallBossBody, GravekeeperBody, MegaConstructBody, VoidMegaCrabBody, GrandparentBody, ScavBody, ElectricWormBody, MoffeinAncientWispBody:1000, MechorillaBody:600, RegigigasBody:1000, LampBossBody:600, LynxTotemBody:600, IfritBody:800, ColossusBody:1150, SolusAmalgamatorBody";
+            public static string Basic_Monsters = "ClayMongerBody, RunshroomBody, LampBody, ExtractorUnitBody, WorkerUnitBody, TankerBody, ChildBody, LunarExploderBody, BeetleBody, WispBody, LemurianBody, JellyfishBody, HermitCrabBody, VoidBarnacleBody, ImpBody, VultureBody, RoboBallMiniBody, AcidLarvaBody, MinorConstructBody, FlyingVerminBody, VerminBody, MoffeinClayManBody:28, ER_SandCrabBody:40, ER_LynxArcherBody:28, ER_LynxHunterBody:28, ER_LynxScoutBody:28, ER_MechanicalSpiderBody:28, ER_ArcherBugBody:28:0:1:Air, ER_SwiftBody:28:0:1:Air, Lynx2Body, LynxAmbusherBody, LynxArcherBody";
+            public static string Minibosses = "MinePodBody, DefectiveUnitBody, IronHaulerBody, ScorchlingBody, LunarGolemBody, LunarWispBody, GupBody, ClayGrenadierBody, ClayBruiserBody, MiniMushroomBody, BisonBody, BellBody, ParentBody, GolemBody, GreaterWispBody, BeetleGuardBody, NullifierBody, VoidJailerBody, LemurianBruiserBody, MoffeinArchWisp:240, ER_LynxShamanBody:40, ER_SpitterBody:30";
+            public static string Champions = "VagrantBody, TitanBody, BeetleQueen2Body, ClayBossBody, MagmaWormBody, ImpBossBody, RoboBallBossBody, GravekeeperBody, MegaConstructBody, VoidMegaCrabBody, GrandparentBody, ScavBody, ElectricWormBody, MoffeinAncientWispBody:1000, MechorillaBody:600, RegigigasBody:1000, LampBossBody:600, ER_LynxTotemBody:600, ER_IfritBody:800, ER_ColossusBody:1150, SolusAmalgamatorBody, BigMushBody, TotemBody";
             public static string Special = "TitanGoldBody:6000:5, SuperRoboBallBossBody:6000:5, DireseekerBossBody:6000:5, VultureHunterBody:7700:5";
             public static string LunarScav = "ScavLunar1Body:8000:5, ScavLunar2Body:8000: 5,ScavLunar3Body:8000:5, ScavLunar4Body:8000:5";
             public static string Drone = "Turret1Body, Drone1Body, Drone2Body, MissileDroneBody, FlameDroneBody, EmergencyDroneBody, MegaDroneBody, BackupDroneBody, HaulerDroneBody, BombardmentDroneBody, CopycatDroneBody, JailerDroneBody";
@@ -118,6 +128,18 @@ namespace Risky_Artifacts.Artifacts
                 category = MonsterCategory.MithrixHurt
             };
 
+            public static CategoryInfo CatProv = new CategoryInfo()
+            {
+                weight = 0f,
+                category = MonsterCategory.Prov
+            };
+
+            public static CategoryInfo CatProvFinal = new CategoryInfo()
+            {
+                weight = 0f,
+                category = MonsterCategory.ProvFinal
+            };
+
             public static CategoryInfo CatVoidling = new CategoryInfo()
             {
                 weight = 0f,
@@ -154,7 +176,7 @@ namespace Risky_Artifacts.Artifacts
 
         public enum MonsterCategory
         {
-            Basic_Monsters, Minibosses, Champions, Special, LunarScav, Mithrix, MithrixHurt, Voidling, Drone, Newt, FalseSonBoss
+            Basic_Monsters, Minibosses, Champions, Special, LunarScav, Mithrix, MithrixHurt, Voidling, Drone, Newt, FalseSonBoss, Prov, ProvFinal
         }
 
         public Universe()
@@ -199,6 +221,8 @@ namespace Risky_Artifacts.Artifacts
             //Special cards are separate so they don't get overwritten
             BuildCatFalseSonBoss();
             BuildCatMithrix();
+            BuildCatProv();
+            BuildCatProvFinal();
             BuildCatMithrixHurt();
             BuildCatVoidling();
             BuildCatNewt();
@@ -241,6 +265,18 @@ namespace Risky_Artifacts.Artifacts
             {
                 MonsterCardSelection.AddCategory("Mithrix Hurt", Categories.CatMithrixHurt.weight);
                 MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = Categories.CatMithrixHurt.cards.ToArray();
+            }
+
+            if (Categories.CatProv.weight > 0f)
+            {
+                MonsterCardSelection.AddCategory("Prov", Categories.CatProv.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = Categories.CatProv.cards.ToArray();
+            }
+
+            if (Categories.CatProvFinal.weight > 0f)
+            {
+                MonsterCardSelection.AddCategory("ProvFinal", Categories.CatProvFinal.weight);
+                MonsterCardSelection.categories[MonsterCardSelection.categories.Length - 1].cards = Categories.CatProvFinal.cards.ToArray();
             }
 
             if (Categories.CatVoidling.weight > 0f)
@@ -370,6 +406,101 @@ namespace Risky_Artifacts.Artifacts
                 requiredUnlockableDef = null
             };
             Categories.CatMithrix.cards = new List<DirectorCard>() { dc };
+        }
+
+        private void BuildCatProv()
+        {
+            CharacterSpawnCard provCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
+            provCard.prefab = Addressables.LoadAssetAsync<GameObject>("411bab1e749703349a6a3e8694911c14").WaitForCompletion();
+
+            provCard.directorCreditCost = provCost;
+
+            provCard.itemsToGrant = new ItemCountPair[]
+            {
+                new ItemCountPair()
+                {
+                    itemDef = RoR2Content.Items.TeleportWhenOob,
+                    count = 1
+                },
+                new ItemCountPair()
+                {
+                    itemDef = UniverseScriptedEncounterStatItem,
+                    count = 1
+                },
+                new ItemCountPair()
+                {
+                    itemDef = RoR2Content.Items.AdaptiveArmor,
+                    count = 1
+                }
+            };
+            provCard.eliteRules = provEliteRules;
+            provCard.noElites = !provAllowElite;
+            provCard.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Ground;
+            provCard.occupyPosition = false;
+            provCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
+            provCard.sendOverNetwork = true;
+            provCard.hullSize = HullClassification.Golem;
+            provCard.name = "cscUniverseProvidenceDesperation";
+            (provCard as ScriptableObject).name = provCard.name;
+
+            DirectorCard dc = new DirectorCard()
+            {
+                selectionWeight = 1,
+                spawnCard = provCard,
+                spawnDistance = DirectorCore.MonsterSpawnDistance.Standard,
+                preventOverhead = false,
+                minimumStageCompletions = provMinStages,
+                forbiddenUnlockableDef = null,
+                requiredUnlockableDef = null
+            };
+            Categories.CatProv.cards = new List<DirectorCard>() { dc };
+        }
+
+        private void BuildCatProvFinal()
+        {
+            CharacterSpawnCard provCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
+            provCard.prefab = Addressables.LoadAssetAsync<GameObject>("11406375f141a344e851ac7da4124a6c").WaitForCompletion();
+            provCard.directorCreditCost = provFinalCost;
+
+            provCard.itemsToGrant = new ItemCountPair[]
+            {
+                new ItemCountPair()
+                {
+                    itemDef = RoR2Content.Items.TeleportWhenOob,
+                    count = 1
+                },
+                new ItemCountPair()
+                {
+                    itemDef = UniverseScriptedEncounterStatItem,
+                    count = 1
+                },
+                new ItemCountPair()
+                {
+                    itemDef = RoR2Content.Items.AdaptiveArmor,
+                    count = 1
+                }
+            };
+            provCard.eliteRules = provFinalEliteRules;
+            provCard.noElites = !provFinalAllowElite;
+            provCard.nodeGraphType = RoR2.Navigation.MapNodeGroup.GraphType.Ground;
+            provCard.occupyPosition = false;
+            provCard.requiredFlags = RoR2.Navigation.NodeFlags.None;
+            provCard.sendOverNetwork = true;
+            provCard.hullSize = HullClassification.Golem;
+            provCard.name = "cscUniverseProvidenceFinal";
+            (provCard as ScriptableObject).name = provCard.name;
+
+            DirectorCard dc = new DirectorCard()
+            {
+                selectionWeight = 1,
+                spawnCard = provCard,
+                spawnDistance = DirectorCore.MonsterSpawnDistance.Standard,
+                preventOverhead = false,
+                minimumStageCompletions = provFinalMinStages,
+                forbiddenUnlockableDef = null,
+                requiredUnlockableDef = null
+            };
+            Categories.CatProvFinal.cards = new List<DirectorCard>() { dc };
         }
 
         public static bool BodyIsFlying(GameObject bodyObject)
@@ -733,7 +864,7 @@ namespace Risky_Artifacts.Artifacts
                 //Get Body
                 if (!masterPrefab)
                 {
-                    Debug.LogError("RiskyArtifacts: Universe: Could not create spawncard for " + name + ", AI Master not found.");
+                    Debug.LogWarning("RiskyArtifacts: Universe: Could not create spawncard for " + name + ", AI Master not found.");
                     continue;
                 }
                 else
@@ -755,7 +886,7 @@ namespace Risky_Artifacts.Artifacts
                 CharacterBody body = bodyPrefab ? bodyPrefab.GetComponent<CharacterBody>() : null;
                 if (!body)
                 {
-                    Debug.LogError("RiskyArtifacts: Universe: Could not create spawncard for " + name + ", Body not found.");
+                    Debug.LogWarning("RiskyArtifacts: Universe: Could not create spawncard for " + name + ", Body not found.");
                     continue;
                 }
 
