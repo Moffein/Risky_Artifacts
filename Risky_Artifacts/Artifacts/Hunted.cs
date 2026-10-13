@@ -556,6 +556,7 @@ namespace Risky_Artifacts.Artifacts
                     }
 
                     body.master.SetLoadoutServer(body.master.loadout);
+                    body.master.SetDirtyBit(CharacterMaster.loadoutDirtyBit);
                     body.master.Respawn(body.footPosition, body.transform.rotation);
                 }
             }
