@@ -213,15 +213,15 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
                                         combatSquad.AddMember(resultMaster);
                                         if (resultMaster.inventory)
                                         {
-                                            resultMaster.inventory.GiveItem(Origin.OriginBonusItem);
-                                            resultMaster.inventory.RemoveItem(RoR2Content.Items.InvadingDoppelganger);
+                                            resultMaster.inventory.GiveItemPermanent(Origin.OriginBonusItem);
+                                            resultMaster.inventory.RemoveItemPermanent(RoR2Content.Items.InvadingDoppelganger);
                                             if (Origin.useAdaptiveArmor && run.stageClearCount >= 5)
                                             {
-                                                resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
+                                                resultMaster.inventory.GiveItemPermanent(RoR2Content.Items.AdaptiveArmor);
                                             }
-                                            if (resultMaster.inventory.GetItemCount(RoR2Content.Items.UseAmbientLevel) <= 0)
+                                            if (resultMaster.inventory.GetItemCountPermanent(RoR2Content.Items.UseAmbientLevel) <= 0)
                                             {
-                                                resultMaster.inventory.GiveItem(RoR2Content.Items.UseAmbientLevel);
+                                                resultMaster.inventory.GiveItemPermanent(RoR2Content.Items.UseAmbientLevel);
                                             }
 
                                             if (RunArtifactManager.instance.IsArtifactEnabled(RoR2Content.Artifacts.MonsterTeamGainsItems) && directorSpawnRequest.teamIndexOverride != TeamIndex.Monster)

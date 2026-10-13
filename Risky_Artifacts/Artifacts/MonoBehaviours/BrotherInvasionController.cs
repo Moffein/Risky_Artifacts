@@ -108,11 +108,11 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
 
                         if (resultMaster.inventory)
                         {
-                            resultMaster.inventory.RemoveItem(RoR2Content.Items.InvadingDoppelganger);
-                            resultMaster.inventory.GiveItem(RoR2Content.Items.TeleportWhenOob);
-                            resultMaster.inventory.GiveItem(BrotherInvasion.BrotherInvasionBonusItem);
-                            if (useAdaptiveArmor) resultMaster.inventory.GiveItem(RoR2Content.Items.AdaptiveArmor);
-                            if (resultMaster.inventory.GetItemCount(RoR2Content.Items.UseAmbientLevel) <= 0) resultMaster.inventory.GiveItem(RoR2Content.Items.UseAmbientLevel);
+                            resultMaster.inventory.RemoveItemPermanent(RoR2Content.Items.InvadingDoppelganger);
+                            resultMaster.inventory.GiveItemPermanent(RoR2Content.Items.TeleportWhenOob);
+                            resultMaster.inventory.GiveItemPermanent(BrotherInvasion.BrotherInvasionBonusItem);
+                            if (useAdaptiveArmor) resultMaster.inventory.GiveItemPermanent(RoR2Content.Items.AdaptiveArmor);
+                            if (resultMaster.inventory.GetItemCountPermanent(RoR2Content.Items.UseAmbientLevel) <= 0) resultMaster.inventory.GiveItem(RoR2Content.Items.UseAmbientLevel);
 
                             if (RunArtifactManager.instance.IsArtifactEnabled(RoR2Content.Artifacts.MonsterTeamGainsItems) && directorSpawnRequest.teamIndexOverride != TeamIndex.Monster)
                             {
@@ -151,8 +151,8 @@ namespace Risky_Artifacts.Artifacts.MonoBehaviours
 
                             int hpBoostToGive = Mathf.FloorToInt((hpMult - 1f) * 10f);
                             int damageBoostToGive = Mathf.FloorToInt((damageMult - 1f) * 10f);
-                            if (hpBoostToGive > 0) resultMaster.inventory.GiveItem(RoR2Content.Items.BoostHp, hpBoostToGive);
-                            if (damageBoostToGive > 0) resultMaster.inventory.GiveItem(RoR2Content.Items.BoostDamage, damageBoostToGive);
+                            if (hpBoostToGive > 0) resultMaster.inventory.GiveItemPermanent(RoR2Content.Items.BoostHp, hpBoostToGive);
+                            if (damageBoostToGive > 0) resultMaster.inventory.GiveItemPermanent(RoR2Content.Items.BoostDamage, damageBoostToGive);
                         }
 
                         CharacterBody cb = resultMaster.GetBody();
