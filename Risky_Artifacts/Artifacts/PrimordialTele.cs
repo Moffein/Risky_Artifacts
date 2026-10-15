@@ -93,7 +93,10 @@ namespace Risky_Artifacts.Artifacts
             //Suppresses the chat message?
             On.EntityStates.LunarTeleporter.IdleToActive.OnExit += (orig, self) =>
             {
-                if (!firstIdleToActive || PrimordialTele.isNaturalLunar)
+                SceneDef sd = SceneCatalog.GetSceneDefForCurrentScene();
+                bool isUltima = sd && sd.baseSceneName == "ultima";
+
+                if (!firstIdleToActive || PrimordialTele.isNaturalLunar || isUltima)
                 {
                     firstIdleToActive = false;
                     orig(self);
@@ -110,6 +113,13 @@ namespace Risky_Artifacts.Artifacts
     {
         public void Start()
         {
+            SceneDef sd = SceneCatalog.GetSceneDefForCurrentScene();
+            if (sd && sd.baseSceneName == "ultima")
+            {
+                Destroy(this);
+                return;
+            }
+
             if (NetworkServer.active)
             {
                 if (!PrimordialTele.isNaturalLunar)
